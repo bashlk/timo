@@ -4,6 +4,9 @@
             "packages/*"
         ]
     },
+    "scripts": {
+        "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
+    },
     "devDependencies": {
         "eslint": "^8.57.0",
         "eslint-plugin-react": "^7.34.0",

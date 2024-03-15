@@ -1,7 +1,7 @@
 {
   "name": "@timer-app/components",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "dependencies": {
     "react": "^18.2.0",
