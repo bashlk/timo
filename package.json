@@ -1,0 +1,8 @@
+{
+    "name": "timer-app",
+    "workspaces": {
+        "packages": [
+            "packages/*"
+        ]
+    }
+}
