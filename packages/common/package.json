@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "dependencies": {
+    "ky": "^1.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }
