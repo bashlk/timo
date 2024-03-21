@@ -1,18 +1,15 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import history from "history/browser";
 
 const Router = ({ routes, children }) => {
-    const [currentPath, setCurrentPath] = useState(window.location.pathname);
+    const [currentPath, setCurrentPath] = useState(history.location.pathname);
 
     useEffect(() => {
-        const onLocationChange = () => {
-            setCurrentPath(window.location.pathname);
-        };
-        window.addEventListener('popstate', onLocationChange);
-        return () => {
-            window.removeEventListener('popstate', onLocationChange);
-        };
-    }, []);
+        return history.listen(({ location }) => {
+            setCurrentPath(location.pathname);
+        });
+    });
 
     const currentRoute = routes.find(route => route.path === currentPath);
 
