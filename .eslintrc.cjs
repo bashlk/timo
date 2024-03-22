@@ -17,5 +17,13 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+    'indent': ['warn'],
+    'quotes': [
+      'warn',
+      'single'
+    ],
+    'semi': 'warn',
+    'no-trailing-spaces': 'warn',
+    'comma-dangle': 'warn',
   },
 }

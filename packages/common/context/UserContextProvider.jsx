@@ -28,10 +28,10 @@ const UserContextProvider = ({ children }) => {
             {children}
         </UserContext.Provider>
     );
-}
+};
 
 UserContextProvider.propTypes = {
-    children: PropTypes.node.isRequired,
+    children: PropTypes.node.isRequired
 };
 
 export default UserContextProvider;
