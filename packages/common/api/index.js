@@ -2,7 +2,7 @@
 import ky from 'ky';
 
 const api = ky.create({
-    prefixUrl: 'https://timer-app-api.frontendundefined.com'
+    prefixUrl: import.meta.env.VITE_API_PATH
 });
 
 export const getUser = async () => {
@@ -15,7 +15,7 @@ export const login = async (username, password) => {
             username,
             password
         }
-    });
+    }).then(response => response.json());
 };
 
 export const register = async (username, password) => {
@@ -24,11 +24,11 @@ export const register = async (username, password) => {
             username,
             password
         }
-    });
+    }).then(response => response.json());
 };
 
 export const listEntries = async () => {
-    return api.get('records/entries');
+    return api.get('records/entries').then(response => response.json());
 };
 
 export const createEntry = async ({ start_time, description, projectid }) => {
@@ -38,7 +38,7 @@ export const createEntry = async ({ start_time, description, projectid }) => {
             description,
             projectid
         }
-    });
+    }).then(response => response.json());
 };
 
 export const updateEntry = async ({ id, start_time, end_time, description, projectid }) => {
@@ -49,7 +49,7 @@ export const updateEntry = async ({ id, start_time, end_time, description, proje
             description,
             projectid
         }
-    });
+    }).then(response => response.json());
 };
 
 export const createProject = async ({ name }) => {
@@ -57,5 +57,5 @@ export const createProject = async ({ name }) => {
         json: {
             name
         }
-    });
+    }).then(response => response.json());
 };

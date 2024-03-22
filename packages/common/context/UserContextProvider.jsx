@@ -10,18 +10,29 @@ const UserContextProvider = ({ children }) => {
     });
 
     useEffect(() => {
-        getUser().then((remoteUser) => {
-            setUser(user => ({ ...user, status: 'authenticated', ...remoteUser }));
-        }).catch(() => {
-            setUser(user => ({ ...user, status: 'unauthenticated' }));
+        if (user.status === 'unknown') {
+            getUser().then((remoteUser) => {
+                setUser(user => ({ ...user, status: 'authenticated', ...remoteUser }));
+            }).catch(() => {
+                setUser(user => ({ ...user, status: 'unauthenticated' }));
+            });
+        }
+    }, [user]);
+
+    const clearUser = useCallback(() => {
+        setUser({
+            status: 'unknown'
         });
     }, []);
 
-    const clearUser = useCallback(() => {
-        setUser(null);
+    const setAuthenticatedUser = useCallback((newUser) => {
+        setUser(user => ({ ...user, status: 'authenticated', ...newUser }));
     }, []);
 
-    const value = useMemo(() => ({ ...user, clearUser }), [user, clearUser]);
+    const value = useMemo(
+        () => ({ ...user, setAuthenticatedUser, clearUser }),
+        [user, clearUser, setAuthenticatedUser]
+    );
 
     return (
         <UserContext.Provider value={value}>

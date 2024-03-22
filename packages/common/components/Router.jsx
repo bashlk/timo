@@ -17,7 +17,7 @@ const Router = ({ routes, children }) => {
         return children(null);
     }
 
-    return children(currentRoute.name);
+    return children(currentRoute.name, history);
 };
 
 Router.propTypes = {

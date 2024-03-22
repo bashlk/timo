@@ -16,10 +16,10 @@ const App = () => {
     return (
         <UserContextProvider>
             <Router routes={routes}>
-                {(routeName) => {
+                {(routeName, history) => {
                     switch (routeName) {
                     case 'Login':
-                        return <Login />;
+                        return <Login history={history} />;
                     case 'Timer':
                         return (
                             <ProtectedRoute>
