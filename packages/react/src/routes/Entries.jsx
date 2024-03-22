@@ -12,6 +12,19 @@ const getTotalDuration = (entries) => {
     }, 0);
 };
 
+const getEntriesGroupedByDate = (entries) => {
+    const formatter = new Intl.DateTimeFormat('default', { dateStyle: 'medium' });
+    // Entries are sorted by id which is ascending, so we need to reverse them
+    return entries.toReversed().reduce((grouped, entry) => {
+        const date = formatter.format(new Date(entry.start_time));
+        if (!grouped[date]) {
+            grouped[date] = [];
+        }
+        grouped[date].push(entry);
+        return grouped;
+    }, {});
+};
+
 const Entries = ({ history }) => {
     const [entries, setEntries] = useState(null);
     const [filtered, setFiltered] = useState(false);
@@ -58,36 +71,43 @@ const Entries = ({ history }) => {
         <div>
             <h1>Entries</h1>
             {entries ? (
-                <ul>
-                    <>
-                        <form ref={formRef} action="" onSubmit={handleFilter}>
-                            <label htmlFor="from">From:</label>
-                            <input type="datetime-local" name="from" />
-                            <label htmlFor="to">To:</label>
-                            <input type="datetime-local" name="to" />
-                            <button type="submit">Filter</button>
-                            {filtered && (
-                                <button onClick={handleFilterReset}>Reset</button>
-                            )}
-                        </form>
-                        {entries.map((entry) => (
-                            <Entry
-                                key={entry.id}
-                                id={entry.id}
-                                description={entry.description}
-                                duration={entry.duration}
-                                start_time={entry.start_time}
-                                end_time={entry.end_time}
-                                onEdit={handleEdit}
-                                onDelete={handleDelete}
-                            />
-                        ))}
-                        <div>
-                            <b>Total: </b>
-                            {new Date(getTotalDuration(entries)).toISOString().slice(11, 19)}
+                <>
+                    <form ref={formRef} action="" onSubmit={handleFilter}>
+                        <label htmlFor="from">From:</label>
+                        <input type="datetime-local" name="from" />
+                        <label htmlFor="to">To:</label>
+                        <input type="datetime-local" name="to" />
+                        <button type="submit">Filter</button>
+                        {filtered && (
+                            <button onClick={handleFilterReset}>Reset</button>
+                        )}
+                    </form>
+                    {Object.entries(getEntriesGroupedByDate(entries)).map(([date, entries]) => (
+                        <div key={date}>
+                            <h2>{date}</h2>
+                            {/* Entries are descending after being grouped, reverse them */}
+                            {entries.toReversed().map((entry) => (
+                                <Entry
+                                    key={entry.id}
+                                    id={entry.id}
+                                    description={entry.description}
+                                    start_time={entry.start_time}
+                                    end_time={entry.end_time}
+                                    onEdit={handleEdit}
+                                    onDelete={handleDelete}
+                                />
+                            ))}
+                            <div>
+                                <b>Total: </b>
+                                {new Date(getTotalDuration(entries)).toISOString().slice(11, 19)}
+                            </div>
                         </div>
-                    </>
-                </ul>
+                    ))}
+                    <p>
+                        <b>Total: </b>
+                        {new Date(getTotalDuration(entries)).toISOString().slice(11, 19)}
+                    </p>
+                </>
             ) : (
                 <p>Loading...</p>
             )}

@@ -31,16 +31,16 @@ const Entry = ({ id, description, start_time, end_time, onEdit = () => {}, onDel
 
     if (!editable) {
         return (
-            <li>
-                <span>{description} {start_time} - {end_time}</span>
+            <div>
+                <span>{description} {start_time.slice(11, 19)} - {end_time.slice(11, 19)}</span>
                 <button onClick={handleEditClick}>Edit</button>
                 <button onClick={handleDeleteClick}>Delete</button>
-            </li>
+            </div>
         );
     }
 
     return (
-        <li>
+        <div>
             <form action="" onSubmit={handleSaveClick}>
                 <input name="description" type="text" defaultValue={description} />
                 <input name="start_time" type="datetime-local" defaultValue={start_time} />
@@ -48,7 +48,7 @@ const Entry = ({ id, description, start_time, end_time, onEdit = () => {}, onDel
                 <button type="submit">Save</button>
                 <button onClick={handleCancelClick}>Cancel</button>
             </form>
-        </li>
+        </div>
     );
 };
 
