@@ -5,6 +5,13 @@ import Tabs from '@timer-app/common/components/Tabs';
 import Entry from '@timer-app/common/components/Entry';
 import { TABS } from '../constants';
 
+const getTotalDuration = (entries) => {
+    return entries.reduce((total, entry) => {
+        const diff = new Date(entry.end_time) - new Date(entry.start_time);
+        return total + diff;
+    }, 0);
+};
+
 const Entries = ({ history }) => {
     const [entries, setEntries] = useState(null);
     const [filtered, setFiltered] = useState(false);
@@ -75,6 +82,10 @@ const Entries = ({ history }) => {
                                 onDelete={handleDelete}
                             />
                         ))}
+                        <div>
+                            <b>Total: </b>
+                            {new Date(getTotalDuration(entries)).toISOString().slice(11, 19)}
+                        </div>
                     </>
                 </ul>
             ) : (
