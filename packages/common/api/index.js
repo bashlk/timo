@@ -55,6 +55,10 @@ export const updateEntry = async ({ id, start_time, end_time, description, proje
     }).then(response => response.json());
 };
 
+export const deleteEntry = async (id) => {
+    return api.delete(`records/entries/${id}`);
+};
+
 export const createProject = async ({ name }) => {
     return api.post('records/projects', {
         json: {
