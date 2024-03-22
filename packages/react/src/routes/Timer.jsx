@@ -1,7 +1,10 @@
-import { createEntry } from '@timer-app/common/api';
 import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { createEntry } from '@timer-app/common/api';
+import Tabs from '@timer-app/common/components/Tabs';
+import { TABS } from '../constants';
 
-const Timer = () => {
+const Timer = ({ history }) => {
     const [duration, setDuration] = useState(0);
     const [timerActive, setTimerActive] = useState(false);
     const [description, setDescription] = useState('');
@@ -86,8 +89,13 @@ const Timer = () => {
                 )}
             </div>
             {entryStatus && <p>{entryStatus}</p>}
+            <Tabs tabs={TABS} history={history} />
         </div>
     );
+};
+
+Timer.propTypes = {
+    history: PropTypes.object.isRequired
 };
 
 export default Timer;

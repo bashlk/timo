@@ -1,7 +1,10 @@
-import { listEntries } from '@timer-app/common/api';
 import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { listEntries } from '@timer-app/common/api';
+import Tabs from '@timer-app/common/components/Tabs';
+import { TABS } from '../constants';
 
-const Entries = () => {
+const Entries = ({ history }) => {
     const [entries, setEntries] = useState(null);
 
     useEffect(() => {
@@ -26,8 +29,13 @@ const Entries = () => {
             ) : (
                 <p>Loading...</p>
             )}
+            <Tabs tabs={TABS} history={history} />
         </div>
     );
+};
+
+Entries.propTypes = {
+    history: PropTypes.object.isRequired
 };
 
 export default Entries;

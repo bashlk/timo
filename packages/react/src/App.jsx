@@ -24,13 +24,13 @@ const App = () => {
                     case 'Timer':
                         return (
                             <ProtectedRoute>
-                                <Timer />
+                                <Timer history={history} />
                             </ProtectedRoute>
                         );
                     case 'Entries':
                         return (
                             <ProtectedRoute>
-                                <Entries />
+                                <Entries history={history} />
                             </ProtectedRoute>
                         );
                     default:
