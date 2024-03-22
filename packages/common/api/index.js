@@ -33,10 +33,11 @@ export const listEntries = async () => {
         .then(data => data.records);
 };
 
-export const createEntry = async ({ start_time, description, projectid }) => {
+export const createEntry = async ({ start_time, end_time, description, projectid }) => {
     return api.post('records/entries', {
         json: {
             start_time,
+            end_time,
             description,
             projectid
         }
