@@ -4,6 +4,7 @@ import UserContextProvider from '@timer-app/common/context/UserContextProvider';
 
 import Login from './routes/Login';
 import Timer from './routes/Timer';
+import Entries from './routes/Entries';
 
 const routes = [
     { path: '/', name: 'Timer' },
@@ -24,6 +25,12 @@ const App = () => {
                         return (
                             <ProtectedRoute>
                                 <Timer />
+                            </ProtectedRoute>
+                        );
+                    case 'Entries':
+                        return (
+                            <ProtectedRoute>
+                                <Entries />
                             </ProtectedRoute>
                         );
                     default:

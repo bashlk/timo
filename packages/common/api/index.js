@@ -28,7 +28,9 @@ export const register = async (username, password) => {
 };
 
 export const listEntries = async () => {
-    return api.get('records/entries').then(response => response.json());
+    return api.get('records/entries')
+        .then(response => response.json())
+        .then(data => data.records);
 };
 
 export const createEntry = async ({ start_time, description, projectid }) => {
