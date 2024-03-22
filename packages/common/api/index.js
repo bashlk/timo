@@ -27,8 +27,15 @@ export const register = async (username, password) => {
     }).then(response => response.json());
 };
 
-export const listEntries = async () => {
-    return api.get('records/entries')
+export const listEntries = async ({ from, to } = {}) => {
+    const searchParams = [];
+    if (from) {
+        searchParams.push(['filter', `start_time,ge,${from}`]);
+    }
+    if (to) {
+        searchParams.push(['filter', `end_time,le,${to}`]);
+    }
+    return api.get('records/entries', { searchParams })
         .then(response => response.json())
         .then(data => data.records);
 };
