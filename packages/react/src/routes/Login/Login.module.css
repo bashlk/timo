@@ -1,0 +1,11 @@
+.login__title {
+  margin-bottom: 32px;
+}
+
+.login__form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 360px;
+  gap: 16px;
+}

@@ -2,6 +2,11 @@ import { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { login } from '@timer-app/common/api';
 import { UserContext } from '@timer-app/common/context/UserContextProvider';
+import Container from '@timer-app/common/components/Container/Container';
+import Input from '@timer-app/common/components/Input';
+import Button from '@timer-app/common/components/Button';
+import Title from '@timer-app/common/components/Title';
+import styles from './Login.module.css';
 
 const Login = ({ history }) => {
     const user = useContext(UserContext);
@@ -27,15 +32,15 @@ const Login = ({ history }) => {
     };
 
     return (
-        <div>
-            <h1>Login</h1>
-            <form action="" onSubmit={handleFormSubmit}>
-                <input name="username" type="text" placeholder="Username" required />
-                <input name="password" type="password" placeholder="Password" required />
-                <button type="submit">Login</button>
+        <Container>
+            <Title className={styles['login__title']}>Login</Title>
+            <form className={styles['login__form']} action="" onSubmit={handleFormSubmit}>
+                <Input name="username" type="text" placeholder="Username" required />
+                <Input name="password" type="password" placeholder="Password" required />
+                <Button type="submit">Login</Button>
                 {loginError && <p>{loginError}</p>}
             </form>
-        </div>
+        </Container>
     );
 };
 
