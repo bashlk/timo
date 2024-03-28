@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { login } from '@timer-app/common/api';
 import { UserContext } from '@timer-app/common/context/UserContextProvider';
-import Container from '@timer-app/common/components/Container/Container';
+import Container from '@timer-app/common/components/Container';
 import Input from '@timer-app/common/components/Input';
 import Button from '@timer-app/common/components/Button';
 import Title from '@timer-app/common/components/Title';

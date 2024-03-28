@@ -1,5 +1,10 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import styles from './Entry.module.css';
+import IconButton from '../IconButton';
+import { Icons } from '../IconButton/IconButton';
+import Input from '../Input';
+import formatDuration from '../../utils/formatDuration';
 
 const Entry = ({ id, description, start_time, end_time, onEdit = () => {}, onDelete = () => {} }) => {
     const [editable, setEditable] = useState(false);
@@ -31,24 +36,39 @@ const Entry = ({ id, description, start_time, end_time, onEdit = () => {}, onDel
 
     if (!editable) {
         return (
-            <div>
-                <span>{description} {start_time.slice(11, 19)} - {end_time.slice(11, 19)}</span>
-                <button onClick={handleEditClick}>Edit</button>
-                <button onClick={handleDeleteClick}>Delete</button>
+            <div className={styles['entry']}>
+                <div className={styles['entry__left']}>
+                    <div className={styles['entry__description']}>{description}</div>
+                    <div className={styles['entry__dates']}>
+                        {start_time.slice(11, 19)}
+                        {' - '}
+                        {end_time.slice(11, 19)}
+                        {' '}
+                        ({formatDuration(new Date(new Date(end_time) - new Date(start_time)))})
+                    </div>
+                </div>
+                <div className={styles['entry__right']}>
+                    <IconButton icon={Icons.EDIT} onClick={handleEditClick} />
+                    <IconButton icon={Icons.DELETE} onClick={handleDeleteClick} />
+                </div>
             </div>
         );
     }
 
     return (
-        <div>
-            <form action="" onSubmit={handleSaveClick}>
-                <input name="description" type="text" defaultValue={description} />
-                <input name="start_time" type="datetime-local" defaultValue={start_time} />
-                <input name="end_time" type="datetime-local" defaultValue={end_time} />
-                <button type="submit">Save</button>
-                <button onClick={handleCancelClick}>Cancel</button>
-            </form>
-        </div>
+        <form className={styles['entry']} action="" onSubmit={handleSaveClick}>
+            <div className={styles['entry__left']}>
+                <Input name="description" type="text" defaultValue={description} />
+                <div className={styles['entry__date-inputs']}>
+                    <Input className={styles['entry__date-input']} name="start_time" type="datetime-local" defaultValue={start_time} />
+                    <Input className={styles['entry__date-input']} name="end_time" type="datetime-local" defaultValue={end_time} />
+                </div>
+            </div>
+            <div className={styles['entry__right']}>
+                <IconButton type="submit" icon={Icons.SAVE} />
+                <IconButton icon={Icons.UNDO} onClick={handleCancelClick} />
+            </div>
+        </form>
     );
 };
 

@@ -5,11 +5,12 @@
     border-radius: 4px;
     font-size: 16px;
     cursor: pointer;
-    border: none;
 }
 
 .button--primary {
     background-color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+
 }
 
 .button--primary:hover {

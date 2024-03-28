@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { createEntry } from '@timer-app/common/api';
 import Timer from '@timer-app/common/components/Timer';
-import Container from '@timer-app/common/components/Container/Container';
+import Container from '@timer-app/common/components/Container';
 import Title from '@timer-app/common/components/Title';
 import Input from '@timer-app/common/components/Input';
 import Button from '@timer-app/common/components/Button';
 import StatusMessage from '@timer-app/common/components/StatusMessage';
-import styles from './LogTime.module.css';
 import { ButtonVariants } from '@timer-app/common/components/Button/Button';
+import styles from './LogTime.module.css';
 
 const TimerState = {
     ACTIVE: 'active',

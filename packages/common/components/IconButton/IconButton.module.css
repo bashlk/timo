@@ -1,0 +1,17 @@
+.icon-button {
+    border: none;
+    background-color: transparent;
+    padding: 4px;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+}
+
+.icon-button:hover {
+    background-color: var(--color-secondary-lite);
+}
+
+.icon-button__icon {
+    stroke: var(--color-primary);
+}

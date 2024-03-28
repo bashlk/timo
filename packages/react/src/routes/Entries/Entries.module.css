@@ -1,0 +1,43 @@
+.entries__body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 100%;
+}
+
+.entries__filters {
+    margin-top: 16px;
+    display: flex;
+    gap: 8px;
+}
+
+.entries__total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.entries__total-label {
+    margin: 0;
+    font-size: 18px;
+}
+
+.entries__day {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.entries__day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.entries__day-name {
+    margin: 0;
+    font-size: 18px;
+}

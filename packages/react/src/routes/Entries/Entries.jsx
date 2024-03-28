@@ -1,9 +1,14 @@
 import { useEffect, useState, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { listEntries, updateEntry, deleteEntry } from '@timer-app/common/api';
-import Tabs from '@timer-app/common/components/Tabs';
 import Entry from '@timer-app/common/components/Entry';
-import { TABS } from '../../constants';
+import Container from '@timer-app/common/components/Container';
+import Title from '@timer-app/common/components/Title';
+import Input from '@timer-app/common/components/Input';
+import Button from '@timer-app/common/components/Button';
+import StatusMessage from '@timer-app/common/components/StatusMessage';
+import formatDuration from '@timer-app/common/utils/formatDuration';
+import styles from './Entries.module.css';
 
 const getTotalDuration = (entries) => {
     return entries.reduce((total, entry) => {
@@ -68,25 +73,27 @@ const Entries = ({ history }) => {
     };
 
     return (
-        <div>
-            <h1>Entries</h1>
+        <Container>
+            <Title>Entries</Title>
             {entries ? (
-                <>
-                    <form ref={formRef} action="" onSubmit={handleFilter}>
-                        <label htmlFor="from">From:</label>
-                        <input type="datetime-local" name="from" />
-                        <label htmlFor="to">To:</label>
-                        <input type="datetime-local" name="to" />
-                        <button type="submit">Filter</button>
-                        {filtered && (
-                            <button onClick={handleFilterReset}>Reset</button>
-                        )}
+                <div className={styles['entries__body']}>
+                    <form className={styles['entries__filters']} ref={formRef} action="" onSubmit={handleFilter}>
+                        <Input type="datetime-local" name="from" />
+                        <Input type="datetime-local" name="to" />
+                        <Button type="submit">Filter</Button>
                     </form>
-                    {Object.entries(getEntriesGroupedByDate(entries)).map(([date, entries]) => (
-                        <div key={date}>
-                            <h2>{date}</h2>
+                    <div className={styles['entries__total-row']}>
+                        <h2 className={styles['entries__total-label']}>Total</h2>
+                        <div>{formatDuration(getTotalDuration(entries))}</div>
+                    </div>
+                    {Object.entries(getEntriesGroupedByDate(entries)).map(([date, dayEntries]) => (
+                        <div className={styles['entries__day']} key={date}>
+                            <div className={styles['entries__day-header']}>
+                                <h2 className={styles['entries__day-name']}>{date}</h2>
+                                <div>{formatDuration(getTotalDuration(dayEntries))}</div>
+                            </div>
                             {/* Entries are descending after being grouped, reverse them */}
-                            {entries.toReversed().map((entry) => (
+                            {dayEntries.toReversed().map((entry) => (
                                 <Entry
                                     key={entry.id}
                                     id={entry.id}
@@ -97,22 +104,13 @@ const Entries = ({ history }) => {
                                     onDelete={handleDelete}
                                 />
                             ))}
-                            <div>
-                                <b>Total: </b>
-                                {new Date(getTotalDuration(entries)).toISOString().slice(11, 19)}
-                            </div>
                         </div>
                     ))}
-                    <p>
-                        <b>Total: </b>
-                        {new Date(getTotalDuration(entries)).toISOString().slice(11, 19)}
-                    </p>
-                </>
+                </div>
             ) : (
-                <p>Loading...</p>
+                <StatusMessage message="Loading" />
             )}
-            <Tabs tabs={TABS} history={history} />
-        </div>
+        </Container>
     );
 };
 
