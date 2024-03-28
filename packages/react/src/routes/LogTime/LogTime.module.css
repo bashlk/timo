@@ -15,3 +15,7 @@
     justify-content: center;
     gap: 8px;
 }
+
+.log-time__entries {
+    margin-top: 32px;
+}

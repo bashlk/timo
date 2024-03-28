@@ -5,10 +5,18 @@
     max-width: 100%;
 }
 
+.entries__new {
+    text-align: center;
+    margin: 16px 0;
+}
+
 .entries__filters {
-    margin-top: 16px;
     display: flex;
     gap: 8px;
+}
+
+.entries__message {
+    text-align: center;
 }
 
 .entries__total-row {

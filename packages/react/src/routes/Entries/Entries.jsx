@@ -9,6 +9,7 @@ import Button from '@timer-app/common/components/Button';
 import StatusMessage from '@timer-app/common/components/StatusMessage';
 import formatDuration from '@timer-app/common/utils/formatDuration';
 import styles from './Entries.module.css';
+import { ButtonVariants } from '@timer-app/common/components/Button/Button';
 
 const getTotalDuration = (entries) => {
     return entries.reduce((total, entry) => {
@@ -30,14 +31,24 @@ const getEntriesGroupedByDate = (entries) => {
     }, {});
 };
 
+const getDateString = (date) => {
+    return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, -8);
+};
+
+const now = new Date();
+const firstDateOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+const lastDateOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+
 const Entries = ({ history }) => {
     const [entries, setEntries] = useState(null);
-    const [filtered, setFiltered] = useState(false);
     const formRef = createRef(null);
 
     useEffect(() => {
         if (entries === null) {
-            listEntries().then((entries) => {
+            listEntries({
+                from: firstDateOfMonth.toISOString(),
+                to: lastDateOfMonth.toISOString()
+            }).then((entries) => {
                 setEntries(entries);
             });
         }
@@ -61,55 +72,53 @@ const Entries = ({ history }) => {
         const from = formData.get('from');
         const to = formData.get('to');
         listEntries({ from, to }).then((entries) => {
-            setFiltered(true);
             setEntries(entries);
         });
     };
 
-    const handleFilterReset = () => {
-        formRef.current.reset();
-        setFiltered(false);
-        setEntries(null);
-    };
-
     return (
         <Container>
-            <Title>Entries</Title>
-            {entries ? (
-                <div className={styles['entries__body']}>
-                    <form className={styles['entries__filters']} ref={formRef} action="" onSubmit={handleFilter}>
-                        <Input type="datetime-local" name="from" />
-                        <Input type="datetime-local" name="to" />
-                        <Button type="submit">Filter</Button>
-                    </form>
-                    <div className={styles['entries__total-row']}>
-                        <h2 className={styles['entries__total-label']}>Total</h2>
-                        <div>{formatDuration(getTotalDuration(entries))}</div>
-                    </div>
-                    {Object.entries(getEntriesGroupedByDate(entries)).map(([date, dayEntries]) => (
-                        <div className={styles['entries__day']} key={date}>
-                            <div className={styles['entries__day-header']}>
-                                <h2 className={styles['entries__day-name']}>{date}</h2>
-                                <div>{formatDuration(getTotalDuration(dayEntries))}</div>
-                            </div>
-                            {/* Entries are descending after being grouped, reverse them */}
-                            {dayEntries.toReversed().map((entry) => (
-                                <Entry
-                                    key={entry.id}
-                                    id={entry.id}
-                                    description={entry.description}
-                                    start_time={entry.start_time}
-                                    end_time={entry.end_time}
-                                    onEdit={handleEdit}
-                                    onDelete={handleDelete}
-                                />
-                            ))}
-                        </div>
-                    ))}
+            <Title>Time entries</Title>
+            <div className={styles['entries__body']}>
+                <div className={styles['entries__new']}>
+                    <Button onClick={() => history.push('/')}>New Entry</Button>
                 </div>
-            ) : (
-                <StatusMessage message="Loading" />
-            )}
+                <form className={styles['entries__filters']} ref={formRef} action="" onSubmit={handleFilter}>
+                    <Input type="datetime-local" name="from" defaultValue={getDateString(firstDateOfMonth)} />
+                    <Input type="datetime-local" name="to" defaultValue={getDateString(lastDateOfMonth)} />
+                    <Button variant={ButtonVariants.SECONDARY} type="submit">Filter</Button>
+                </form>
+                {entries === null && <StatusMessage className={styles['entries__message']} message="Loading" />}
+                {entries?.length === 0 && <StatusMessage className={styles['entries__message']} message="No entries found" />}
+                {entries?.length > 0 && (
+                    <>
+                        <div className={styles['entries__total-row']}>
+                            <h2 className={styles['entries__total-label']}>Total</h2>
+                            <div>{formatDuration(getTotalDuration(entries))}</div>
+                        </div>
+                        {Object.entries(getEntriesGroupedByDate(entries)).map(([date, dayEntries]) => (
+                            <div className={styles['entries__day']} key={date}>
+                                <div className={styles['entries__day-header']}>
+                                    <h2 className={styles['entries__day-name']}>{date}</h2>
+                                    <div>{formatDuration(getTotalDuration(dayEntries))}</div>
+                                </div>
+                                {/* Entries are descending after being grouped, reverse them */}
+                                {dayEntries.toReversed().map((entry) => (
+                                    <Entry
+                                        key={entry.id}
+                                        id={entry.id}
+                                        description={entry.description}
+                                        start_time={entry.start_time}
+                                        end_time={entry.end_time}
+                                        onEdit={handleEdit}
+                                        onDelete={handleDelete}
+                                    />
+                                ))}
+                            </div>
+                        ))}
+                    </>
+                )}
+            </div>
         </Container>
     );
 };

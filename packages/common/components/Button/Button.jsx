@@ -7,7 +7,7 @@ export const ButtonVariants = {
     SECONDARY: 'secondary'
 };
 
-const Button = ({ children, variant = ButtonVariants.PRIMARY, ...buttonProps }) => (
+const Button = ({ children, variant = ButtonVariants.PRIMARY, className, ...buttonProps }) => (
     <button
         className={(
             clsx(
@@ -15,7 +15,8 @@ const Button = ({ children, variant = ButtonVariants.PRIMARY, ...buttonProps }) 
                 {
                     [styles['button--primary']]: variant === ButtonVariants.PRIMARY,
                     [styles['button--secondary']]: variant === ButtonVariants.SECONDARY
-                }
+                },
+                className
             )
         )}
         {...buttonProps}
@@ -26,6 +27,7 @@ const Button = ({ children, variant = ButtonVariants.PRIMARY, ...buttonProps }) 
 
 Button.propTypes = {
     children: PropTypes.node.isRequired,
+    className: PropTypes.string,
     variant: PropTypes.oneOf(Object.values(ButtonVariants))
 };
 
