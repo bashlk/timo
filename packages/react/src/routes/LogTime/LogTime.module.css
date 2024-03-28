@@ -1,0 +1,17 @@
+.log-time__center {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 32px;
+}
+
+.log-time__status {
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.log-time__buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { listEntries, updateEntry, deleteEntry } from '@timer-app/common/api';
 import Tabs from '@timer-app/common/components/Tabs';
 import Entry from '@timer-app/common/components/Entry';
-import { TABS } from '../constants';
+import { TABS } from '../../constants';
 
 const getTotalDuration = (entries) => {
     return entries.reduce((total, entry) => {

@@ -2,10 +2,10 @@
 
 :root {
   --color-primary: #141414;
-  --color-secondary: #333;
-  --color-tertiary: #ccc;
+  --color-secondary: #ADB5BD;
+  --color-tertiary: #CED4DA;
   --color-heading: #141414;
-  --color-text: #333;
+  --color-text: #141414;
 }
 
 body {

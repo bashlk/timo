@@ -1,0 +1,8 @@
+.timer {
+    font-size: 60px;
+    font-weight: bold;
+    color: var(--color-primary);
+    /* Constrain width to prevent different character from changing element width */
+    width: 270px;
+    text-align: center;
+}

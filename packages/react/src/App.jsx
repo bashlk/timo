@@ -3,8 +3,8 @@ import ProtectedRoute from '@timer-app/common/components/ProtectedRoute';
 import UserContextProvider from '@timer-app/common/context/UserContextProvider';
 
 import Login from './routes/Login/Login';
-import Timer from './routes/Timer';
-import Entries from './routes/Entries';
+import LogTime from './routes/LogTime/LogTime';
+import Entries from './routes/Entries/Entries';
 import TopBar from '@timer-app/common/components/TopBar';
 
 const routes = [
@@ -27,7 +27,7 @@ const App = () => {
                         case 'Timer':
                             return (
                                 <ProtectedRoute>
-                                    <Timer history={history} />
+                                    <LogTime history={history} />
                                 </ProtectedRoute>
                             );
                         case 'Entries':

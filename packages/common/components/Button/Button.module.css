@@ -1,5 +1,4 @@
-.button {
-    background-color: var(--color-primary);
+.button {    
     color: white;
     font-weight: bold;
     padding: 12px 24px;
@@ -9,6 +8,18 @@
     border: none;
 }
 
-.button:hover {
+.button--primary {
+    background-color: var(--color-primary);
+}
+
+.button--primary:hover {
+    background-color: var(--color-tertiary);
+}
+
+.button--secondary {
     background-color: var(--color-secondary);
+}
+
+.button--secondary:hover {
+    background-color: var(--color-tertiary);
 }
