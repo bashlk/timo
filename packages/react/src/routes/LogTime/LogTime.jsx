@@ -106,7 +106,7 @@ const LogTime = ({ history }) => {
                     </>
                 )}
             </div>
-            <Button className={styles['log-time__entries']} variant={ButtonVariants.SECONDARY} onClick={() => history.push('/entries')}>
+            <Button className={styles['log-time__entries']} variant={ButtonVariants.SECONDARY} onClick={() => history.push('/')}>
                 View time entries
             </Button>
         </Container>

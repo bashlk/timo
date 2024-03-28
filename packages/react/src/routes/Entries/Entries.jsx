@@ -81,7 +81,7 @@ const Entries = ({ history }) => {
             <Title>Time entries</Title>
             <div className={styles['entries__body']}>
                 <div className={styles['entries__new']}>
-                    <Button onClick={() => history.push('/')}>New Entry</Button>
+                    <Button onClick={() => history.push('/timer')}>New Entry</Button>
                 </div>
                 <form className={styles['entries__filters']} ref={formRef} action="" onSubmit={handleFilter}>
                     <Input type="datetime-local" name="from" defaultValue={getDateString(firstDateOfMonth)} />

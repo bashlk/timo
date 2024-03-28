@@ -8,10 +8,10 @@ import Entries from './routes/Entries/Entries';
 import TopBar from '@timer-app/common/components/TopBar';
 
 const routes = [
-    { path: '/', name: 'Timer' },
+    { path: '/', name: 'Entries' },
     { path: '/login', name: 'Login' },
     { path: '/register', name: 'Register' },
-    { path: '/entries', name: 'Entries' }
+    { path: '/timer', name: 'Timer' }
 ];
 
 const App = () => {
