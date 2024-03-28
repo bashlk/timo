@@ -52,9 +52,9 @@ const LogTime = ({ history }) => {
                 start_time: `@${endTimestamp - duration}`,
                 end_time: `@${endTimestamp}`
             }).then(() => {
-                setStatusMessage('Time entry saved successfully');
+                setStatusMessage('Time logged successfully');
             }).catch(() => {
-                setStatusMessage('Error saving time entry');
+                setStatusMessage('Error saving time log');
             });
         }
     });
