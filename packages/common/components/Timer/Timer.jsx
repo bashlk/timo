@@ -8,7 +8,6 @@ const Timer = ({ value, active, onPaused }) => {
     useEffect(() => {
         let interval;
         if (active) {
-            setCurrentValue(value);
             interval = setInterval(() => {
                 setCurrentValue((val) => val + 1);
             }, 1000);
@@ -21,6 +20,10 @@ const Timer = ({ value, active, onPaused }) => {
             onPaused(currentValue);
         }
     }, [active, currentValue, onPaused]);
+
+    useEffect(() => {
+        setCurrentValue(value);
+    }, [value]);
 
     // Format duration to HH:MM:SS
     const formattedValue = new Date(currentValue * 1000).toISOString().slice(11, 19);
