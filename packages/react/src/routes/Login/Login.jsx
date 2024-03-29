@@ -12,7 +12,7 @@ import styles from './Login.module.css';
 
 const Login = ({ history }) => {
     const user = useContext(UserContext);
-    const [loginError, setLoginError] = useState(null);
+    const [statusMessage, setStatusMessage] = useState(null);
 
     useEffect(() => {
         if (user.status === 'authenticated') {
@@ -23,16 +23,25 @@ const Login = ({ history }) => {
     const handleFormSubmit = (e) => {
         e.preventDefault();
         const action = e.nativeEvent.submitter.value;
+
         const formData = new FormData(e.target);
         const username = formData.get('username');
         const password = formData.get('password');
+
+        setStatusMessage('Loading...');
 
         if (action == 'login') {
             login(username, password).then((response) => {
                 user.setAuthenticatedUser(response);
                 history.replace('/');
-            }).catch(() => {
-                setLoginError('Invalid username or password');
+            }).catch((error) => {
+                if (error instanceof TypeError) {
+                    setStatusMessage('Failed to connect to server. Please try again later.');
+                } else {
+                    error.response.json().then((data) => {
+                        setStatusMessage(data.message);
+                    });
+                }
             });
         }
 
@@ -40,8 +49,14 @@ const Login = ({ history }) => {
             register(username, password).then((response) => {
                 user.setAuthenticatedUser(response);
                 history.replace('/');
-            }).catch(() => {
-                setLoginError('Username already exists');
+            }).catch((error) => {
+                if (error instanceof TypeError) {
+                    setStatusMessage('Failed to connect to server. Please try again later.');
+                } else {
+                    error.response.json().then((data) => {
+                        setStatusMessage(data.message);
+                    });
+                }
             });
         }
     };
@@ -52,7 +67,7 @@ const Login = ({ history }) => {
             <form className={styles['login__form']} action="" onSubmit={handleFormSubmit}>
                 <Input name="username" type="text" placeholder="Username" required />
                 <Input name="password" type="password" placeholder="Password" required />
-                {loginError && <StatusMessage className={styles['login__status']} message={loginError} />}
+                {statusMessage && <StatusMessage className={styles['login__status']} message={statusMessage} />}
                 <div className={styles['login__button']}>
                     <Button value="login" type="submit">Login</Button>
                     <Button variant={ButtonVariants.SECONDARY} value="register" type="submit">Register</Button>
