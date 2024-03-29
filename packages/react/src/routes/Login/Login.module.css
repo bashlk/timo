@@ -9,3 +9,13 @@
   max-width: 360px;
   gap: 16px;
 }
+
+.login__status {
+  text-align: center;
+}
+
+.login__button {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
