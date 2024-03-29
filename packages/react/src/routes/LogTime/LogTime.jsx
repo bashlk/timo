@@ -53,8 +53,14 @@ const LogTime = ({ history }) => {
                 end_time: `@${endTimestamp}`
             }).then(() => {
                 setStatusMessage('Time logged successfully');
-            }).catch(() => {
-                setStatusMessage('Error saving time log');
+            }).catch((error) => {
+                if (error instanceof TypeError) {
+                    setStatusMessage('Failed to connect to server. Please try again later.');
+                } else {
+                    error.response.json().then((data) => {
+                        setStatusMessage(data.message);
+                    });
+                }
             });
         }
     });
