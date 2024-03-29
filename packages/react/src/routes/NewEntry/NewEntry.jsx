@@ -8,7 +8,7 @@ import Input from '@timer-app/common/components/Input';
 import Button from '@timer-app/common/components/Button';
 import StatusMessage from '@timer-app/common/components/StatusMessage';
 import { ButtonVariants } from '@timer-app/common/components/Button/Button';
-import styles from './LogTime.module.css';
+import styles from './NewEntry.module.css';
 
 const TimerState = {
     ACTIVE: 'active',
@@ -43,6 +43,10 @@ const LogTime = ({ history }) => {
         setDescription(e.target.value);
     };
 
+    const handleViewEntriesClick = () => {
+        history.push('/');
+    };
+
     useEffect(() => {
         if (timerState === TimerState.STOPPED && duration > 0) {
             setDuration(0);
@@ -67,8 +71,8 @@ const LogTime = ({ history }) => {
 
     return (
         <Container>
-            <Title>Log time</Title>
-            <div className={styles['log-time__center']}>
+            <Title>New time entry</Title>
+            <div className={styles['new-entry__center']}>
                 <Timer
                     value={duration}
                     active={timerState === TimerState.ACTIVE}
@@ -83,9 +87,9 @@ const LogTime = ({ history }) => {
             </div>
             <StatusMessage
                 message={statusMessage}
-                className={styles['log-time__status']}
+                className={styles['new-entry__status']}
             />
-            <div className={styles['log-time__buttons']}>
+            <div className={styles['new-entry__buttons']}>
                 {(timerState === TimerState.STOPPED && duration === 0) && (
                     <Button onClick={handleStartClick}>
                         Start
@@ -112,7 +116,7 @@ const LogTime = ({ history }) => {
                     </>
                 )}
             </div>
-            <Button className={styles['log-time__entries']} variant={ButtonVariants.SECONDARY} onClick={() => history.push('/')}>
+            <Button className={styles['new-entry__entries']} variant={ButtonVariants.SECONDARY} onClick={handleViewEntriesClick}>
                 View time entries
             </Button>
         </Container>

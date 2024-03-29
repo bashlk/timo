@@ -1,21 +1,21 @@
-.log-time__center {
+.new-entry__center {
     display: flex;
     flex-direction: column;
     gap: 12px;
     margin-top: 32px;
 }
 
-.log-time__status {
+.new-entry__status {
     margin-top: 12px;
     margin-bottom: 12px;
 }
 
-.log-time__buttons {
+.new-entry__buttons {
     display: flex;
     justify-content: center;
     gap: 8px;
 }
 
-.log-time__entries {
+.new-entry__entries {
     margin-top: 32px;
 }

@@ -3,15 +3,15 @@ import ProtectedRoute from '@timer-app/common/components/ProtectedRoute';
 import UserContextProvider from '@timer-app/common/context/UserContextProvider';
 
 import Login from './routes/Login/Login';
-import LogTime from './routes/LogTime/LogTime';
 import Entries from './routes/Entries/Entries';
+import NewEntry from './routes/NewEntry/NewEntry';
 import TopBar from '@timer-app/common/components/TopBar';
 
 const routes = [
     { path: '/', name: 'Entries' },
     { path: '/login', name: 'Login' },
     { path: '/register', name: 'Register' },
-    { path: '/timer', name: 'Timer' }
+    { path: '/new', name: 'NewEntry' }
 ];
 
 const App = () => {
@@ -24,10 +24,10 @@ const App = () => {
                         switch (routeName) {
                         case 'Login':
                             return <Login history={history} />;
-                        case 'Timer':
+                        case 'NewEntry':
                             return (
                                 <ProtectedRoute>
-                                    <LogTime history={history} />
+                                    <NewEntry history={history} />
                                 </ProtectedRoute>
                             );
                         case 'Entries':
