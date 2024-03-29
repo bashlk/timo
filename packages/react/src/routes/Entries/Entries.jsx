@@ -55,7 +55,13 @@ const Entries = ({ history }) => {
                 setEntryStatusMessage({ id: updatedEntry.id, message: 'Failed to connect to server. Please try again later.' });
             } else {
                 error.response.json().then((data) => {
-                    setEntryStatusMessage({ id: updatedEntry.id, message: data.message });
+                    if (data.code === 1013) {
+                        if (data.details.end_time) {
+                            setEntryStatusMessage({ id: updatedEntry.id, message: 'End time must be greater than start time.' });
+                        }
+                    } else {
+                        setEntryStatusMessage({ id: updatedEntry.id, message: data.message });
+                    }
                 });
             }
         });
