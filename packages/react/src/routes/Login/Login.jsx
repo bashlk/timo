@@ -16,7 +16,7 @@ const Login = ({ history }) => {
 
     useEffect(() => {
         if (user.status === 'authenticated') {
-            history.replace('/');
+            history.replace('./');
         }
     }, [history, user]);
 
@@ -33,7 +33,7 @@ const Login = ({ history }) => {
         if (action == 'login') {
             login(username, password).then((response) => {
                 user.setAuthenticatedUser(response);
-                history.replace('/');
+                history.replace('./');
             }).catch((error) => {
                 if (error instanceof TypeError) {
                     setStatusMessage('Failed to connect to server. Please try again later.');
@@ -48,7 +48,7 @@ const Login = ({ history }) => {
         if (action == 'register') {
             register(username, password).then((response) => {
                 user.setAuthenticatedUser(response);
-                history.replace('/');
+                history.replace('./');
             }).catch((error) => {
                 if (error instanceof TypeError) {
                     setStatusMessage('Failed to connect to server. Please try again later.');

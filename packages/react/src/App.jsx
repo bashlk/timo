@@ -19,7 +19,7 @@ const App = () => {
         <>
             <TopBar />
             <UserContextProvider>
-                <Router routes={routes}>
+                <Router base="/react" routes={routes}>
                     {(routeName, history) => {
                         switch (routeName) {
                         case 'Login':

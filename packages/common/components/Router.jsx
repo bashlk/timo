@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import history from 'history/browser';
 
-const Router = ({ routes, children }) => {
+const Router = ({ base = '', routes, children }) => {
     const [currentPath, setCurrentPath] = useState(history.location.pathname);
 
     useEffect(() => {
@@ -11,7 +11,7 @@ const Router = ({ routes, children }) => {
         });
     });
 
-    const currentRoute = routes.find(route => route.path === currentPath);
+    const currentRoute = routes.find(route => `${base}${route.path}` === currentPath);
 
     if (!currentRoute) {
         return children(null);
@@ -27,7 +27,8 @@ Router.propTypes = {
             name: PropTypes.string.isRequired
         })
     ).isRequired,
-    children: PropTypes.func.isRequired
+    children: PropTypes.func.isRequired,
+    base: PropTypes.string
 };
 
 export default Router;

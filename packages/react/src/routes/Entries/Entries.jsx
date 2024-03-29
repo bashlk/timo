@@ -114,7 +114,7 @@ const Entries = ({ history }) => {
     };
 
     const handleNewClick = () => {
-        history.push('/new');
+        history.push('./new');
     };
 
     useEffect(() => {

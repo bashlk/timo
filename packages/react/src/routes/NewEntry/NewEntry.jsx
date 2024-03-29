@@ -44,7 +44,7 @@ const LogTime = ({ history }) => {
     };
 
     const handleViewEntriesClick = () => {
-        history.push('/');
+        history.push('./');
     };
 
     useEffect(() => {
