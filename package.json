@@ -5,7 +5,9 @@
         ]
     },
     "scripts": {
-        "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
+        "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+        "build": "npm run build --workspaces",
+        "prepare-deploy": "node prepare-deploy.js"
     },
     "devDependencies": {
         "eslint": "^8.57.0",
