@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import history from 'history/browser';
 import { UserContext, UserStatus } from '../context/UserContextProvider';
 
-const FALLBACK_ROUTE = '/login';
+const FALLBACK_ROUTE = './login';
 
 const ProtectedRoute = ({ children }) => {
     const user = useContext(UserContext);
