@@ -41,18 +41,8 @@ const lastDateOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 5
 
 const Entries = ({ history }) => {
     const [entries, setEntries] = useState(null);
+    const [statusMessage, setStatusMessage] = useState(null);
     const formRef = createRef(null);
-
-    useEffect(() => {
-        if (entries === null) {
-            listEntries({
-                from: firstDateOfMonth.toISOString(),
-                to: lastDateOfMonth.toISOString()
-            }).then((entries) => {
-                setEntries(entries);
-            });
-        }
-    }, [entries]);
 
     const handleEdit = (updatedEntry) => {
         updateEntry(updatedEntry).then(() => {
@@ -66,15 +56,46 @@ const Entries = ({ history }) => {
         });
     };
 
+    const handleListEntriesResponse = (entries) => {
+        setEntries(entries);
+        if (entries.length === 0) {
+            setStatusMessage('No entries found');
+        } else {
+            setStatusMessage(null);
+        }
+    };
+
+    const handleListEntriesError = (error) => {
+        if (error instanceof TypeError) {
+            setStatusMessage('Failed to connect to server. Please try again later.');
+        } else {
+            error.response.json().then((data) => {
+                setStatusMessage(data.message);
+            });
+        }
+    };
+
     const handleFilter = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const from = formData.get('from');
         const to = formData.get('to');
-        listEntries({ from, to }).then((entries) => {
-            setEntries(entries);
-        });
+        setStatusMessage('Loading...');
+        listEntries({ from, to })
+            .then(handleListEntriesResponse)
+            .catch(handleListEntriesError);
     };
+
+    useEffect(() => {
+        if (entries === null) {
+            setStatusMessage('Loading...');
+            listEntries({
+                from: firstDateOfMonth.toISOString(),
+                to: lastDateOfMonth.toISOString()
+            }).then(handleListEntriesResponse)
+                .catch(handleListEntriesError);
+        }
+    }, [entries]);
 
     return (
         <Container>
@@ -88,8 +109,7 @@ const Entries = ({ history }) => {
                     <Input type="datetime-local" name="to" defaultValue={getDateString(lastDateOfMonth)} />
                     <Button variant={ButtonVariants.SECONDARY} type="submit">Filter</Button>
                 </form>
-                {entries === null && <StatusMessage className={styles['entries__message']} message="Loading" />}
-                {entries?.length === 0 && <StatusMessage className={styles['entries__message']} message="No entries found" />}
+                {statusMessage && <StatusMessage className={styles['entries__message']} message={statusMessage} />}
                 {entries?.length > 0 && (
                     <>
                         <div className={styles['entries__total-row']}>
