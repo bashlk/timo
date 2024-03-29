@@ -42,17 +42,38 @@ const lastDateOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 5
 const Entries = ({ history }) => {
     const [entries, setEntries] = useState(null);
     const [statusMessage, setStatusMessage] = useState(null);
+    const [entryStatusMessage, setEntryStatusMessage] = useState({ id: null, message: null });
     const formRef = createRef(null);
 
     const handleEdit = (updatedEntry) => {
+        setEntryStatusMessage({ id: updatedEntry.id, message: 'Saving...' });
         updateEntry(updatedEntry).then(() => {
             setEntries(null);
+            setEntryStatusMessage({ id: null, message: null });
+        }).catch((error) => {
+            if (error instanceof TypeError) {
+                setEntryStatusMessage({ id: updatedEntry.id, message: 'Failed to connect to server. Please try again later.' });
+            } else {
+                error.response.json().then((data) => {
+                    setEntryStatusMessage({ id: updatedEntry.id, message: data.message });
+                });
+            }
         });
     };
 
     const handleDelete = (entryId) => {
+        setEntryStatusMessage({ id: entryId, message: 'Deleting...' });
         deleteEntry(entryId).then(() => {
             setEntries(null);
+            setEntryStatusMessage({ id: null, message: null });
+        }).catch((error) => {
+            if (error instanceof TypeError) {
+                setEntryStatusMessage({ id: entryId, message: 'Failed to connect to server. Please try again later.' });
+            } else {
+                error.response.json().then((data) => {
+                    setEntryStatusMessage({ id: entryId, message: data.message });
+                });
+            }
         });
     };
 
@@ -132,6 +153,7 @@ const Entries = ({ history }) => {
                                         end_time={entry.end_time}
                                         onEdit={handleEdit}
                                         onDelete={handleDelete}
+                                        status={entryStatusMessage.id === entry.id ? entryStatusMessage.message : null}
                                     />
                                 ))}
                             </div>

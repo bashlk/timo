@@ -5,8 +5,9 @@ import IconButton from '../IconButton';
 import { Icons } from '../IconButton/IconButton';
 import Input from '../Input';
 import formatDuration from '../../utils/formatDuration';
+import StatusMessage from '../StatusMessage';
 
-const Entry = ({ id, description, start_time, end_time, onEdit = () => {}, onDelete = () => {} }) => {
+const Entry = ({ id, description, start_time, end_time, onEdit = () => {}, onDelete = () => {}, status }) => {
     const [editable, setEditable] = useState(false);
 
     const handleSaveClick = (e) => {
@@ -46,6 +47,7 @@ const Entry = ({ id, description, start_time, end_time, onEdit = () => {}, onDel
                         {' '}
                         ({formatDuration(new Date(new Date(end_time) - new Date(start_time)))})
                     </div>
+                    {status && <StatusMessage className={styles['entry__status']} message={status} />}
                 </div>
                 <div className={styles['entry__right']}>
                     <IconButton icon={Icons.EDIT} onClick={handleEditClick} />
@@ -63,6 +65,7 @@ const Entry = ({ id, description, start_time, end_time, onEdit = () => {}, onDel
                     <Input className={styles['entry__date-input']} name="start_time" type="datetime-local" defaultValue={start_time} />
                     <Input className={styles['entry__date-input']} name="end_time" type="datetime-local" defaultValue={end_time} />
                 </div>
+                {status && <StatusMessage className={styles['entry__status']} message={status} />}
             </div>
             <div className={styles['entry__right']}>
                 <IconButton type="submit" icon={Icons.SAVE} />
@@ -78,7 +81,8 @@ Entry.propTypes = {
     start_time: PropTypes.string.isRequired,
     end_time: PropTypes.string.isRequired,
     onEdit: PropTypes.func,
-    onDelete: PropTypes.func
+    onDelete: PropTypes.func,
+    status: PropTypes.string
 };
 
 export default Entry;

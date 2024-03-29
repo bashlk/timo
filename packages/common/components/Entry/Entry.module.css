@@ -37,3 +37,7 @@
 .entry__date-input {
     max-width: 200px;
 }
+
+.entry__status {
+    margin-top: 2px;
+}

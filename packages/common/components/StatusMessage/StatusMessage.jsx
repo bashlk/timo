@@ -9,7 +9,8 @@ const StatusMessage = ({ message, className }) => (
 );
 
 StatusMessage.propTypes = {
-    message: PropTypes.string.isRequired
+    message: PropTypes.string.isRequired,
+    className: PropTypes.string
 };
 
 export default StatusMessage;
