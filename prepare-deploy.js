@@ -4,6 +4,9 @@ const path = require('path');
 const source = path.join(__dirname, 'packages');
 const destination = path.join(__dirname, 'dist');
 
+fs.rmdirSync(destination, { recursive: true });
+fs.mkdirSync(destination, { recursive: true });
+
 fs.readdirSync(source, { withFileTypes: true }).forEach(dirent => {
     if (dirent.isDirectory()) {
         const currentPath = path.join(source, dirent.name);
