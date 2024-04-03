@@ -7,9 +7,8 @@ export default defineConfig({
     server: {
         proxy: {
             '/api': {
-                target: 'https://timer-app-api.frontendundefined.com',
-                changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/api/, '')
+                target: 'https://timer-app.frontendundefined.com/api',
+                changeOrigin: true
             }
         }
     },
