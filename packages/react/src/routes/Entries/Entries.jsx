@@ -136,8 +136,8 @@ const Entries = ({ history }) => {
                     <Button onClick={handleNewClick}>New entry</Button>
                 </div>
                 <form className={styles['entries__filters']} ref={formRef} action="" onSubmit={handleFilter}>
-                    <Input type="datetime-local" name="from" defaultValue={getDateString(firstDateOfMonth)} />
-                    <Input type="datetime-local" name="to" defaultValue={getDateString(lastDateOfMonth)} />
+                    <Input label="Filter entries start time" type="datetime-local" name="from" defaultValue={getDateString(firstDateOfMonth)} />
+                    <Input label="Filter entries end time" type="datetime-local" name="to" defaultValue={getDateString(lastDateOfMonth)} />
                     <Button variant={ButtonVariants.SECONDARY} type="submit">Filter</Button>
                 </form>
                 {statusMessage && <StatusMessage className={styles['entries__message']} message={statusMessage} />}

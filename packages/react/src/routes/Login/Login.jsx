@@ -65,8 +65,8 @@ const Login = ({ history }) => {
         <Container>
             <Title className={styles['login__title']}>Login</Title>
             <form className={styles['login__form']} action="" onSubmit={handleFormSubmit}>
-                <Input name="username" type="text" placeholder="Username" required />
-                <Input name="password" type="password" placeholder="Password" required />
+                <Input label="Username" name="username" type="text" placeholder="Username" required />
+                <Input label="Password" name="password" type="password" placeholder="Password" required />
                 {statusMessage && <StatusMessage className={styles['login__status']} message={statusMessage} />}
                 <div className={styles['login__button']}>
                     <Button value="login" type="submit">Login</Button>

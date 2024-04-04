@@ -60,10 +60,10 @@ const Entry = ({ id, description, start_time, end_time, onEdit = () => {}, onDel
     return (
         <form className={styles['entry']} action="" onSubmit={handleSaveClick}>
             <div className={styles['entry__left']}>
-                <Input name="description" type="text" defaultValue={description} />
+                <Input label="Description" name="description" type="text" defaultValue={description} />
                 <div className={styles['entry__date-inputs']}>
-                    <Input className={styles['entry__date-input']} name="start_time" type="datetime-local" defaultValue={start_time} />
-                    <Input className={styles['entry__date-input']} name="end_time" type="datetime-local" defaultValue={end_time} />
+                    <Input label="Start time" className={styles['entry__date-input']} name="start_time" type="datetime-local" defaultValue={start_time} />
+                    <Input label="End time" className={styles['entry__date-input']} name="end_time" type="datetime-local" defaultValue={end_time} />
                 </div>
                 {status && <StatusMessage className={styles['entry__status']} message={status} />}
             </div>
