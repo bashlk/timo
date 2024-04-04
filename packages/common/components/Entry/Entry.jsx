@@ -50,8 +50,8 @@ const Entry = ({ id, description, start_time, end_time, onEdit = () => {}, onDel
                     {status && <StatusMessage className={styles['entry__status']} message={status} />}
                 </div>
                 <div className={styles['entry__right']}>
-                    <IconButton icon={Icons.EDIT} onClick={handleEditClick} />
-                    <IconButton icon={Icons.DELETE} onClick={handleDeleteClick} />
+                    <IconButton label="Edit" icon={Icons.EDIT} onClick={handleEditClick} />
+                    <IconButton label="Delete" icon={Icons.DELETE} onClick={handleDeleteClick} />
                 </div>
             </div>
         );
@@ -68,8 +68,8 @@ const Entry = ({ id, description, start_time, end_time, onEdit = () => {}, onDel
                 {status && <StatusMessage className={styles['entry__status']} message={status} />}
             </div>
             <div className={styles['entry__right']}>
-                <IconButton type="submit" icon={Icons.SAVE} />
-                <IconButton icon={Icons.UNDO} onClick={handleCancelClick} />
+                <IconButton label="Save" type="submit" icon={Icons.SAVE} />
+                <IconButton label="Cancel" icon={Icons.UNDO} onClick={handleCancelClick} />
             </div>
         </form>
     );

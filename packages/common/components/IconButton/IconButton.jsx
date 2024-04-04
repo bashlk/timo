@@ -9,16 +9,17 @@ export const Icons = {
     'UNDO': IconArrowBackUp
 };
 
-const IconButton = ({ icon: IconComponent, ...buttonProps }) => {
+const IconButton = ({ icon: IconComponent, label, ...buttonProps }) => {
     return (
-        <button className={styles['icon-button']} {...buttonProps}>
+        <button className={styles['icon-button']} aria-label={label} {...buttonProps}>
             <IconComponent className={styles['icon-button__icon']} size={24} />
         </button>
     );
 };
 
 IconButton.propTypes = {
-    icon: PropTypes.object.isRequired
+    icon: PropTypes.object.isRequired,
+    label: PropTypes.string.isRequired
 };
 
 export default IconButton;
