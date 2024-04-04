@@ -19,32 +19,41 @@ const routes = [
 const App = () => {
     return (
         <>
-            <TopBar />
             <UserContextProvider>
                 <Router base="/react" routes={routes}>
                     {(routeName, history) => {
+                        let pageComponent = null;
                         switch (routeName) {
                         case 'Login':
-                            return <Login history={history} />;
+                            pageComponent = <Login history={history} />;
+                            break;
                         case 'NewEntry':
-                            return (
+                            pageComponent = (
                                 <ProtectedRoute>
                                     <NewEntry history={history} />
                                 </ProtectedRoute>
                             );
+                            break;
                         case 'Entries':
-                            return (
+                            pageComponent = (
                                 <ProtectedRoute>
                                     <Entries history={history} />
                                 </ProtectedRoute>
                             );
+                            break;
                         default:
-                            return (
+                            pageComponent = (
                                 <Container>
                                     <Title>Page not found</Title>
                                 </Container>
                             );
                         }
+                        return (
+                            <>
+                                <TopBar onIconClick={() => history.push('./')} />
+                                {pageComponent}
+                            </>
+                        );
                     }}
                 </Router>
             </UserContextProvider>

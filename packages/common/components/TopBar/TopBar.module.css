@@ -5,3 +5,7 @@
     width: 100%;
     padding: 12px 0;
 }
+
+.top-bar__icon {
+    cursor: pointer;
+}
