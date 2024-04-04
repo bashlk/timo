@@ -6,6 +6,8 @@ import Login from './routes/Login/Login';
 import Entries from './routes/Entries/Entries';
 import NewEntry from './routes/NewEntry/NewEntry';
 import TopBar from '@timer-app/common/components/TopBar';
+import Container from '@timer-app/common/components/Container';
+import Title from '@timer-app/common/components/Title';
 
 const routes = [
     { path: '/', name: 'Entries' },
@@ -37,7 +39,11 @@ const App = () => {
                                 </ProtectedRoute>
                             );
                         default:
-                            return <h1>404</h1>;
+                            return (
+                                <Container>
+                                    <Title>Page not found</Title>
+                                </Container>
+                            );
                         }
                     }}
                 </Router>
