@@ -28,7 +28,7 @@
 }
 
 .entries__total-label {
-    margin: 0;
+    font-weight: bold;
     font-size: 18px;
 }
 
@@ -46,6 +46,5 @@
 }
 
 .entries__day-name {
-    margin: 0;
     font-size: 18px;
 }
