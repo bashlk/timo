@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { createEntry } from '@timer-app/common/api';
-import Timer from '@timer-app/common/components/Timer';
-import Container from '@timer-app/common/components/Container';
-import Title from '@timer-app/common/components/Title';
-import Input from '@timer-app/common/components/Input';
-import Button from '@timer-app/common/components/Button';
-import StatusMessage from '@timer-app/common/components/StatusMessage';
-import { ButtonVariants } from '@timer-app/common/components/Button/Button';
+import { createEntry } from '@timo/common/api';
+import Timer from '@timo/common/components/Timer';
+import Container from '@timo/common/components/Container';
+import Title from '@timo/common/components/Title';
+import Input from '@timo/common/components/Input';
+import Button from '@timo/common/components/Button';
+import StatusMessage from '@timo/common/components/StatusMessage';
+import { ButtonVariants } from '@timo/common/components/Button/Button';
 import styles from './NewEntry.module.css';
 
 const TimerState = {

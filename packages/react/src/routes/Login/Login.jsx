@@ -1,13 +1,13 @@
 import { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { login, register } from '@timer-app/common/api';
-import { UserContext } from '@timer-app/common/context/UserContextProvider';
-import Container from '@timer-app/common/components/Container';
-import Input from '@timer-app/common/components/Input';
-import Button from '@timer-app/common/components/Button';
-import Title from '@timer-app/common/components/Title';
-import { ButtonVariants } from '@timer-app/common/components/Button/Button';
-import StatusMessage from '@timer-app/common/components/StatusMessage';
+import { login, register } from '@timo/common/api';
+import { UserContext } from '@timo/common/context/UserContextProvider';
+import Container from '@timo/common/components/Container';
+import Input from '@timo/common/components/Input';
+import Button from '@timo/common/components/Button';
+import Title from '@timo/common/components/Title';
+import { ButtonVariants } from '@timo/common/components/Button/Button';
+import StatusMessage from '@timo/common/components/StatusMessage';
 import styles from './Login.module.css';
 
 const Login = ({ history }) => {

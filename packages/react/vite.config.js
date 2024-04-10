@@ -7,7 +7,8 @@ export default defineConfig({
     plugins: [
         react(),
         visualizer({
-            emitFile: true
+            emitFile: true,
+            template: 'sunburst'
         })
     ],
     server: {
