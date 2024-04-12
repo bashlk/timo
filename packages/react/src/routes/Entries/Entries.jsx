@@ -118,11 +118,15 @@ const Entries = ({ history }) => {
     };
 
     useEffect(() => {
+        const formData = new FormData(formRef.current);
+        const from = formData.get('from');
+        const to = formData.get('to');
+
         if (entries === null) {
             setStatusMessage('Loading...');
             listEntries({
-                from: firstDateOfMonth.toISOString(),
-                to: lastDateOfMonth.toISOString()
+                from,
+                to
             }).then(handleListEntriesResponse)
                 .catch(handleListEntriesError);
         }

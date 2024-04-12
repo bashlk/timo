@@ -7,14 +7,13 @@ export default defineConfig({
     plugins: [
         react(),
         visualizer({
-            emitFile: true,
-            template: 'sunburst'
+            emitFile: true
         })
     ],
     server: {
         proxy: {
             '/api': {
-                target: 'https://timer-app.frontendundefined.com/api',
+                target: 'https://timo.frontendundefined.com/api',
                 changeOrigin: true
             }
         }
