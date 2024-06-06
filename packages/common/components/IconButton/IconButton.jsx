@@ -12,7 +12,7 @@ export const Icons = {
 const IconButton = ({ icon: IconComponent, label, ...buttonProps }) => {
     return (
         <button className={styles['icon-button']} aria-label={label} {...buttonProps}>
-            <IconComponent className={styles['icon-button__icon']} size={24} />
+            <IconComponent className={styles['icon']} size={24} />
         </button>
     );
 };

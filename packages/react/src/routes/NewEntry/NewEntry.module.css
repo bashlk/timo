@@ -1,4 +1,4 @@
-.new-entry__center {
+.center {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -6,23 +6,23 @@
     margin-top: 32px;
 }
 
-.new-entry__status {
+.status {
     margin-top: 12px;
     margin-bottom: 12px;
 }
 
-.new-entry__buttons {
+.buttons {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 8px;
 }
 
-.new-entry__entries {
+.entries {
     margin-top: 32px;
 }
 
-.new-entry__back {
+.back {
     display: flex;
     justify-content: center;
 }

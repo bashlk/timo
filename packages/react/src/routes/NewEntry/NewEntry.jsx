@@ -71,7 +71,7 @@ const LogTime = ({ history }) => {
     return (
         <>
             <Title>New time entry</Title>
-            <div className={styles['new-entry__center']}>
+            <div className={styles['center']}>
                 <Timer
                     value={duration}
                     active={timerState === TimerState.ACTIVE}
@@ -87,9 +87,9 @@ const LogTime = ({ history }) => {
             </div>
             <StatusMessage
                 message={statusMessage}
-                className={styles['new-entry__status']}
+                className={styles['status']}
             />
-            <div className={styles['new-entry__buttons']}>
+            <div className={styles['buttons']}>
                 {(timerState === TimerState.STOPPED && duration === 0) && (
                     <Button onClick={handleStartClick}>
                         Start
@@ -116,8 +116,8 @@ const LogTime = ({ history }) => {
                     </>
                 )}
             </div>
-            <div className={styles['new-entry__back']}>
-                <Button className={styles['new-entry__entries']} variant={ButtonVariants.SECONDARY} onClick={handleViewEntriesClick}>
+            <div className={styles['back']}>
+                <Button className={styles['entries']} variant={ButtonVariants.SECONDARY} onClick={handleViewEntriesClick}>
                     View time entries
                 </Button>
             </div>

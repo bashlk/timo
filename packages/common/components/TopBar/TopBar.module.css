@@ -6,11 +6,11 @@
     padding: 12px 0;
 }
 
-.top-bar__icon {
+.icon {
     grid-column: 2;
 }
 
-.top-bar__avatar {
+.avatar {
     grid-column: 3;
     justify-self: end;
     align-self: center;

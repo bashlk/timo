@@ -38,18 +38,18 @@ const Entry = ({ id, description, start_time, end_time, onEdit = () => {}, onDel
     if (!editable) {
         return (
             <div className={styles['entry']}>
-                <div className={styles['entry__left']}>
-                    <div className={styles['entry__description']}>{description}</div>
-                    <div className={styles['entry__dates']}>
+                <div className={styles['left']}>
+                    <div className={styles['description']}>{description}</div>
+                    <div className={styles['dates']}>
                         {start_time.slice(11, 19)}
                         {' - '}
                         {end_time.slice(11, 19)}
                         {' '}
                         ({formatDuration(new Date(new Date(end_time) - new Date(start_time)))})
                     </div>
-                    {status && <StatusMessage className={styles['entry__status']} message={status} />}
+                    {status && <StatusMessage className={styles['status']} message={status} />}
                 </div>
-                <div className={styles['entry__right']}>
+                <div className={styles['right']}>
                     <IconButton label="Edit" icon={Icons.EDIT} onClick={handleEditClick} />
                     <IconButton label="Delete" icon={Icons.DELETE} onClick={handleDeleteClick} />
                 </div>
@@ -59,15 +59,15 @@ const Entry = ({ id, description, start_time, end_time, onEdit = () => {}, onDel
 
     return (
         <form className={styles['entry']} action="" onSubmit={handleSaveClick}>
-            <div className={styles['entry__left']}>
+            <div className={styles['left']}>
                 <Input label="Description" name="description" type="text" defaultValue={description} />
-                <div className={styles['entry__date-inputs']}>
-                    <Input label="Start time" className={styles['entry__date-input']} name="start_time" type="datetime-local" defaultValue={start_time} />
-                    <Input label="End time" className={styles['entry__date-input']} name="end_time" type="datetime-local" defaultValue={end_time} />
+                <div className={styles['date-inputs']}>
+                    <Input label="Start time" className={styles['date-input']} name="start_time" type="datetime-local" defaultValue={start_time} />
+                    <Input label="End time" className={styles['date-input']} name="end_time" type="datetime-local" defaultValue={end_time} />
                 </div>
-                {status && <StatusMessage className={styles['entry__status']} message={status} />}
+                {status && <StatusMessage className={styles['status']} message={status} />}
             </div>
-            <div className={styles['entry__right']}>
+            <div className={styles['right']}>
                 <IconButton label="Save" type="submit" icon={Icons.SAVE} />
                 <IconButton label="Cancel" icon={Icons.UNDO} onClick={handleCancelClick} />
             </div>

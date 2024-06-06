@@ -61,13 +61,13 @@ const Login = ({ history }) => {
     };
 
     return (
-        <div className={styles['login__body']}>
-            <Title className={styles['login__title']}>Login</Title>
-            <form className={styles['login__form']} action="" onSubmit={handleFormSubmit}>
+        <div className={styles['body']}>
+            <Title className={styles['title']}>Login</Title>
+            <form className={styles['form']} action="" onSubmit={handleFormSubmit}>
                 <Input label="Username" name="username" type="text" placeholder="Username" required />
                 <Input label="Password" name="password" type="password" placeholder="Password" required />
-                {statusMessage && <StatusMessage className={styles['login__status']} message={statusMessage} />}
-                <div className={styles['login__button']}>
+                {statusMessage && <StatusMessage className={styles['status']} message={statusMessage} />}
+                <div className={styles['button']}>
                     <Button value="login" type="submit">Login</Button>
                     <Button variant={ButtonVariants.SECONDARY} value="register" type="submit">Register</Button>
                 </div>

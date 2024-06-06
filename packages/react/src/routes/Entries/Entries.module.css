@@ -1,26 +1,26 @@
-.entries__body {
+.body {
     display: flex;
     flex-direction: column;
     gap: 16px;
     max-width: 100%;
 }
 
-.entries__new {
+.new {
     text-align: center;
     margin: 16px 0;
 }
 
-.entries__filters {
+.filters {
     display: flex;
     justify-content: space-between;
     gap: 8px;
 }
 
-.entries__message {
+.message {
     text-align: center;
 }
 
-.entries__total-row {
+.total-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -28,24 +28,24 @@
     font-weight: bold;
 }
 
-.entries__total-label {
+.total-label {
     font-weight: bold;
     font-size: 18px;
 }
 
-.entries__day {
+.day {
     display: flex;
     width: 100%;
     flex-direction: column;
     gap: 8px;
 }
 
-.entries__day-header {
+.day-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.entries__day-name {
+.day-name {
     font-size: 18px;
 }

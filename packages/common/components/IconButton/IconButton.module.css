@@ -12,6 +12,6 @@
     background-color: var(--color-secondary-lite);
 }
 
-.icon-button__icon {
+.icon {
     stroke: var(--color-primary);
 }

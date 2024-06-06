@@ -134,26 +134,26 @@ const Entries = ({ history }) => {
     return (
         <>
             <Title>Time entries</Title>
-            <div className={styles['entries__body']}>
-                <div className={styles['entries__new']}>
+            <div className={styles['body']}>
+                <div className={styles['new']}>
                     <Button onClick={handleNewClick}>New entry</Button>
                 </div>
-                <form className={styles['entries__filters']} ref={formRef} action="" onSubmit={handleFilter}>
+                <form className={styles['filters']} ref={formRef} action="" onSubmit={handleFilter}>
                     <Input label="Filter entries start time" type="datetime-local" name="from" defaultValue={getDateString(firstDateOfMonth)} />
                     <Input label="Filter entries end time" type="datetime-local" name="to" defaultValue={getDateString(lastDateOfMonth)} />
                     <Button variant={ButtonVariants.SECONDARY} type="submit">Filter</Button>
                 </form>
-                {statusMessage && <StatusMessage className={styles['entries__message']} message={statusMessage} />}
+                {statusMessage && <StatusMessage className={styles['message']} message={statusMessage} />}
                 {entries?.length > 0 && (
                     <>
-                        <div className={styles['entries__total-row']}>
-                            <h2 className={styles['entries__total-label']}>Total</h2>
+                        <div className={styles['total-row']}>
+                            <h2 className={styles['total-label']}>Total</h2>
                             <div>{formatDuration(getTotalDuration(entries))}</div>
                         </div>
                         {Object.entries(getEntriesGroupedByDate(entries)).map(([date, dayEntries]) => (
-                            <div className={styles['entries__day']} key={date}>
-                                <div className={styles['entries__day-header']}>
-                                    <h2 className={styles['entries__day-name']}>{date}</h2>
+                            <div className={styles['day']} key={date}>
+                                <div className={styles['day-header']}>
+                                    <h2 className={styles['day-name']}>{date}</h2>
                                     <div>{formatDuration(getTotalDuration(dayEntries))}</div>
                                 </div>
                                 {/* Entries are descending after being grouped, reverse them */}
