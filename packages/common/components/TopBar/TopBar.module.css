@@ -1,11 +1,17 @@
 .top-bar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: grid;
     width: 100%;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
     padding: 12px 0;
 }
 
 .top-bar__icon {
-    cursor: pointer;
+    grid-column: 2;
+}
+
+.top-bar__avatar {
+    grid-column: 3;
+    justify-self: end;
+    align-self: center;
 }

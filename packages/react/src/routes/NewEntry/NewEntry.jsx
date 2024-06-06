@@ -116,9 +116,11 @@ const LogTime = ({ history }) => {
                     </>
                 )}
             </div>
-            <Button className={styles['new-entry__entries']} variant={ButtonVariants.SECONDARY} onClick={handleViewEntriesClick}>
-                View time entries
-            </Button>
+            <div className={styles['new-entry__back']}>
+                <Button className={styles['new-entry__entries']} variant={ButtonVariants.SECONDARY} onClick={handleViewEntriesClick}>
+                    View time entries
+                </Button>
+            </div>
         </>
     );
 };

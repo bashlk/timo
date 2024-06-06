@@ -61,7 +61,7 @@ const Login = ({ history }) => {
     };
 
     return (
-        <>
+        <div className={styles['login__body']}>
             <Title className={styles['login__title']}>Login</Title>
             <form className={styles['login__form']} action="" onSubmit={handleFormSubmit}>
                 <Input label="Username" name="username" type="text" placeholder="Username" required />
@@ -72,7 +72,7 @@ const Login = ({ history }) => {
                     <Button variant={ButtonVariants.SECONDARY} value="register" type="submit">Register</Button>
                 </div>
             </form>
-        </>
+        </div>
     );
 };
 
