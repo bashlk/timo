@@ -6,12 +6,13 @@
 }
 
 .avatar {
-    margin-top: 32px;
+    margin-top: 24px;
 }
 
 .subheading {
     font-size: 18px;
     font-weight: bold;
+    text-align: center;
 }
 
 .form {
@@ -19,7 +20,7 @@
     flex-direction: column;
     width: 100%;
     max-width: 360px;
-    margin-top: 32px;
+    margin-top: 24px;
 }
 
 .form-controls {
@@ -36,5 +37,4 @@
 .button {
     display: flex;
     justify-content: center;
-    margin-top: 16px;;
 }

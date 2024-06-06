@@ -25,7 +25,7 @@ const Profile = () => {
 
     return (
         <div className={styles['profile']}>
-            <Title>Profile</Title>
+            <Title>My profile</Title>
             <Avatar className={styles['avatar']} character="B" background="light" large />
             <form className={styles['form']} action="" onSubmit={handleFormSubmit}>
                 <h2 className={styles['subheading']}>Customize</h2>
@@ -37,9 +37,9 @@ const Profile = () => {
                     <Input label="Avatar character" name="avatar-character" type="text" labelVisible required />
                     <Input label="Username" name="username" type="text" labelVisible required />
                     {statusMessage && <StatusMessage className={styles['status']} message={statusMessage} />}
-                </div>
-                <div className={styles['button']}>
-                    <Button value="login" type="submit">Save</Button>
+                    <div className={styles['button']}>
+                        <Button value="login" type="submit">Save</Button>
+                    </div>
                 </div>
             </form>
             <form className={styles['form']} action="" onSubmit={handleFormSubmit}>
@@ -48,9 +48,9 @@ const Profile = () => {
                     <Input label="Old password" name="password" type="password" labelVisible required />
                     <Input label="New password" name="newPassword" type="password" labelVisible required />
                     {statusMessage && <StatusMessage className={styles['status']} message={statusMessage} />}
-                </div>
-                <div className={styles['button']}>
-                    <Button value="login" type="submit">Change password</Button>
+                    <div className={styles['button']}>
+                        <Button value="login" type="submit">Change password</Button>
+                    </div>
                 </div>
             </form>
         </div>

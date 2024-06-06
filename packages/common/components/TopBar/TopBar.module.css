@@ -14,5 +14,5 @@
 .avatar {
     grid-column: 3;
     justify-self: end;
-    align-self: center;
+    align-self: self-start;
 }
