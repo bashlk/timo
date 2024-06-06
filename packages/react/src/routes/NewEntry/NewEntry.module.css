@@ -11,6 +11,10 @@
     margin-bottom: 12px;
 }
 
+.description {
+    width: 250px;
+}
+
 .buttons {
     display: flex;
     justify-content: center;

@@ -78,6 +78,7 @@ const LogTime = ({ history }) => {
                     onPaused={setDuration}
                 />
                 <Input
+                    className={styles['description']}
                     label="Time entry description"
                     type="text"
                     placeholder="What are you working on?"
