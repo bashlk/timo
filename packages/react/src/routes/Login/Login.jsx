@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import { login, register } from '@timo/common/api';
 import { UserContext } from '@timo/common/context/UserContextProvider';
 import Input from '@timo/common/components/Input';
-import Button from '@timo/common/components/Button';
+import Button, { ButtonVariants } from '@timo/common/components/Button';
 import Title from '@timo/common/components/Title';
-import { ButtonVariants } from '@timo/common/components/Button/Button';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import styles from './Login.module.css';
 

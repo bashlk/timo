@@ -1,0 +1,22 @@
+.radio-group {
+    display: flex;
+    gap: 16px;
+}
+
+.label {
+    font-size: 12px;
+    color: var(--color-secondary);
+}
+
+.radio-item {
+    display: flex;
+    align-items: center;
+}
+
+.radio {
+    appearance: auto;
+    accent-color: var(--color-primary);
+    margin-right: 4px;
+    width: 16px;
+    height: 16px;
+}

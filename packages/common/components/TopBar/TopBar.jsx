@@ -3,15 +3,16 @@ import { IconClockHour8 } from '@tabler/icons-react';
 import Avatar from '../Avatar/Avatar';
 import styles from './TopBar.module.css';
 
-const TopBar = ({ onIconClick = () => {} }) => (
+const TopBar = ({ onIconClick = () => {}, onAvatarClick = () => {} }) => (
     <div className={styles['top-bar']}>
         <IconClockHour8 className={styles['icon']} size={48} onClick={onIconClick} />
-        <Avatar className={styles['avatar']} character="B" background="light" />
+        <Avatar className={styles['avatar']} character="B" background="light" onClick={onAvatarClick} />
     </div>
 );
 
 TopBar.propTypes = {
-    onIconClick: PropTypes.func
+    onIconClick: PropTypes.func,
+    onAvatarClick: PropTypes.func
 };
 
 export default TopBar;

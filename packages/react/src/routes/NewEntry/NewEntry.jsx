@@ -4,9 +4,8 @@ import { createEntry } from '@timo/common/api';
 import Timer from '@timo/common/components/Timer';
 import Title from '@timo/common/components/Title';
 import Input from '@timo/common/components/Input';
-import Button from '@timo/common/components/Button';
+import Button, { ButtonVariants } from '@timo/common/components/Button';
 import StatusMessage from '@timo/common/components/StatusMessage';
-import { ButtonVariants } from '@timo/common/components/Button/Button';
 import styles from './NewEntry.module.css';
 
 const TimerState = {
@@ -15,7 +14,7 @@ const TimerState = {
     STOPPED: 'stopped'
 };
 
-const LogTime = ({ history }) => {
+const LogTime = () => {
     const [duration, setDuration] = useState(0);
     const [timerState, setTimerState] = useState(TimerState.STOPPED);
     const [description, setDescription] = useState('');
@@ -40,10 +39,6 @@ const LogTime = ({ history }) => {
 
     const handleDescriptionChange = (e) => {
         setDescription(e.target.value);
-    };
-
-    const handleViewEntriesClick = () => {
-        history.push('./');
     };
 
     useEffect(() => {
@@ -116,11 +111,6 @@ const LogTime = ({ history }) => {
                         </Button>
                     </>
                 )}
-            </div>
-            <div className={styles['back']}>
-                <Button className={styles['entries']} variant={ButtonVariants.SECONDARY} onClick={handleViewEntriesClick}>
-                    View time entries
-                </Button>
             </div>
         </>
     );
