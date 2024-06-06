@@ -21,7 +21,7 @@ const App = () => {
     return (
         <>
             <UserContextProvider>
-                <Router base="/react" routes={routes}>
+                <Router base="/tanstack-query" routes={routes}>
                     {(routeName, history) => {
                         let pageComponent = null;
                         switch (routeName) {

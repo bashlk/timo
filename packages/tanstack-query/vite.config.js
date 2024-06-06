@@ -18,5 +18,5 @@ export default defineConfig({
             }
         }
     },
-    base: '/react/'
+    base: '/tanstack-query/'
 });
