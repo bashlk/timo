@@ -8,6 +8,7 @@
 
 .icon {
     grid-column: 2;
+    cursor: pointer;
 }
 
 .avatar {
