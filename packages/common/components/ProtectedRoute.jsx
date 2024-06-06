@@ -1,12 +1,13 @@
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import history from 'history/browser';
-import { UserContext, UserStatus } from '../context/UserContextProvider';
+import { UserStatus } from '../context/UserContextProvider';
+import useUser from '../hooks/useUser';
 
 const FALLBACK_ROUTE = './login';
 
 const ProtectedRoute = ({ children }) => {
-    const user = useContext(UserContext);
+    const user = useUser();
 
     useEffect(() => {
         if (user?.status === UserStatus.UNAUTHENTICATED) {

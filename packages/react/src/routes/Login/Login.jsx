@@ -64,7 +64,7 @@ const Login = ({ history }) => {
             <Title className={styles['title']}>Login</Title>
             <form className={styles['form']} action="" onSubmit={handleFormSubmit}>
                 <Input label="Username" name="username" type="text" placeholder="Username" required />
-                <Input label="Password" name="password" type="password" placeholder="Password" required />
+                <Input label="Password" name="password" type="password" placeholder="Password" autoComplete="current-password" required />
                 {statusMessage && <StatusMessage className={styles['status']} message={statusMessage} />}
                 <div className={styles['button']}>
                     <Button value="login" type="submit">Login</Button>

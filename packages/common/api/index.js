@@ -6,7 +6,10 @@ const api = ky.create({
 });
 
 export const getUser = async () => {
-    return api.get('me');
+    // /me doesn't update when the user data is updated
+    return api.get('records/users')
+        .then(response => response.json())
+        .then(data => data.records[0]);
 };
 
 export const login = async (username, password) => {
@@ -23,6 +26,26 @@ export const register = async (username, password) => {
         json: {
             username,
             password
+        }
+    }).then(response => response.json());
+};
+
+export const updateUser = async ({ id, username, avatar_character, avatar_background }) => {
+    return api.put(`records/users/${id}`, {
+        json: {
+            username,
+            avatar_character,
+            avatar_background
+        }
+    }).then(response => response.json());
+};
+
+export const updatePassword = async ({ username, password, newPassword }) => {
+    return api.post('password', {
+        json: {
+            username,
+            password,
+            newPassword
         }
     }).then(response => response.json());
 };

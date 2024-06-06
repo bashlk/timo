@@ -18,7 +18,7 @@ const UserContextProvider = ({ children }) => {
     useEffect(() => {
         if (user.status === UserStatus.UNKNOWN) {
             getUser().then((remoteUser) => {
-                setUser(user => ({ ...user, status: UserStatus.AUTHENTICATED, ...remoteUser }));
+                setUser(user => ({ ...user, status: UserStatus.AUTHENTICATED, data: remoteUser }));
             }).catch(() => {
                 setUser(user => ({ ...user, status: UserStatus.UNAUTHENTICATED }));
             });
@@ -27,12 +27,12 @@ const UserContextProvider = ({ children }) => {
 
     const clearUser = useCallback(() => {
         setUser({
-            status: 'unknown'
+            status: UserStatus.UNKNOWN
         });
     }, []);
 
     const setAuthenticatedUser = useCallback((newUser) => {
-        setUser(user => ({ ...user, status: UserStatus.AUTHENTICATED, ...newUser }));
+        setUser(user => ({ ...user, status: UserStatus.AUTHENTICATED, data: newUser }));
     }, []);
 
     const value = useMemo(

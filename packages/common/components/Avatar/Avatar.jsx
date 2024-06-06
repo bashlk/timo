@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import styles from './Avatar.module.css';
 
-const Avatar = ({ className, character, background, large, onClick = () => {} }) => (
+const Avatar = ({ className, character = '?', background = 'light', large, onClick = () => {} }) => (
     <div
         className={
             clsx(styles['avatar'],
@@ -16,14 +16,14 @@ const Avatar = ({ className, character, background, large, onClick = () => {} })
         onClick={onClick}
     >
         <div className={styles['emoji']}>
-            {character}
+            {character.toUpperCase()}
         </div>
     </div>
 );
 
 Avatar.propTypes = {
     className: PropTypes.string,
-    character: PropTypes.string.isRequired,
+    character: PropTypes.string,
     background: PropTypes.oneOf([
         'dark',
         'light'
