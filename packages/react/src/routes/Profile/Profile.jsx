@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import Title from '@timo/common/components/Title';
 import Avatar from '@timo/common/components/Avatar';
 import Input from '@timo/common/components/Input';
-import Button from '@timo/common/components/Button';
+import Button, { ButtonVariants } from '@timo/common/components/Button';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import RadioGroup from '@timo/common/components/RadioGroup';
 import useUser from '@timo/common/hooks/useUser';
-import { updateUser, updatePassword } from '@timo/common/api';
+import { updateUser, updatePassword, logout } from '@timo/common/api';
 import styles from './Profile.module.css';
 
 const Profile = () => {
@@ -96,6 +96,12 @@ const Profile = () => {
         });
     };
 
+    const handleLogoutClick = () => {
+        logout().then(() => {
+            user.clearUser();
+        });
+    };
+
     return (
         <div className={styles['profile']}>
             <Title>My profile</Title>
@@ -168,6 +174,14 @@ const Profile = () => {
                     </div>
                 </div>
             </form>
+            <Button
+                className={styles['sign-out']}
+                value="login"
+                variant={ButtonVariants.SECONDARY}
+                onClick={handleLogoutClick}
+            >
+                Sign out
+            </Button>
         </div>
     );
 };

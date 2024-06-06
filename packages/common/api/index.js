@@ -50,6 +50,10 @@ export const updatePassword = async ({ username, password, newPassword }) => {
     }).then(response => response.json());
 };
 
+export const logout = async () => {
+    return api.post('logout');
+};
+
 export const listEntries = async ({ from, to } = {}) => {
     const searchParams = [];
     if (from) {

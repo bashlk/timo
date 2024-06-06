@@ -38,3 +38,7 @@
     display: flex;
     justify-content: center;
 }
+
+.sign-out {
+    margin-top: 24px;
+}
