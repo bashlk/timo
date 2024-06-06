@@ -46,13 +46,7 @@ const Profile = () => {
             // Clear the user in context and force refetch
             user.clearUser();
         }).catch((error) => {
-            if (error instanceof TypeError) {
-                setCustomizeStatus('Failed to connect to server. Please try again later.');
-            } else {
-                error.response.json().then((data) => {
-                    setCustomizeStatus(data.message);
-                });
-            }
+            setCustomizeStatus(error.message);
         });
     };
 
@@ -72,13 +66,7 @@ const Profile = () => {
         }).then(() => {
             setPasswordStatus('Password updated');
         }).catch((error) => {
-            if (error instanceof TypeError) {
-                setPasswordStatus('Failed to connect to server. Please try again later.');
-            } else {
-                error.response.json().then((data) => {
-                    setPasswordStatus(data.message);
-                });
-            }
+            setPasswordStatus(error.message);
         });
     };
 

@@ -50,19 +50,7 @@ const Entries = ({ history }) => {
             setEntries(null);
             setEntryStatusMessage({ id: null, message: null });
         }).catch((error) => {
-            if (error instanceof TypeError) {
-                setEntryStatusMessage({ id: updatedEntry.id, message: 'Failed to connect to server. Please try again later.' });
-            } else {
-                error.response.json().then((data) => {
-                    if (data.code === 1013) {
-                        if (data.details.end_time) {
-                            setEntryStatusMessage({ id: updatedEntry.id, message: 'End time must be greater than start time.' });
-                        }
-                    } else {
-                        setEntryStatusMessage({ id: updatedEntry.id, message: data.message });
-                    }
-                });
-            }
+            setEntryStatusMessage({ id: updatedEntry.id, message: error.message });
         });
     };
 
@@ -72,13 +60,7 @@ const Entries = ({ history }) => {
             setEntries(null);
             setEntryStatusMessage({ id: null, message: null });
         }).catch((error) => {
-            if (error instanceof TypeError) {
-                setEntryStatusMessage({ id: entryId, message: 'Failed to connect to server. Please try again later.' });
-            } else {
-                error.response.json().then((data) => {
-                    setEntryStatusMessage({ id: entryId, message: data.message });
-                });
-            }
+            setEntryStatusMessage({ id: entryId, message: error.message });
         });
     };
 
@@ -92,13 +74,7 @@ const Entries = ({ history }) => {
     };
 
     const handleListEntriesError = (error) => {
-        if (error instanceof TypeError) {
-            setStatusMessage('Failed to connect to server. Please try again later.');
-        } else {
-            error.response.json().then((data) => {
-                setStatusMessage(data.message);
-            });
-        }
+        setStatusMessage(error.message);
     };
 
     const handleFilter = (e) => {

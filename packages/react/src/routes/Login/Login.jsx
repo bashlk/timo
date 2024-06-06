@@ -33,13 +33,7 @@ const Login = ({ history }) => {
                 user.setAuthenticatedUser(response);
                 history.replace('./');
             }).catch((error) => {
-                if (error instanceof TypeError) {
-                    setStatusMessage('Failed to connect to server. Please try again later.');
-                } else {
-                    error.response.json().then((data) => {
-                        setStatusMessage(data.message);
-                    });
-                }
+                setStatusMessage(error.message);
             });
         }
 
@@ -48,13 +42,7 @@ const Login = ({ history }) => {
                 user.setAuthenticatedUser(response);
                 history.replace('./');
             }).catch((error) => {
-                if (error instanceof TypeError) {
-                    setStatusMessage('Failed to connect to server. Please try again later.');
-                } else {
-                    error.response.json().then((data) => {
-                        setStatusMessage(data.message);
-                    });
-                }
+                setStatusMessage(error.message);
             });
         }
     };

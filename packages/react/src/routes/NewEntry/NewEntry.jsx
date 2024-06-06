@@ -52,13 +52,7 @@ const LogTime = () => {
             }).then(() => {
                 setStatusMessage('Time logged successfully');
             }).catch((error) => {
-                if (error instanceof TypeError) {
-                    setStatusMessage('Failed to connect to server. Please try again later.');
-                } else {
-                    error.response.json().then((data) => {
-                        setStatusMessage(data.message);
-                    });
-                }
+                setStatusMessage(error.message);
             });
         }
     });
