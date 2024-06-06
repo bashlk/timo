@@ -2,7 +2,6 @@ import { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { login, register } from '@timo/common/api';
 import { UserContext } from '@timo/common/context/UserContextProvider';
-import Container from '@timo/common/components/Container';
 import Input from '@timo/common/components/Input';
 import Button from '@timo/common/components/Button';
 import Title from '@timo/common/components/Title';
@@ -62,7 +61,7 @@ const Login = ({ history }) => {
     };
 
     return (
-        <Container>
+        <>
             <Title className={styles['login__title']}>Login</Title>
             <form className={styles['login__form']} action="" onSubmit={handleFormSubmit}>
                 <Input label="Username" name="username" type="text" placeholder="Username" required />
@@ -73,7 +72,7 @@ const Login = ({ history }) => {
                     <Button variant={ButtonVariants.SECONDARY} value="register" type="submit">Register</Button>
                 </div>
             </form>
-        </Container>
+        </>
     );
 };
 

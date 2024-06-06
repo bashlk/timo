@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { createEntry } from '@timo/common/api';
 import Timer from '@timo/common/components/Timer';
-import Container from '@timo/common/components/Container';
 import Title from '@timo/common/components/Title';
 import Input from '@timo/common/components/Input';
 import Button from '@timo/common/components/Button';
@@ -70,7 +69,7 @@ const LogTime = ({ history }) => {
     });
 
     return (
-        <Container>
+        <>
             <Title>New time entry</Title>
             <div className={styles['new-entry__center']}>
                 <Timer
@@ -120,7 +119,7 @@ const LogTime = ({ history }) => {
             <Button className={styles['new-entry__entries']} variant={ButtonVariants.SECONDARY} onClick={handleViewEntriesClick}>
                 View time entries
             </Button>
-        </Container>
+        </>
     );
 };
 

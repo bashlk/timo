@@ -5,7 +5,6 @@ import UserContextProvider from '@timo/common/context/UserContextProvider';
 import Login from './routes/Login/Login';
 import Entries from './routes/Entries/Entries';
 import NewEntry from './routes/NewEntry/NewEntry';
-import TopBar from '@timo/common/components/TopBar';
 import Container from '@timo/common/components/Container';
 import Title from '@timo/common/components/Title';
 
@@ -43,16 +42,13 @@ const App = () => {
                             break;
                         default:
                             pageComponent = (
-                                <Container>
-                                    <Title>Page not found</Title>
-                                </Container>
+                                <Title>Page not found</Title>
                             );
                         }
                         return (
-                            <>
-                                <TopBar onIconClick={() => history.push('./')} />
+                            <Container onTopBarIconClick={() => history.push('./')}>
                                 {pageComponent}
-                            </>
+                            </Container>
                         );
                     }}
                 </Router>

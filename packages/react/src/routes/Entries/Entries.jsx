@@ -2,7 +2,6 @@ import { useEffect, useState, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { listEntries, updateEntry, deleteEntry } from '@timo/common/api';
 import Entry from '@timo/common/components/Entry';
-import Container from '@timo/common/components/Container';
 import Title from '@timo/common/components/Title';
 import Input from '@timo/common/components/Input';
 import Button from '@timo/common/components/Button';
@@ -133,7 +132,7 @@ const Entries = ({ history }) => {
     }, [entries]);
 
     return (
-        <Container>
+        <>
             <Title>Time entries</Title>
             <div className={styles['entries__body']}>
                 <div className={styles['entries__new']}>
@@ -175,7 +174,7 @@ const Entries = ({ history }) => {
                     </>
                 )}
             </div>
-        </Container>
+        </>
     );
 };
 
