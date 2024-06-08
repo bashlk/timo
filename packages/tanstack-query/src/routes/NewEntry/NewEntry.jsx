@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useMutation } from '@tanstack/react-query';
 import { createEntry } from '@timo/common/api';
 import Timer from '@timo/common/components/Timer';
 import Title from '@timo/common/components/Title';
@@ -15,18 +16,21 @@ const TimerState = {
 };
 
 const LogTime = () => {
+    const descriptionRef = useRef(null);
     const [duration, setDuration] = useState(0);
     const [timerState, setTimerState] = useState(TimerState.STOPPED);
-    const [description, setDescription] = useState('');
-    const [statusMessage, setStatusMessage] = useState('');
 
-    const handleStartClick = () => {
-        if (description.length === 0) {
-            setStatusMessage('Description is required');
-        } else {
-            setTimerState(TimerState.ACTIVE);
-            setStatusMessage('');
-        }
+    const { mutate: create, error, isPending, isSuccess } = useMutation({
+        mutationFn: createEntry
+    });
+    const statusMessage =
+        error ? error.message :
+            isPending ? 'Saving...' :
+                isSuccess ? 'Time logged successfully' : '';
+
+    const handleStartClick = (e) => {
+        e.preventDefault();
+        setTimerState(TimerState.ACTIVE);
     };
 
     const handleStopClick = () => {
@@ -37,28 +41,20 @@ const LogTime = () => {
         setTimerState(TimerState.PAUSED);
     };
 
-    const handleDescriptionChange = (e) => {
-        setDescription(e.target.value);
-    };
-
     useEffect(() => {
         if (timerState === TimerState.STOPPED && duration > 0) {
             setDuration(0);
             const endTimestamp = Math.floor(Date.now() / 1000);
-            createEntry({
-                description,
+            create({
+                description: descriptionRef.current.value,
                 start_time: `@${endTimestamp - duration}`,
                 end_time: `@${endTimestamp}`
-            }).then(() => {
-                setStatusMessage('Time logged successfully');
-            }).catch((error) => {
-                setStatusMessage(error.message);
             });
         }
     });
 
     return (
-        <>
+        <form action="" onSubmit={handleStartClick}>
             <Title>New time entry</Title>
             <div className={styles['center']}>
                 <Timer
@@ -67,12 +63,13 @@ const LogTime = () => {
                     onPaused={setDuration}
                 />
                 <Input
+                    name="description"
+                    ref={descriptionRef}
                     className={styles['description']}
                     label="Time entry description"
                     type="text"
                     placeholder="What are you working on?"
-                    value={description}
-                    onChange={handleDescriptionChange}
+                    required
                 />
             </div>
             <StatusMessage
@@ -81,7 +78,7 @@ const LogTime = () => {
             />
             <div className={styles['buttons']}>
                 {(timerState === TimerState.STOPPED && duration === 0) && (
-                    <Button onClick={handleStartClick}>
+                    <Button type="submit">
                         Start
                     </Button>
                 )}
@@ -106,7 +103,7 @@ const LogTime = () => {
                     </>
                 )}
             </div>
-        </>
+        </form>
     );
 };
 

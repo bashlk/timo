@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import Title from '@timo/common/components/Title';
 import Avatar from '@timo/common/components/Avatar';
 import Input from '@timo/common/components/Input';
@@ -11,8 +12,6 @@ import styles from './Profile.module.css';
 
 const Profile = () => {
     const user = useUser();
-    const [customizeStatus, setCustomizeStatus] = useState(null);
-    const [passwordStatus, setPasswordStatus] = useState(null);
     const [avatar, setAvatar] = useState({
         character: undefined,
         background: undefined
@@ -27,48 +26,56 @@ const Profile = () => {
         }
     }, [user]);
 
+    const { mutate: updateUserM, error: updateUserError, isPending: isUpdatingUser, isSuccess: userUpdated } = useMutation({
+        mutationFn: updateUser,
+        onSuccess: () => {
+            // Clear the user in context and force refetch
+            user.clearUser();
+        }
+    });
+    const updateUserStatus =
+        updateUserError ? updateUserError.message :
+            isUpdatingUser ? 'Loading...' :
+                userUpdated ? 'Profile updated' : '';
     const handleCustomizeFormSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const username = formData.get('username');
         const avatarCharacter = formData.get('avatar-character');
         const avatarBackground = formData.get('avatar-background');
-
-        setCustomizeStatus('Loading...');
-
-        updateUser({
+        updateUserM({
             id: user?.data?.id,
             username,
             avatar_character: avatarCharacter,
             avatar_background: avatarBackground
-        }).then(() => {
-            setCustomizeStatus('Profile updated');
-            // Clear the user in context and force refetch
-            user.clearUser();
-        }).catch((error) => {
-            setCustomizeStatus(error.message);
         });
     };
 
+    const { mutate: updatePasswordM , error: updatePasswordError, isPending: isUpdatingPassword, isSuccess: passwordUpdated } = useMutation({
+        mutationFn: updatePassword
+    });
+    const updatePasswordStatus =
+        updatePasswordError ? updatePasswordError.message :
+            isUpdatingPassword ? 'Loading...' :
+                passwordUpdated ? 'Password updated' : '';
     const handlePasswordFormSubmit = (e) => {
         e.preventDefault();
-
         const formData = new FormData(e.target);
         const password = formData.get('password');
         const newPassword = formData.get('newPassword');
-
-        setPasswordStatus('Loading...');
-
-        updatePassword({
+        updatePasswordM({
             username: user?.data?.username,
             password,
             newPassword
-        }).then(() => {
-            setPasswordStatus('Password updated');
-        }).catch((error) => {
-            setPasswordStatus(error.message);
         });
     };
+
+    const { mutate: logoutM } = useMutation({
+        mutationFn: logout,
+        onSuccess: () => {
+            user.clearUser();
+        }
+    });
 
     const handleAvatarBackgroundChange = (e) => {
         setAvatar({
@@ -81,12 +88,6 @@ const Profile = () => {
         setAvatar({
             ...avatar,
             character: e.target.value
-        });
-    };
-
-    const handleLogoutClick = () => {
-        logout().then(() => {
-            user.clearUser();
         });
     };
 
@@ -131,7 +132,7 @@ const Profile = () => {
                         labelVisible
                         required
                     />
-                    {customizeStatus && <StatusMessage className={styles['status']} message={customizeStatus} />}
+                    {updateUserStatus && <StatusMessage className={styles['status']} message={updateUserStatus} />}
                     <div className={styles['button']}>
                         <Button value="login" type="submit">Save</Button>
                     </div>
@@ -156,7 +157,7 @@ const Profile = () => {
                         labelVisible
                         required
                     />
-                    {passwordStatus && <StatusMessage className={styles['status']} message={passwordStatus} />}
+                    {updatePasswordStatus && <StatusMessage className={styles['status']} message={updatePasswordStatus} />}
                     <div className={styles['button']}>
                         <Button value="login" type="submit">Change password</Button>
                     </div>
@@ -166,7 +167,7 @@ const Profile = () => {
                 className={styles['sign-out']}
                 value="login"
                 variant={ButtonVariants.SECONDARY}
-                onClick={handleLogoutClick}
+                onClick={logoutM}
             >
                 Sign out
             </Button>

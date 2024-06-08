@@ -29,7 +29,7 @@ const Login = ({ history }) => {
         setStatusMessage('Loading...');
 
         if (action == 'login') {
-            login(username, password).then((response) => {
+            login({ username, password }).then((response) => {
                 user.setAuthenticatedUser(response);
                 history.replace('./');
             }).catch((error) => {
@@ -38,7 +38,7 @@ const Login = ({ history }) => {
         }
 
         if (action == 'register') {
-            register(username, password).then((response) => {
+            register({ username, password }).then((response) => {
                 user.setAuthenticatedUser(response);
                 history.replace('./');
             }).catch((error) => {

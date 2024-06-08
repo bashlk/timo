@@ -1,5 +1,6 @@
-import { useState, useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useMutation } from '@tanstack/react-query';
 import { login, register } from '@timo/common/api';
 import { UserContext } from '@timo/common/context/UserContextProvider';
 import Input from '@timo/common/components/Input';
@@ -10,13 +11,27 @@ import styles from './Login.module.css';
 
 const Login = ({ history }) => {
     const user = useContext(UserContext);
-    const [statusMessage, setStatusMessage] = useState(null);
 
     useEffect(() => {
         if (user.status === 'authenticated') {
             history.replace('./');
         }
     }, [history, user]);
+
+    const handleSuccess = (response) => {
+        user.setAuthenticatedUser(response);
+        history.replace('./');
+    };
+
+    const loginMutation = useMutation({
+        mutationFn: login,
+        onSuccess: handleSuccess
+    });
+
+    const registerMutation = useMutation({
+        mutationFn: register,
+        onSuccess: handleSuccess
+    });
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
@@ -26,26 +41,18 @@ const Login = ({ history }) => {
         const username = formData.get('username');
         const password = formData.get('password');
 
-        setStatusMessage('Loading...');
-
         if (action == 'login') {
-            login(username, password).then((response) => {
-                user.setAuthenticatedUser(response);
-                history.replace('./');
-            }).catch((error) => {
-                setStatusMessage(error.message);
-            });
+            loginMutation.mutate({ username, password });
         }
 
         if (action == 'register') {
-            register(username, password).then((response) => {
-                user.setAuthenticatedUser(response);
-                history.replace('./');
-            }).catch((error) => {
-                setStatusMessage(error.message);
-            });
+            registerMutation.mutate({ username, password });
         }
     };
+
+    const error = loginMutation.error || registerMutation.error;
+    const pending = loginMutation.isPending || registerMutation.isPending;
+    const statusMessage = error ? error.message : pending ? 'Loading...' : null;
 
     return (
         <div className={styles['body']}>

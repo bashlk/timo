@@ -19,7 +19,7 @@ const requestWrapper = (request) => {
         });
 };
 
-export const login = async (username, password) => {
+export const login = async ({ username, password }) => {
     return requestWrapper(
         api.post('login', {
             json: {
@@ -36,7 +36,7 @@ export const getUser = async () => {
     ).then(data => data.records[0]);
 };
 
-export const register = async (username, password) => {
+export const register = async ({ username, password }) => {
     return requestWrapper(
         api.post('register', {
             json: {

@@ -1,5 +1,6 @@
-import { useEffect, useState, createRef } from 'react';
+import { useState, createRef } from 'react';
 import PropTypes from 'prop-types';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { listEntries, updateEntry, deleteEntry } from '@timo/common/api';
 import Entry from '@timo/common/components/Entry';
 import Title from '@timo/common/components/Title';
@@ -39,73 +40,49 @@ const firstDateOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 const lastDateOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
 
 const Entries = ({ history }) => {
-    const [entries, setEntries] = useState(null);
-    const [statusMessage, setStatusMessage] = useState(null);
-    const [entryStatusMessage, setEntryStatusMessage] = useState({ id: null, message: null });
     const formRef = createRef(null);
+    const [params, setParams] = useState({
+        from: getDateString(firstDateOfMonth),
+        to: getDateString(lastDateOfMonth)
+    });
 
-    const handleEdit = (updatedEntry) => {
-        setEntryStatusMessage({ id: updatedEntry.id, message: 'Saving...' });
-        updateEntry(updatedEntry).then(() => {
-            setEntries(null);
-            setEntryStatusMessage({ id: null, message: null });
-        }).catch((error) => {
-            setEntryStatusMessage({ id: updatedEntry.id, message: error.message });
-        });
-    };
+    const { data: entries, isFetching, isError, error, refetch } = useQuery({
+        queryKey: ['entries', params],
+        queryFn: () => listEntries(params)
+    });
+    const statusMessage =
+        isFetching ? 'Loading...' :
+            isError ? error.message :
+                entries?.length === 0 ? 'No entries found' : null;
 
-    const handleDelete = (entryId) => {
-        setEntryStatusMessage({ id: entryId, message: 'Deleting...' });
-        deleteEntry(entryId).then(() => {
-            setEntries(null);
-            setEntryStatusMessage({ id: null, message: null });
-        }).catch((error) => {
-            setEntryStatusMessage({ id: entryId, message: error.message });
-        });
-    };
-
-    const handleListEntriesResponse = (entries) => {
-        setEntries(entries);
-        if (entries.length === 0) {
-            setStatusMessage('No entries found');
-        } else {
-            setStatusMessage(null);
+    const { mutate: update, error: updateError, variables: updateVariables, isPending: isUpdating } = useMutation({
+        mutationFn: updateEntry,
+        onSuccess: () => {
+            refetch();
         }
-    };
+    });
+    const updateStatus = updateError ? updateError.message : isUpdating ? 'Saving...' : null;
 
-    const handleListEntriesError = (error) => {
-        setStatusMessage(error.message);
-    };
+    const { mutate: deleteEntryM, error: deleteError, variables: deleteVariables, isPending: isDeleting } = useMutation({
+        mutationFn: deleteEntry,
+        onSuccess: () => {
+            refetch();
+        }
+    });
+    const deleteStatus = deleteError ? deleteError.message : isDeleting ? 'Deleting...' : null;
 
     const handleFilter = (e) => {
         e.preventDefault();
-        const formData = new FormData(e.target);
-        const from = formData.get('from');
-        const to = formData.get('to');
-        setStatusMessage('Loading...');
-        listEntries({ from, to })
-            .then(handleListEntriesResponse)
-            .catch(handleListEntriesError);
+        const formData = new FormData(formRef.current);
+        setParams({
+            from: formData.get('from'),
+            to: formData.get('to')
+        });
     };
 
     const handleNewClick = () => {
         history.push('./new');
     };
-
-    useEffect(() => {
-        const formData = new FormData(formRef.current);
-        const from = formData.get('from');
-        const to = formData.get('to');
-
-        if (entries === null) {
-            setStatusMessage('Loading...');
-            listEntries({
-                from,
-                to
-            }).then(handleListEntriesResponse)
-                .catch(handleListEntriesError);
-        }
-    }, [entries]);
 
     return (
         <>
@@ -133,18 +110,24 @@ const Entries = ({ history }) => {
                                     <div>{formatDuration(getTotalDuration(dayEntries))}</div>
                                 </div>
                                 {/* Entries are descending after being grouped, reverse them */}
-                                {dayEntries.toReversed().map((entry) => (
-                                    <Entry
-                                        key={entry.id}
-                                        id={entry.id}
-                                        description={entry.description}
-                                        start_time={entry.start_time}
-                                        end_time={entry.end_time}
-                                        onEdit={handleEdit}
-                                        onDelete={handleDelete}
-                                        status={entryStatusMessage.id === entry.id ? entryStatusMessage.message : null}
-                                    />
-                                ))}
+                                {dayEntries.toReversed().map((entry) => {
+                                    const updatingEntry = updateVariables?.id === entry.id;
+                                    const deletingEntry = deleteVariables === entry.id;
+                                    const status = updatingEntry ? updateStatus : deletingEntry ? deleteStatus : null;
+
+                                    return (
+                                        <Entry
+                                            key={entry.id}
+                                            id={entry.id}
+                                            description={entry.description}
+                                            start_time={entry.start_time}
+                                            end_time={entry.end_time}
+                                            onEdit={update}
+                                            onDelete={deleteEntryM}
+                                            status={status}
+                                        />
+                                    );
+                                })}
                             </div>
                         ))}
                     </>

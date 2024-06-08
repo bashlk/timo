@@ -1,7 +1,10 @@
+import {
+    QueryClient,
+    QueryClientProvider
+} from '@tanstack/react-query';
 import Router from '@timo/common/components/Router';
 import ProtectedRoute from '@timo/common/components/ProtectedRoute';
 import UserContextProvider from '@timo/common/context/UserContextProvider';
-
 import Login from './routes/Login/Login';
 import Entries from './routes/Entries/Entries';
 import NewEntry from './routes/NewEntry/NewEntry';
@@ -17,9 +20,11 @@ const routes = [
     { path: '/profile', name: 'Profile' }
 ];
 
+const queryClient = new QueryClient();
+
 const App = () => {
     return (
-        <>
+        <QueryClientProvider client={queryClient}>
             <UserContextProvider>
                 <Router base="/tanstack-query" routes={routes}>
                     {(routeName, history) => {
@@ -62,7 +67,7 @@ const App = () => {
                     }}
                 </Router>
             </UserContextProvider>
-        </>
+        </QueryClientProvider>
     );
 };
 
