@@ -2,6 +2,7 @@ import {
     QueryClient,
     QueryClientProvider
 } from '@tanstack/react-query';
+import PropTypes from 'prop-types';
 import Router from '@timo/common/components/Router';
 import ProtectedRoute from '@timo/common/components/ProtectedRoute';
 import UserContextProvider from '@timo/common/context/UserContextProvider';
@@ -11,6 +12,7 @@ import NewEntry from './routes/NewEntry/NewEntry';
 import Profile from './routes/Profile/Profile';
 import Container from '@timo/common/components/Container';
 import Title from '@timo/common/components/Title';
+import useUser from '@timo/common/hooks/useUser';
 
 const routes = [
     { path: '/', name: 'Entries' },
@@ -21,6 +23,27 @@ const routes = [
 ];
 
 const queryClient = new QueryClient();
+
+const ContainerWithUser = ({ history, children }) => {
+    const user = useUser();
+    return (
+        <Container
+            avatar={{
+                character: user?.data?.avatar_character,
+                background: user?.data?.avatar_background
+            }}
+            onTopBarIconClick={() => history.push('./')}
+            onAvatarClick={() => history.push('./profile')}
+        >
+            {children}
+        </Container>
+    );
+};
+
+ContainerWithUser.propTypes = {
+    history: PropTypes.object.isRequired,
+    children: PropTypes.node
+};
 
 const App = () => {
     return (
@@ -60,9 +83,9 @@ const App = () => {
                             );
                         }
                         return (
-                            <Container onTopBarIconClick={() => history.push('./')} onAvatarClick={() => history.push('./profile')}>
+                            <ContainerWithUser history={history}>
                                 {pageComponent}
-                            </Container>
+                            </ContainerWithUser>
                         );
                     }}
                 </Router>
