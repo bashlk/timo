@@ -9,7 +9,7 @@ const Router = ({ base = '', routes, children }) => {
         return history.listen(({ location }) => {
             setCurrentPath(location.pathname);
         });
-    });
+    }, []);
 
     const currentRoute = routes.find(route => `${base}${route.path}` === currentPath);
 

@@ -6,12 +6,12 @@ import Input from '@timo/common/components/Input';
 import Button, { ButtonVariants } from '@timo/common/components/Button';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import RadioGroup from '@timo/common/components/RadioGroup';
-import useUser from '@timo/common/hooks/useUser';
-import { updateUser, updatePassword, logout } from '@timo/common/api';
+import { updateUser, updatePassword } from '@timo/common/api';
 import styles from './Profile.module.css';
+import useUserStore from '../../zustand/useUserStore';
 
 const Profile = () => {
-    const user = useUser();
+    const user = useUserStore();
     const [avatar, setAvatar] = useState({
         character: undefined,
         background: undefined
@@ -29,8 +29,8 @@ const Profile = () => {
     const { mutate: updateUserM, error: updateUserError, isPending: isUpdatingUser, isSuccess: userUpdated } = useMutation({
         mutationFn: updateUser,
         onSuccess: () => {
-            // Clear the user in context and force refetch
-            user.clearUser();
+            // Force re-fetch user
+            user.fetchUser();
         }
     });
     const updateUserStatus =
@@ -69,13 +69,6 @@ const Profile = () => {
             newPassword
         });
     };
-
-    const { mutate: logoutM } = useMutation({
-        mutationFn: logout,
-        onSuccess: () => {
-            user.clearUser();
-        }
-    });
 
     const handleAvatarBackgroundChange = (e) => {
         setAvatar({
@@ -167,7 +160,7 @@ const Profile = () => {
                 className={styles['sign-out']}
                 value="login"
                 variant={ButtonVariants.SECONDARY}
-                onClick={logoutM}
+                onClick={user.clearUser}
             >
                 Sign out
             </Button>

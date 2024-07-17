@@ -6,8 +6,8 @@ import useUser from '../hooks/useUser';
 
 const FALLBACK_ROUTE = './login';
 
-const ProtectedRoute = ({ children }) => {
-    const user = useUser();
+const ProtectedRoute = ({ userHook = useUser, children }) => {
+    const user = userHook();
 
     useEffect(() => {
         if (user?.status === UserStatus.UNAUTHENTICATED) {
@@ -23,6 +23,7 @@ const ProtectedRoute = ({ children }) => {
 };
 
 ProtectedRoute.propTypes = {
+    userHook: PropTypes.func,
     children: PropTypes.node.isRequired
 };
 
