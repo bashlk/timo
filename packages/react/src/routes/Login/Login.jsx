@@ -1,7 +1,7 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { login, register } from '@timo/common/api';
-import { UserContext } from '@timo/common/context/UserContextProvider';
+import useUser from '@timo/common/hooks/useUser';
 import Input from '@timo/common/components/Input';
 import Button, { ButtonVariants } from '@timo/common/components/Button';
 import Title from '@timo/common/components/Title';
@@ -9,7 +9,7 @@ import StatusMessage from '@timo/common/components/StatusMessage';
 import styles from './Login.module.css';
 
 const Login = ({ history }) => {
-    const user = useContext(UserContext);
+    const user = useUser();
     const [statusMessage, setStatusMessage] = useState(null);
 
     useEffect(() => {
