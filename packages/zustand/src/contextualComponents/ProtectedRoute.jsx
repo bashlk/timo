@@ -1,23 +1,19 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import history from 'history/browser';
-import { UserStatus } from '../context/UserContextProvider';
-import useUser from '../hooks/useUser';
+import { UserStatus } from '@timo/common/context/UserContextProvider';
+import useUserStore from '../zustand/useUserStore';
 
 const FALLBACK_ROUTE = './login';
 
-const ProtectedRoute = ({ userHook = useUser, children }) => {
-    const user = userHook();
+const ProtectedRoute = ({ children }) => {
+    const userStatus = useUserStore((state) => state.status);
 
     useEffect(() => {
-        if (user?.status === UserStatus.UNAUTHENTICATED) {
+        if (userStatus === UserStatus.UNAUTHENTICATED) {
             history.replace(FALLBACK_ROUTE);
         }
     });
-
-    if (!user) {
-        return null;
-    }
 
     return children;
 };

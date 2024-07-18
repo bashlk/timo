@@ -3,14 +3,15 @@ import {
     QueryClientProvider
 } from '@tanstack/react-query';
 import Router from '@timo/common/components/Router';
-import ProtectedRoute from '@timo/common/components/ProtectedRoute';
+import Container from '@timo/common/components/Container';
+import Title from '@timo/common/components/Title';
+
 import Login from './routes/Login/Login';
 import Entries from './routes/Entries/Entries';
 import NewEntry from './routes/NewEntry/NewEntry';
 import Profile from './routes/Profile/Profile';
-import Container from '@timo/common/components/Container';
-import Title from '@timo/common/components/Title';
-import useUserStore from './zustand/useUserStore';
+import TopBarWithUser from './contextualComponents/TopBarWithUser';
+import ProtectedRoute from './contextualComponents/ProtectedRoute';
 
 const routes = [
     { path: '/', name: 'Entries' },
@@ -22,59 +23,51 @@ const routes = [
 
 const queryClient = new QueryClient();
 
-const App = () => {
-    const userData = useUserStore(state => state.data);
-    return (
-        <QueryClientProvider client={queryClient}>
-            <Router base="/zustand" routes={routes}>
-                {(routeName, history) => {
-                    let pageComponent = null;
-                    switch (routeName) {
-                    case 'Login':
-                        pageComponent = <Login history={history} />;
-                        break;
-                    case 'NewEntry':
-                        pageComponent = (
-                            <ProtectedRoute userHook={useUserStore}>
-                                <NewEntry history={history} />
-                            </ProtectedRoute>
-                        );
-                        break;
-                    case 'Entries':
-                        pageComponent = (
-                            <ProtectedRoute userHook={useUserStore}>
-                                <Entries history={history} />
-                            </ProtectedRoute>
-                        );
-                        break;
-                    case 'Profile':
-                        pageComponent = (
-                            <ProtectedRoute userHook={useUserStore}>
-                                <Profile />
-                            </ProtectedRoute>
-                        );
-                        break;
-                    default:
-                        pageComponent = (
-                            <Title>Page not found</Title>
-                        );
-                    }
-                    return (
-                        <Container
-                            avatar={{
-                                character: userData?.avatar_character,
-                                background: userData?.avatar_background
-                            }}
-                            onTopBarIconClick={() => history.push('./')}
-                            onAvatarClick={() => history.push('./profile')}
-                        >
-                            {pageComponent}
-                        </Container>
+const App = () => (
+    <QueryClientProvider client={queryClient}>
+        <Router base="/zustand" routes={routes}>
+            {(routeName, history) => {
+                let pageComponent = null;
+                switch (routeName) {
+                case 'Login':
+                    pageComponent = <Login history={history} />;
+                    break;
+                case 'NewEntry':
+                    pageComponent = (
+                        <ProtectedRoute>
+                            <NewEntry history={history} />
+                        </ProtectedRoute>
                     );
-                }}
-            </Router>
-        </QueryClientProvider>
-    );
-};
+                    break;
+                case 'Entries':
+                    pageComponent = (
+                        <ProtectedRoute>
+                            <Entries history={history} />
+                        </ProtectedRoute>
+                    );
+                    break;
+                case 'Profile':
+                    pageComponent = (
+                        <ProtectedRoute>
+                            <Profile />
+                        </ProtectedRoute>
+                    );
+                    break;
+                default:
+                    pageComponent = (
+                        <Title>Page not found</Title>
+                    );
+                }
+                return (
+                    <Container>
+                        <TopBarWithUser history={history} />
+                        {pageComponent}
+                    </Container>
+                );
+            }}
+        </Router>
+    </QueryClientProvider>
+);
+
 
 export default App;
