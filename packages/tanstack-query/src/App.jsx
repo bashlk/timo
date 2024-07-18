@@ -6,13 +6,13 @@ import Router from '@timo/common/components/Router';
 import UserContextProvider from '@timo/common/context/UserContextProvider';
 import Container from '@timo/common/components/Container';
 import Title from '@timo/common/components/Title';
+import TopBarWithUser from '@timo/common/contextualComponents/TopBarWithUser';
+import ProtectedRoute from '@timo/common/contextualComponents/ProtectedRoute';
 
 import Login from './routes/Login/Login';
 import Entries from './routes/Entries/Entries';
 import NewEntry from './routes/NewEntry/NewEntry';
 import Profile from './routes/Profile/Profile';
-import TopBarWithUser from './contextualComponents/TopBarWithUser';
-import ProtectedRoute from './contextualComponents/ProtectedRoute';
 
 const routes = [
     { path: '/', name: 'Entries' },
