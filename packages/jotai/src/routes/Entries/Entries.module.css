@@ -1,0 +1,51 @@
+.body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 100%;
+}
+
+.new {
+    text-align: center;
+    margin: 16px 0;
+}
+
+.filters {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.message {
+    text-align: center;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.total-label {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.day {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.day-name {
+    font-size: 18px;
+}
