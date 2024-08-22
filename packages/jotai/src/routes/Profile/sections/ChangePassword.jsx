@@ -1,13 +1,14 @@
 import { useMutation } from '@tanstack/react-query';
+import { useAtomValue } from 'jotai';
 import Input from '@timo/common/components/Input';
-import useUser from '@timo/common/hooks/useUser';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import Button from '@timo/common/components/Button';
 import { updatePassword } from '@timo/common/api';
+import userAtom from '../atoms/userAtom';
 import styles from '../Profile.module.css';
 
 const ChangePassword = () => {
-    const user = useUser();
+    const user = useAtomValue(userAtom);
 
     const { mutate: updatePasswordM , error: updatePasswordError, isPending: isUpdatingPassword, isSuccess: passwordUpdated } = useMutation({
         mutationFn: updatePassword

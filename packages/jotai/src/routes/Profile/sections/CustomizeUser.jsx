@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
+import { useAtom } from 'jotai';
 import { useMutation } from '@tanstack/react-query';
 import Avatar from '@timo/common/components/Avatar';
 import RadioGroup from '@timo/common/components/RadioGroup';
 import Input from '@timo/common/components/Input';
-import useUser from '@timo/common/hooks/useUser';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import Button from '@timo/common/components/Button';
 import { updateUser } from '@timo/common/api';
+import userAtom, { UserAtomActions } from '../../../atoms/userAtom';
 import styles from '../Profile.module.css';
 
 const CustomizeUser = () => {
-    const user = useUser();
+    const [user, runUserAtomAction] = useAtom(userAtom);
     const [avatar, setAvatar] = useState({
         character: undefined,
         background: undefined
@@ -28,8 +29,7 @@ const CustomizeUser = () => {
     const { mutate: updateUserM, error: updateUserError, isPending: isUpdatingUser, isSuccess: userUpdated } = useMutation({
         mutationFn: updateUser,
         onSuccess: () => {
-            // Clear the user in context and force refetch
-            user.clearUser();
+            runUserAtomAction({ action: UserAtomActions.Refresh });
         }
     });
 

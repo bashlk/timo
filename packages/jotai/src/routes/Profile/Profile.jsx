@@ -1,21 +1,13 @@
-import { useMutation } from '@tanstack/react-query';
+import { useSetAtom } from 'jotai';
 import Title from '@timo/common/components/Title';
 import Button, { ButtonVariants } from '@timo/common/components/Button';
-import useUser from '@timo/common/hooks/useUser';
-import { logout } from '@timo/common/api';
 import styles from './Profile.module.css';
 import ChangePassword from './sections/ChangePassword';
 import CustomizeUser from './sections/CustomizeUser';
+import userAtom from '../../atoms/userAtom';
 
 const Profile = () => {
-    const user = useUser();
-
-    const { mutate: logoutM } = useMutation({
-        mutationFn: logout,
-        onSuccess: () => {
-            user.clearUser();
-        }
-    });
+    const runUserAtomAction = useSetAtom(userAtom);
 
     return (
         <div className={styles['profile']}>
@@ -26,7 +18,7 @@ const Profile = () => {
                 className={styles['sign-out']}
                 value="login"
                 variant={ButtonVariants.SECONDARY}
-                onClick={logoutM}
+                onClick={() => runUserAtomAction({ action: 'logout' })}
             >
                 Sign out
             </Button>

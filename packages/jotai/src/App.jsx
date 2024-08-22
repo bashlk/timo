@@ -3,16 +3,15 @@ import {
     QueryClientProvider
 } from '@tanstack/react-query';
 import Router from '@timo/common/components/Router';
-import UserContextProvider from '@timo/common/context/UserContextProvider';
 import Container from '@timo/common/components/Container';
 import Title from '@timo/common/components/Title';
-import TopBarWithUser from '@timo/common/contextualComponents/TopBarWithUser';
-import ProtectedRoute from '@timo/common/contextualComponents/ProtectedRoute';
 
 import Login from './routes/Login/Login';
 import Entries from './routes/Entries/Entries';
 import NewEntry from './routes/NewEntry/NewEntry';
 import Profile from './routes/Profile/Profile';
+import TopBarWithUser from './contextualComponents/TopBarWithUser';
+import ProtectedRoute from './contextualComponents/ProtectedRoute';
 
 const routes = [
     { path: '/', name: 'Entries' },
@@ -26,49 +25,47 @@ const queryClient = new QueryClient();
 
 const App = () => (
     <QueryClientProvider client={queryClient}>
-        <UserContextProvider>
-            <Router base="/jotai" routes={routes}>
-                {(routeName, history) => {
-                    let pageComponent = null;
-                    switch (routeName) {
-                    case 'Login':
-                        pageComponent = <Login history={history} />;
-                        break;
-                    case 'NewEntry':
-                        pageComponent = (
-                            <ProtectedRoute>
-                                <NewEntry history={history} />
-                            </ProtectedRoute>
-                        );
-                        break;
-                    case 'Entries':
-                        pageComponent = (
-                            <ProtectedRoute>
-                                <Entries history={history} />
-                            </ProtectedRoute>
-                        );
-                        break;
-                    case 'Profile':
-                        pageComponent = (
-                            <ProtectedRoute>
-                                <Profile />
-                            </ProtectedRoute>
-                        );
-                        break;
-                    default:
-                        pageComponent = (
-                            <Title>Page not found</Title>
-                        );
-                    }
-                    return (
-                        <Container>
-                            <TopBarWithUser history={history} />
-                            {pageComponent}
-                        </Container>
+        <Router base="/jotai" routes={routes}>
+            {(routeName, history) => {
+                let pageComponent = null;
+                switch (routeName) {
+                case 'Login':
+                    pageComponent = <Login history={history} />;
+                    break;
+                case 'NewEntry':
+                    pageComponent = (
+                        <ProtectedRoute>
+                            <NewEntry history={history} />
+                        </ProtectedRoute>
                     );
-                }}
-            </Router>
-        </UserContextProvider>
+                    break;
+                case 'Entries':
+                    pageComponent = (
+                        <ProtectedRoute>
+                            <Entries history={history} />
+                        </ProtectedRoute>
+                    );
+                    break;
+                case 'Profile':
+                    pageComponent = (
+                        <ProtectedRoute>
+                            <Profile />
+                        </ProtectedRoute>
+                    );
+                    break;
+                default:
+                    pageComponent = (
+                        <Title>Page not found</Title>
+                    );
+                }
+                return (
+                    <Container>
+                        <TopBarWithUser history={history} />
+                        {pageComponent}
+                    </Container>
+                );
+            }}
+        </Router>
     </QueryClientProvider>
 );
 
