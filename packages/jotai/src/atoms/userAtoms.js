@@ -14,22 +14,19 @@ const logoutAtom = atomWithMutation(() => ({
     mutationFn: logout
 }));
 
-export const UserAtomActions = {
-    Refresh: 'refresh',
-    Logout: 'logout'
-};
-
 const userStatusAtom = atom(
     (get) => {
         const { data } = get(getUserAtom);
         if (data?.error?.message === 'Authentication required') {
             return UserStatus.UNAUTHENTICATED;
         }
+        if (!data?.data) {
+            return UserStatus.UNKNOWN;
+        }
         // Stale data is present during refetching, even if it errors out
-        if (!data.isFetching && data?.data) {
+        if (data?.data) {
             return UserStatus.AUTHENTICATED;
         }
-        return UserStatus.UNKNOWN;
     }
 );
 
@@ -57,6 +54,11 @@ const userAvatarAtom = atom(
     }
 );
 
+const UserAtomActions = {
+    Refresh: 'refresh',
+    Logout: 'logout'
+};
+
 const userActionAtom = atom(
     null,
     async (get, set, update) => {
@@ -74,6 +76,7 @@ const userActionAtom = atom(
 
 export {
     UserStatus,
+    UserAtomActions,
     userStatusAtom,
     userIdAtom,
     usernameAtom,
