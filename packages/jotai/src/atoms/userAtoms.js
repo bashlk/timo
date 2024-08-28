@@ -96,7 +96,8 @@ const userActionAtom = atom(
             return {
                 action: sortedActions[0][0],
                 isPending: sortedActions[0][1]?.isPending,
-                error: null
+                error: null,
+                isSuccess: false
             };
         }
 
@@ -104,14 +105,25 @@ const userActionAtom = atom(
             return {
                 action: sortedActions[0][0],
                 error: sortedActions[0][1]?.error,
-                isPending: false
+                isPending: false,
+                isSuccess: false
+            };
+        }
+
+        if (sortedActions[0][1]?.isSuccess) {
+            return {
+                action: sortedActions[0][0],
+                error: null,
+                isPending: false,
+                isSuccess: true
             };
         }
 
         return {
             action: null,
             error: null,
-            isPending: false
+            isPending: false,
+            isSuccess: false
         };
     },
     async (get, set, update) => {

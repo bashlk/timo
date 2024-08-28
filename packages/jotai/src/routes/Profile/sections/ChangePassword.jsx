@@ -1,33 +1,31 @@
-import { useMutation } from '@tanstack/react-query';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useAtom } from 'jotai';
 import Input from '@timo/common/components/Input';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import Button from '@timo/common/components/Button';
-import { updatePassword } from '@timo/common/api';
-import { usernameAtom } from '../../../atoms/userAtoms';
+import { usernameAtom, userActionAtom, UserAtomActions } from '../../../atoms/userAtoms';
 import styles from '../Profile.module.css';
 
 const ChangePassword = () => {
     const username = useAtomValue(usernameAtom);
+    const [userAtomActionStatus, runUserAtomAction] = useAtom(userActionAtom);
 
-    const { mutate: updatePasswordM , error: updatePasswordError, isPending: isUpdatingPassword, isSuccess: passwordUpdated } = useMutation({
-        mutationFn: updatePassword
-    });
-
-    const updatePasswordStatus =
-        updatePasswordError ? updatePasswordError.message :
-            isUpdatingPassword ? 'Loading...' :
-                passwordUpdated ? 'Password updated' : '';
+    const isUserAtomActionUpdatePassword = userAtomActionStatus.action === UserAtomActions.UpdatePassword;
+    const updatePasswordStatus = isUserAtomActionUpdatePassword && (userAtomActionStatus.error ? userAtomActionStatus.error.message :
+        userAtomActionStatus.isPending ? 'Loading...' :
+            userAtomActionStatus.isSuccess ? 'Password updated' : '');
 
     const handlePasswordFormSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const password = formData.get('password');
         const newPassword = formData.get('newPassword');
-        updatePasswordM({
-            username: username,
-            password,
-            newPassword
+        runUserAtomAction({
+            action: UserAtomActions.UpdatePassword,
+            data: {
+                username,
+                password,
+                newPassword
+            }
         });
     };
 
