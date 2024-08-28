@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useMutation } from '@tanstack/react-query';
 import { login, register } from '@timo/common/api';
 import Input from '@timo/common/components/Input';
@@ -11,7 +11,7 @@ import { userActionAtom, userStatusAtom, UserStatus, UserAtomActions } from '../
 import styles from './Login.module.css';
 
 const Login = ({ history }) => {
-    const userStatus = useAtom(userStatusAtom);
+    const userStatus = useAtomValue(userStatusAtom);
     const runUserAtomAction = useSetAtom(userActionAtom);
 
     useEffect(() => {
