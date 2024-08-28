@@ -1,8 +1,6 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useAtomValue, useSetAtom } from 'jotai';
-import { useMutation } from '@tanstack/react-query';
-import { login, register } from '@timo/common/api';
+import { useAtom, useAtomValue } from 'jotai';
 import Input from '@timo/common/components/Input';
 import Button, { ButtonVariants } from '@timo/common/components/Button';
 import Title from '@timo/common/components/Title';
@@ -12,28 +10,13 @@ import styles from './Login.module.css';
 
 const Login = ({ history }) => {
     const userStatus = useAtomValue(userStatusAtom);
-    const runUserAtomAction = useSetAtom(userActionAtom);
+    const [userAtomActionStatus, runUserAtomAction] = useAtom(userActionAtom);
 
     useEffect(() => {
         if (userStatus === UserStatus.AUTHENTICATED) {
             history.replace('./');
         }
     }, [history, userStatus]);
-
-    const handleSuccess = () => {
-        runUserAtomAction({ action: UserAtomActions.Refresh });
-        history.replace('./');
-    };
-
-    const loginMutation = useMutation({
-        mutationFn: login,
-        onSuccess: handleSuccess
-    });
-
-    const registerMutation = useMutation({
-        mutationFn: register,
-        onSuccess: handleSuccess
-    });
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
@@ -44,17 +27,15 @@ const Login = ({ history }) => {
         const password = formData.get('password');
 
         if (action == 'login') {
-            loginMutation.mutate({ username, password });
+            runUserAtomAction({ action: UserAtomActions.Login, data: { username, password }});
         }
 
         if (action == 'register') {
-            registerMutation.mutate({ username, password });
+            runUserAtomAction({ action: UserAtomActions.Register, data: { username, password }});
         }
     };
 
-    const error = loginMutation.error || registerMutation.error;
-    const pending = loginMutation.isPending || registerMutation.isPending;
-    const statusMessage = error ? error.message : pending ? 'Loading...' : null;
+    const statusMessage = userAtomActionStatus.error ? userAtomActionStatus.error.message : userAtomActionStatus.isPending ? 'Loading...' : null;
 
     return (
         <div className={styles['body']}>
