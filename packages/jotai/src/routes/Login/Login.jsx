@@ -1,23 +1,24 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { useMutation } from '@tanstack/react-query';
 import { login, register } from '@timo/common/api';
 import Input from '@timo/common/components/Input';
 import Button, { ButtonVariants } from '@timo/common/components/Button';
 import Title from '@timo/common/components/Title';
 import StatusMessage from '@timo/common/components/StatusMessage';
-import userAtom, { UserAtomActions, UserStatus } from '../../atoms/userAtom';
+import { userActionAtom, userStatusAtom, UserStatus, UserAtomActions } from '../../atoms/userAtoms';
 import styles from './Login.module.css';
 
 const Login = ({ history }) => {
-    const [user, runUserAtomAction] = useAtom(userAtom);
+    const userStatus = useAtom(userStatusAtom);
+    const runUserAtomAction = useSetAtom(userActionAtom);
 
     useEffect(() => {
-        if (user.status === UserStatus.AUTHENTICATED) {
+        if (userStatus === UserStatus.AUTHENTICATED) {
             history.replace('./');
         }
-    }, [history, user]);
+    }, [history, userStatus]);
 
     const handleSuccess = () => {
         runUserAtomAction({ action: UserAtomActions.Refresh });

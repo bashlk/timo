@@ -4,11 +4,11 @@ import Input from '@timo/common/components/Input';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import Button from '@timo/common/components/Button';
 import { updatePassword } from '@timo/common/api';
-import userAtom from '../atoms/userAtom';
+import { usernameAtom } from '../../../atoms/userAtoms';
 import styles from '../Profile.module.css';
 
 const ChangePassword = () => {
-    const user = useAtomValue(userAtom);
+    const username = useAtomValue(usernameAtom);
 
     const { mutate: updatePasswordM , error: updatePasswordError, isPending: isUpdatingPassword, isSuccess: passwordUpdated } = useMutation({
         mutationFn: updatePassword
@@ -25,7 +25,7 @@ const ChangePassword = () => {
         const password = formData.get('password');
         const newPassword = formData.get('newPassword');
         updatePasswordM({
-            username: user?.data?.username,
+            username: username,
             password,
             newPassword
         });

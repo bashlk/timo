@@ -19,25 +19,46 @@ export const UserAtomActions = {
     Logout: 'logout'
 };
 
-const userAtom = atom(
+const userStatusAtom = atom(
     (get) => {
         const { data } = get(getUserAtom);
         if (data?.error?.message === 'Authentication required') {
-            return {
-                status: UserStatus.UNAUTHENTICATED
-            };
+            return UserStatus.UNAUTHENTICATED;
         }
         // Stale data is present during refetching, even if it errors out
         if (!data.isFetching && data?.data) {
-            return {
-                status: UserStatus.AUTHENTICATED,
-                data: data.data
-            };
+            return UserStatus.AUTHENTICATED;
         }
+        return UserStatus.UNKNOWN;
+    }
+);
+
+const userIdAtom = atom(
+    (get) => {
+        const { data } = get(getUserAtom);
+        return data?.data?.id;
+    }
+);
+
+const usernameAtom = atom(
+    (get) => {
+        const { data } = get(getUserAtom);
+        return data?.data?.username;
+    }
+);
+
+const userAvatarAtom = atom(
+    (get) => {
+        const { data } = get(getUserAtom);
         return {
-            status: UserStatus.UNKNOWN
+            character: data?.data?.avatar_character,
+            background: data?.data?.avatar_background
         };
-    },
+    }
+);
+
+const userActionAtom = atom(
+    null,
     async (get, set, update) => {
         const { data } = get(getUserAtom);
         if (update?.action === UserAtomActions.Refresh) {
@@ -51,6 +72,11 @@ const userAtom = atom(
     }
 );
 
-export { UserStatus };
-
-export default userAtom;
+export {
+    UserStatus,
+    userStatusAtom,
+    userIdAtom,
+    usernameAtom,
+    userAvatarAtom,
+    userActionAtom
+};

@@ -2,20 +2,20 @@ import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import history from 'history/browser';
 import { useAtomValue } from 'jotai';
-import userAtom, { UserStatus } from '../atoms/userAtom';
+import { UserStatus, userStatusAtom } from '../atoms/userAtoms';
 
 const FALLBACK_ROUTE = './login';
 
 const ProtectedRoute = ({ children }) => {
-    const user = useAtomValue(userAtom);
+    const status = useAtomValue(userStatusAtom);
 
     useEffect(() => {
-        if (user?.status === UserStatus.UNAUTHENTICATED) {
+        if (status === UserStatus.UNAUTHENTICATED) {
             history.replace(FALLBACK_ROUTE);
         }
     });
 
-    if (!user) {
+    if (status === UserStatus.UNKNOWN) {
         return null;
     }
 

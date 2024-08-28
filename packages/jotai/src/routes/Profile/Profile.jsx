@@ -4,10 +4,10 @@ import Button, { ButtonVariants } from '@timo/common/components/Button';
 import styles from './Profile.module.css';
 import ChangePassword from './sections/ChangePassword';
 import CustomizeUser from './sections/CustomizeUser';
-import userAtom from '../../atoms/userAtom';
+import { userActionAtom } from '../../atoms/userAtoms';
 
 const Profile = () => {
-    const runUserAtomAction = useSetAtom(userAtom);
+    const runUserAtomAction = useSetAtom(userActionAtom);
 
     return (
         <div className={styles['profile']}>

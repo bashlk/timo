@@ -1,16 +1,16 @@
 import PropTypes from 'prop-types';
 import TopBar from '@timo/common/components/TopBar';
 import { useAtomValue } from 'jotai';
-import userAtom from '../atoms/userAtom';
+import { userAvatarAtom } from '../atoms/userAtoms';
 
 const TopBarWithUser = ({ history }) => {
-    const user = useAtomValue(userAtom);
+    const userAvatar = useAtomValue(userAvatarAtom);
 
     return (
         <TopBar
             avatar={{
-                character: user?.data?.avatar_character,
-                background: user?.data?.avatar_background
+                character: userAvatar?.character,
+                background: userAvatar?.background
             }}
             onIconClick={() => history.push('./')}
             onAvatarClick={() => history.push('./profile')}
