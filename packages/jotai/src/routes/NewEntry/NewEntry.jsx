@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useAtomValue } from 'jotai/utils';
+import { useAtomValue } from 'jotai';
 import PropTypes from 'prop-types';
 import Timer from '@timo/common/components/Timer';
 import Title from '@timo/common/components/Title';

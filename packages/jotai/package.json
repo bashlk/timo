@@ -9,9 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.40.1",
+    "@tanstack/query-core": "^5.52.2",
     "jotai": "^2.9.3",
-    "jotai-effect": "^1.0.0",
     "jotai-tanstack-query": "^0.8.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

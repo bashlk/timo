@@ -1,7 +1,3 @@
-import {
-    QueryClient,
-    QueryClientProvider
-} from '@tanstack/react-query';
 import Router from '@timo/common/components/Router';
 import Container from '@timo/common/components/Container';
 import Title from '@timo/common/components/Title';
@@ -21,52 +17,48 @@ const routes = [
     { path: '/profile', name: 'Profile' }
 ];
 
-const queryClient = new QueryClient();
-
 const App = () => (
-    <QueryClientProvider client={queryClient}>
-        <Router base="/jotai" routes={routes}>
-            {(routeName, history) => {
-                let pageComponent = null;
-                switch (routeName) {
-                case 'Login':
-                    pageComponent = <Login history={history} />;
-                    break;
-                case 'NewEntry':
-                    pageComponent = (
-                        <ProtectedRoute>
-                            <NewEntry history={history} />
-                        </ProtectedRoute>
-                    );
-                    break;
-                case 'Entries':
-                    pageComponent = (
-                        <ProtectedRoute>
-                            <Entries history={history} />
-                        </ProtectedRoute>
-                    );
-                    break;
-                case 'Profile':
-                    pageComponent = (
-                        <ProtectedRoute>
-                            <Profile />
-                        </ProtectedRoute>
-                    );
-                    break;
-                default:
-                    pageComponent = (
-                        <Title>Page not found</Title>
-                    );
-                }
-                return (
-                    <Container>
-                        <TopBarWithUser history={history} />
-                        {pageComponent}
-                    </Container>
+    <Router base="/jotai" routes={routes}>
+        {(routeName, history) => {
+            let pageComponent = null;
+            switch (routeName) {
+            case 'Login':
+                pageComponent = <Login history={history} />;
+                break;
+            case 'NewEntry':
+                pageComponent = (
+                    <ProtectedRoute>
+                        <NewEntry history={history} />
+                    </ProtectedRoute>
                 );
-            }}
-        </Router>
-    </QueryClientProvider>
+                break;
+            case 'Entries':
+                pageComponent = (
+                    <ProtectedRoute>
+                        <Entries history={history} />
+                    </ProtectedRoute>
+                );
+                break;
+            case 'Profile':
+                pageComponent = (
+                    <ProtectedRoute>
+                        <Profile />
+                    </ProtectedRoute>
+                );
+                break;
+            default:
+                pageComponent = (
+                    <Title>Page not found</Title>
+                );
+            }
+            return (
+                <Container>
+                    <TopBarWithUser history={history} />
+                    {pageComponent}
+                </Container>
+            );
+        }}
+    </Router>
 );
 
 export default App;
