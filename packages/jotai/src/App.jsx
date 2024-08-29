@@ -1,4 +1,3 @@
-import Router from '@timo/common/components/Router';
 import Container from '@timo/common/components/Container';
 import Title from '@timo/common/components/Title';
 
@@ -8,6 +7,7 @@ import NewEntry from './routes/NewEntry/NewEntry';
 import Profile from './routes/Profile/Profile';
 import TopBarWithUser from './contextualComponents/TopBarWithUser';
 import ProtectedRoute from './contextualComponents/ProtectedRoute';
+import Router from './components/Router';
 
 const routes = [
     { path: '/', name: 'Entries' },
@@ -19,29 +19,29 @@ const routes = [
 
 const App = () => (
     <Router base="/jotai" routes={routes}>
-        {(routeName, history) => {
+        {(routeName, locationAtom) => {
             let pageComponent = null;
             switch (routeName) {
             case 'Login':
-                pageComponent = <Login history={history} />;
+                pageComponent = <Login locationAtom={locationAtom} />;
                 break;
             case 'NewEntry':
                 pageComponent = (
-                    <ProtectedRoute history={history}>
-                        <NewEntry history={history} />
+                    <ProtectedRoute locationAtom={locationAtom}>
+                        <NewEntry locationAtom={locationAtom} />
                     </ProtectedRoute>
                 );
                 break;
             case 'Entries':
                 pageComponent = (
-                    <ProtectedRoute history={history}>
-                        <Entries history={history} />
+                    <ProtectedRoute locationAtom={locationAtom}>
+                        <Entries locationAtom={locationAtom} />
                     </ProtectedRoute>
                 );
                 break;
             case 'Profile':
                 pageComponent = (
-                    <ProtectedRoute history={history}>
+                    <ProtectedRoute locationAtom={locationAtom}>
                         <Profile />
                     </ProtectedRoute>
                 );
@@ -53,7 +53,7 @@ const App = () => (
             }
             return (
                 <Container>
-                    <TopBarWithUser history={history} />
+                    <TopBarWithUser locationAtom={locationAtom} />
                     {pageComponent}
                 </Container>
             );

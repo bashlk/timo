@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import Entry from '@timo/common/components/Entry';
 import Title from '@timo/common/components/Title';
 import Input from '@timo/common/components/Input';
@@ -19,7 +19,8 @@ import {
     entriesCountAtom
 } from '../../atoms/entryAtoms';
 
-const Entries = ({ history }) => {
+const Entries = ({ locationAtom }) => {
+    const setLocation = useSetAtom(locationAtom);
     const [startDate, setStartDate] = useAtom(entriesStartDateAtom);
     const [endDate, setEndDate] = useAtom(entriesEndDateAtom);
     const entries = useAtomValue(entriesGroupedByDateAtom);
@@ -47,7 +48,7 @@ const Entries = ({ history }) => {
     };
 
     const handleNewClick = () => {
-        history.push('./new');
+        setLocation({ pathname: '/new' });
     };
 
     return (
@@ -104,7 +105,7 @@ const Entries = ({ history }) => {
 };
 
 Entries.propTypes = {
-    history: PropTypes.object.isRequired
+    locationAtom: PropTypes.object.isRequired
 };
 
 export default Entries;

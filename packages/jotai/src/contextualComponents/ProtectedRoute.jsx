@@ -1,16 +1,19 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { UserStatus, userStatusAtom } from '../atoms/userAtoms';
 
-const FALLBACK_ROUTE = './login';
+const FALLBACK_ROUTE = '/login';
 
-const ProtectedRoute = ({ history, children }) => {
+const ProtectedRoute = ({ locationAtom, children }) => {
     const status = useAtomValue(userStatusAtom);
+    const setLocation = useSetAtom(locationAtom);
 
     useEffect(() => {
         if (status === UserStatus.UNAUTHENTICATED) {
-            history.replace(FALLBACK_ROUTE);
+            setLocation({
+                pathname: FALLBACK_ROUTE
+            });
         }
     });
 
@@ -24,9 +27,7 @@ const ProtectedRoute = ({ history, children }) => {
 ProtectedRoute.propTypes = {
     userHook: PropTypes.func,
     children: PropTypes.node.isRequired,
-    history: PropTypes.shape({
-        replace: PropTypes.func.isRequired
-    }).isRequired
+    locationAtom: PropTypes.object.isRequired
 };
 
 export default ProtectedRoute;
