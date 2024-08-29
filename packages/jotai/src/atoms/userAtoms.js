@@ -11,24 +11,34 @@ const getUserAtom = loadable(atomWithQuery(() => ({
     retry: false
 })));
 
-const loginAtom = atomWithMutation(() => ({
-    mutationFn: login
+const mutationSuccessHandler = (get) => () => {
+    const { data } = get(getUserAtom);
+    data.refetch();
+};
+
+const loginAtom = atomWithMutation((get) => ({
+    mutationFn: login,
+    onSuccess: mutationSuccessHandler(get)
 }));
 
-const registerAtom = atomWithMutation(() => ({
-    mutationFn: register
+const registerAtom = atomWithMutation((get) => ({
+    mutationFn: register,
+    onSuccess: mutationSuccessHandler(get)
 }));
 
-const updateUserAtom = atomWithMutation(() => ({
-    mutationFn: updateUser
+const updateUserAtom = atomWithMutation((get) => ({
+    mutationFn: updateUser,
+    onSuccess: mutationSuccessHandler(get)
 }));
 
-const updatePasswordAtom = atomWithMutation(() => ({
-    mutationFn: updatePassword
+const updatePasswordAtom = atomWithMutation((get) => ({
+    mutationFn: updatePassword,
+    onSuccess: mutationSuccessHandler(get)
 }));
 
-const logoutAtom = atomWithMutation(() => ({
-    mutationFn: logout
+const logoutAtom = atomWithMutation((get) => ({
+    mutationFn: logout,
+    onSuccess: mutationSuccessHandler(get)
 }));
 
 const userStatusAtom = atom(
@@ -79,84 +89,6 @@ const UserAtomActions = {
     Logout: 'logout'
 };
 
-const userActionAtom = atom(
-    // Returns the status of the last mutation atom that was submitted
-    (get) => {
-        const actions = [
-            [UserAtomActions.Login, get(loginAtom)],
-            [UserAtomActions.Register, get(registerAtom)],
-            [UserAtomActions.Update, get(updateUserAtom)],
-            [UserAtomActions.UpdatePassword, get(updatePasswordAtom)],
-            [UserAtomActions.Logout, get(logoutAtom)]
-        ];
-
-        const sortedActions =  actions.sort(([, { submittedAt: a }], [, { submittedAt: b }]) => b - a);
-
-        if (sortedActions[0][1]?.isPending) {
-            return {
-                action: sortedActions[0][0],
-                isPending: sortedActions[0][1]?.isPending,
-                error: null,
-                isSuccess: false
-            };
-        }
-
-        if (sortedActions[0][1]?.error) {
-            return {
-                action: sortedActions[0][0],
-                error: sortedActions[0][1]?.error,
-                isPending: false,
-                isSuccess: false
-            };
-        }
-
-        if (sortedActions[0][1]?.isSuccess) {
-            return {
-                action: sortedActions[0][0],
-                error: null,
-                isPending: false,
-                isSuccess: true
-            };
-        }
-
-        return {
-            action: null,
-            error: null,
-            isPending: false,
-            isSuccess: false
-        };
-    },
-    async (get, set, update) => {
-        if (update?.action === UserAtomActions.Login) {
-            const { mutateAsync } = get(loginAtom);
-            await mutateAsync(update.data);
-        }
-
-        if (update?.action === UserAtomActions.Register) {
-            const { mutateAsync } = get(registerAtom);
-            await mutateAsync(update.data);
-        }
-
-        if (update?.action === UserAtomActions.Update) {
-            const { mutateAsync } = get(updateUserAtom);
-            await mutateAsync(update.data);
-        }
-
-        if (update?.action === UserAtomActions.UpdatePassword) {
-            const { mutateAsync } = get(updatePasswordAtom);
-            await mutateAsync(update.data);
-        }
-
-        if (update?.action === UserAtomActions.Logout) {
-            const { mutateAsync } = get(logoutAtom);
-            await mutateAsync();
-        }
-
-        const { data } = get(getUserAtom);
-        await data.refetch();
-    }
-);
-
 export {
     UserStatus,
     UserAtomActions,
@@ -164,5 +96,9 @@ export {
     userIdAtom,
     usernameAtom,
     userAvatarAtom,
-    userActionAtom
+    loginAtom,
+    registerAtom,
+    updateUserAtom,
+    updatePasswordAtom,
+    logoutAtom
 };

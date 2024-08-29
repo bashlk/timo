@@ -1,31 +1,28 @@
-import { useAtomValue, useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import Input from '@timo/common/components/Input';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import Button from '@timo/common/components/Button';
-import { usernameAtom, userActionAtom, UserAtomActions } from '../../../atoms/userAtoms';
+import { usernameAtom, updatePasswordAtom } from '../../../atoms/userAtoms';
 import styles from '../Profile.module.css';
 
 const ChangePassword = () => {
     const username = useAtomValue(usernameAtom);
-    const [userAtomActionStatus, runUserAtomAction] = useAtom(userActionAtom);
+    const { mutate: updatePassword, error, isPending, isSuccess } = useAtomValue(updatePasswordAtom);
 
-    const isUserAtomActionUpdatePassword = userAtomActionStatus.action === UserAtomActions.UpdatePassword;
-    const updatePasswordStatus = isUserAtomActionUpdatePassword && (userAtomActionStatus.error ? userAtomActionStatus.error.message :
-        userAtomActionStatus.isPending ? 'Loading...' :
-            userAtomActionStatus.isSuccess ? 'Password updated' : '');
+    const updatePasswordStatus =
+        error ? error.message :
+            isPending ? 'Loading...' :
+                isSuccess ? 'Password updated' : '';
 
     const handlePasswordFormSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const password = formData.get('password');
         const newPassword = formData.get('newPassword');
-        runUserAtomAction({
-            action: UserAtomActions.UpdatePassword,
-            data: {
-                username,
-                password,
-                newPassword
-            }
+        updatePassword({
+            username,
+            password,
+            newPassword
         });
     };
 

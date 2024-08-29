@@ -1,16 +1,17 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import Input from '@timo/common/components/Input';
 import Button, { ButtonVariants } from '@timo/common/components/Button';
 import Title from '@timo/common/components/Title';
 import StatusMessage from '@timo/common/components/StatusMessage';
-import { userActionAtom, userStatusAtom, UserStatus, UserAtomActions } from '../../atoms/userAtoms';
+import { loginAtom, registerAtom, userStatusAtom, UserStatus } from '../../atoms/userAtoms';
 import styles from './Login.module.css';
 
 const Login = ({ history }) => {
     const userStatus = useAtomValue(userStatusAtom);
-    const [userAtomActionStatus, runUserAtomAction] = useAtom(userActionAtom);
+    const { error: loginError, isPending: isLoginPending, mutate: login } = useAtomValue(loginAtom);
+    const { error: registerError, isPending: isRegisterPending, mutate: register } = useAtomValue(registerAtom);
 
     useEffect(() => {
         if (userStatus === UserStatus.AUTHENTICATED) {
@@ -27,15 +28,17 @@ const Login = ({ history }) => {
         const password = formData.get('password');
 
         if (action == 'login') {
-            runUserAtomAction({ action: UserAtomActions.Login, data: { username, password }});
+            login({ username, password });
         }
 
         if (action == 'register') {
-            runUserAtomAction({ action: UserAtomActions.Register, data: { username, password }});
+            register({ username, password });
         }
     };
 
-    const statusMessage = userAtomActionStatus.error ? userAtomActionStatus.error.message : userAtomActionStatus.isPending ? 'Loading...' : null;
+    const isPending = isLoginPending || isRegisterPending;
+    const error = loginError || registerError;
+    const statusMessage = error ? error.message : isPending ? 'Loading...' : null;
 
     return (
         <div className={styles['body']}>

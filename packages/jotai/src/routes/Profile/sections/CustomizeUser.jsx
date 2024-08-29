@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import Avatar from '@timo/common/components/Avatar';
 import RadioGroup from '@timo/common/components/RadioGroup';
 import Input from '@timo/common/components/Input';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import Button from '@timo/common/components/Button';
-import { userAvatarAtom, userActionAtom, userIdAtom, usernameAtom, UserAtomActions } from '../../../atoms/userAtoms';
+import { userAvatarAtom,  userIdAtom, usernameAtom, updateUserAtom } from '../../../atoms/userAtoms';
 import styles from '../Profile.module.css';
 
 const CustomizeUser = () => {
     const userAvatar = useAtomValue(userAvatarAtom);
     const userId = useAtomValue(userIdAtom);
     const username = useAtomValue(usernameAtom);
-    const [userAtomActionStatus, runUserAtomAction] = useAtom(userActionAtom);
+    const { mutate: updateUser, error, isPending, isSuccess } = useAtomValue(updateUserAtom);
     const [avatar, setAvatar] = useState({
         character: undefined,
         background: undefined
@@ -25,9 +25,8 @@ const CustomizeUser = () => {
     }, [userAvatar]);
 
 
-    const isUserAtomActionUpdate = userAtomActionStatus.action === UserAtomActions.Update;
-    const updateUserStatus = isUserAtomActionUpdate && (userAtomActionStatus.error ? userAtomActionStatus.error.message :
-        userAtomActionStatus.isPending ? 'Loading...' : userAtomActionStatus.isSuccess ? 'Profile updated' : '');
+    const updateUserStatus = error ? error.message :
+        isPending ? 'Loading...' : isSuccess ? 'Profile updated' : '';
 
     const handleCustomizeFormSubmit = (e) => {
         e.preventDefault();
@@ -35,14 +34,11 @@ const CustomizeUser = () => {
         const username = formData.get('username');
         const avatarCharacter = formData.get('avatar-character');
         const avatarBackground = formData.get('avatar-background');
-        runUserAtomAction({
-            action: UserAtomActions.Update,
-            data: {
-                id: userId,
-                username,
-                avatar_character: avatarCharacter,
-                avatar_background: avatarBackground
-            }
+        updateUser({
+            id: userId,
+            username,
+            avatar_character: avatarCharacter,
+            avatar_background: avatarBackground
         });
     };
 
