@@ -76,8 +76,7 @@ const Entries = () => {
                                     <h2 className={styles['day-name']}>{date}</h2>
                                     <div>{entryDurationsGroupedByDate[date]}</div>
                                 </div>
-                                {/* Entries are descending after being grouped, reverse them */}
-                                {dayEntries.toReversed().map((entry) => {
+                                {dayEntries.map((entry) => {
                                     const updatingEntry = updateVariables?.id === entry.id;
                                     const deletingEntry = deleteVariables === entry.id;
                                     const status = updatingEntry ? updateStatus : deletingEntry ? deleteStatus : null;

@@ -51,12 +51,17 @@ const entriesGroupedByDateAtom = atom(
         if (data) {
             const formatter = new Intl.DateTimeFormat('default', { dateStyle: 'medium' });
             // Entries are sorted by id which is ascending, so we need to reverse them
-            return data.toReversed().reduce((grouped, entry) => {
+            const groupedEntries = data.toReversed().reduce((grouped, entry) => {
                 const date = formatter.format(new Date(entry.start_time));
                 if (!grouped[date]) {
                     grouped[date] = [];
                 }
                 grouped[date].push(entry);
+                return grouped;
+            }, {});
+            // Entries within a day are in descending after being grouped, reverse them
+            return Object.entries(groupedEntries).reduce((grouped, [date, dayEntries]) => {
+                grouped[date] = dayEntries.toReversed();
                 return grouped;
             }, {});
         }
