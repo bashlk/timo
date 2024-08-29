@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
+import { useAtomValue } from 'jotai/utils';
 import PropTypes from 'prop-types';
-import { useMutation } from '@tanstack/react-query';
-import { createEntry } from '@timo/common/api';
 import Timer from '@timo/common/components/Timer';
 import Title from '@timo/common/components/Title';
 import Input from '@timo/common/components/Input';
 import Button, { ButtonVariants } from '@timo/common/components/Button';
 import StatusMessage from '@timo/common/components/StatusMessage';
+import { createEntryAtom } from '../../atoms/entryAtoms';
 import styles from './NewEntry.module.css';
 
 const TimerState = {
@@ -20,9 +20,7 @@ const LogTime = () => {
     const [duration, setDuration] = useState(0);
     const [timerState, setTimerState] = useState(TimerState.STOPPED);
 
-    const { mutate: create, error, isPending, isSuccess } = useMutation({
-        mutationFn: createEntry
-    });
+    const { mutate: createEntry, error, isPending, isSuccess } = useAtomValue(createEntryAtom);
     const statusMessage =
         error ? error.message :
             isPending ? 'Saving...' :
@@ -45,7 +43,7 @@ const LogTime = () => {
         if (timerState === TimerState.STOPPED && duration > 0) {
             setDuration(0);
             const endTimestamp = Math.floor(Date.now() / 1000);
-            create({
+            createEntry({
                 description: descriptionRef.current.value,
                 start_time: `@${endTimestamp - duration}`,
                 end_time: `@${endTimestamp}`
