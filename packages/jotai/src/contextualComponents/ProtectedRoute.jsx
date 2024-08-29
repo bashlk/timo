@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import history from 'history/browser';
 import { useAtomValue } from 'jotai';
 import { UserStatus, userStatusAtom } from '../atoms/userAtoms';
 
 const FALLBACK_ROUTE = './login';
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ history, children }) => {
     const status = useAtomValue(userStatusAtom);
 
     useEffect(() => {
@@ -24,7 +23,10 @@ const ProtectedRoute = ({ children }) => {
 
 ProtectedRoute.propTypes = {
     userHook: PropTypes.func,
-    children: PropTypes.node.isRequired
+    children: PropTypes.node.isRequired,
+    history: PropTypes.shape({
+        replace: PropTypes.func.isRequired
+    }).isRequired
 };
 
 export default ProtectedRoute;

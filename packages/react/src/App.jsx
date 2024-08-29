@@ -29,21 +29,21 @@ const App = () => (
                     break;
                 case 'NewEntry':
                     pageComponent = (
-                        <ProtectedRoute>
+                        <ProtectedRoute history={history}>
                             <NewEntry history={history} />
                         </ProtectedRoute>
                     );
                     break;
                 case 'Entries':
                     pageComponent = (
-                        <ProtectedRoute>
+                        <ProtectedRoute history={history}>
                             <Entries history={history} />
                         </ProtectedRoute>
                     );
                     break;
                 case 'Profile':
                     pageComponent = (
-                        <ProtectedRoute>
+                        <ProtectedRoute history={history}>
                             <Profile />
                         </ProtectedRoute>
                     );
