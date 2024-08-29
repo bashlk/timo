@@ -8,6 +8,7 @@ import Input from '@timo/common/components/Input';
 import Button from '@timo/common/components/Button';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import formatDuration from '@timo/common/utils/formatDuration';
+import getDateString from '@timo/common/utils/getDateString';
 import styles from './Entries.module.css';
 import { ButtonVariants } from '@timo/common/components/Button/Button';
 
@@ -29,10 +30,6 @@ const getEntriesGroupedByDate = (entries) => {
         grouped[date].push(entry);
         return grouped;
     }, {});
-};
-
-const getDateString = (date) => {
-    return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, -8);
 };
 
 const now = new Date();
