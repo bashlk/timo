@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { useAtomValue, useSetAtom } from 'jotai';
 import Input from '@timo/common/components/Input';
 import Button, { ButtonVariants } from '@timo/common/components/Button';
 import Title from '@timo/common/components/Title';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import { loginAtom, registerAtom, userStatusAtom, UserStatus } from '../../atoms/userAtoms';
+import { baseAwareLocationAtom } from '../atoms/locationAtoms';
 import styles from './Login.module.css';
 
-const Login = ({ locationAtom }) => {
-    const setLocation = useSetAtom(locationAtom);
+const Login = () => {
+    const setLocation = useSetAtom(baseAwareLocationAtom);
     const userStatus = useAtomValue(userStatusAtom);
     const { error: loginError, isPending: isLoginPending, mutate: login } = useAtomValue(loginAtom);
     const { error: registerError, isPending: isRegisterPending, mutate: register } = useAtomValue(registerAtom);
@@ -55,10 +55,6 @@ const Login = ({ locationAtom }) => {
             </form>
         </div>
     );
-};
-
-Login.propTypes = {
-    locationAtom: PropTypes.object.isRequired
 };
 
 export default Login;

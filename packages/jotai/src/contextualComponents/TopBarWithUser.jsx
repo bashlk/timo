@@ -1,11 +1,11 @@
-import PropTypes from 'prop-types';
 import TopBar from '@timo/common/components/TopBar';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { userAvatarAtom } from '../atoms/userAtoms';
+import { baseAwareLocationAtom } from '../atoms/locationAtoms';
 
-const TopBarWithUser = ({ locationAtom }) => {
+const TopBarWithUser = () => {
     const userAvatar = useAtomValue(userAvatarAtom);
-    const setLocation = useSetAtom(locationAtom);
+    const setLocation = useSetAtom(baseAwareLocationAtom);
 
     return (
         <TopBar
@@ -17,10 +17,6 @@ const TopBarWithUser = ({ locationAtom }) => {
             onAvatarClick={() => setLocation({ pathname: '/profile' })}
         />
     );
-};
-
-TopBarWithUser.propTypes = {
-    locationAtom: PropTypes.object.isRequired
 };
 
 export default TopBarWithUser;

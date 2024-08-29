@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import Entry from '@timo/common/components/Entry';
 import Title from '@timo/common/components/Title';
@@ -18,9 +17,10 @@ import {
     deleteEntryAtom,
     entriesCountAtom
 } from '../../atoms/entryAtoms';
+import { baseAwareLocationAtom } from '../atoms/locationAtoms';
 
-const Entries = ({ locationAtom }) => {
-    const setLocation = useSetAtom(locationAtom);
+const Entries = () => {
+    const setLocation = useSetAtom(baseAwareLocationAtom);
     const [startDate, setStartDate] = useAtom(entriesStartDateAtom);
     const [endDate, setEndDate] = useAtom(entriesEndDateAtom);
     const entries = useAtomValue(entriesGroupedByDateAtom);
@@ -102,10 +102,6 @@ const Entries = ({ locationAtom }) => {
             </div>
         </>
     );
-};
-
-Entries.propTypes = {
-    locationAtom: PropTypes.object.isRequired
 };
 
 export default Entries;

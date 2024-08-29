@@ -1,5 +1,4 @@
-import { atom } from 'jotai';
-import { atomWithLocation } from 'jotai-location';
+
 import Container from '@timo/common/components/Container';
 import Title from '@timo/common/components/Title';
 
@@ -11,8 +10,6 @@ import TopBarWithUser from './contextualComponents/TopBarWithUser';
 import ProtectedRoute from './contextualComponents/ProtectedRoute';
 import Router from './components/Router';
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-
 const routes = [
     { path: '/', name: 'Entries' },
     { path: '/login', name: 'Login' },
@@ -21,44 +18,31 @@ const routes = [
     { path: '/profile', name: 'Profile' }
 ];
 
-const locationAtom = atomWithLocation();
-
-const baseAwareLocationAtom = atom(
-    (get) => ({
-        ...get(locationAtom),
-        pathname: get(locationAtom).pathname.split(BASE_URL)[1]
-    }),
-    (get, set, update) => {
-        const updatedWithBase = { ...update, pathname: `${BASE_URL}${update.pathname}` };
-        set(locationAtom, updatedWithBase);
-    }
-);
-
 const App = () => (
-    <Router routes={routes} locationAtom={baseAwareLocationAtom}>
+    <Router routes={routes}>
         {(routeName) => {
             let pageComponent = null;
             switch (routeName) {
             case 'Login':
-                pageComponent = <Login locationAtom={baseAwareLocationAtom} />;
+                pageComponent = <Login />;
                 break;
             case 'NewEntry':
                 pageComponent = (
-                    <ProtectedRoute locationAtom={baseAwareLocationAtom}>
-                        <NewEntry locationAtom={baseAwareLocationAtom} />
+                    <ProtectedRoute>
+                        <NewEntry />
                     </ProtectedRoute>
                 );
                 break;
             case 'Entries':
                 pageComponent = (
-                    <ProtectedRoute locationAtom={baseAwareLocationAtom}>
-                        <Entries locationAtom={baseAwareLocationAtom} />
+                    <ProtectedRoute>
+                        <Entries />
                     </ProtectedRoute>
                 );
                 break;
             case 'Profile':
                 pageComponent = (
-                    <ProtectedRoute locationAtom={baseAwareLocationAtom}>
+                    <ProtectedRoute>
                         <Profile />
                     </ProtectedRoute>
                 );
@@ -70,7 +54,7 @@ const App = () => (
             }
             return (
                 <Container>
-                    <TopBarWithUser locationAtom={baseAwareLocationAtom} />
+                    <TopBarWithUser />
                     {pageComponent}
                 </Container>
             );
