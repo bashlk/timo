@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import history from 'history/browser';
 
-const Router = ({ base = '', routes, children }) => {
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
+const Router = ({ routes, children }) => {
     const [currentPath, setCurrentPath] = useState(history.location.pathname);
 
     useEffect(() => {
@@ -11,7 +13,7 @@ const Router = ({ base = '', routes, children }) => {
         });
     }, []);
 
-    const currentRoute = routes.find(route => `${base}${route.path}` === currentPath);
+    const currentRoute = routes.find(route => `${BASE_URL}${route.path}` === currentPath);
 
     if (!currentRoute) {
         return children(null);
@@ -27,8 +29,7 @@ Router.propTypes = {
             name: PropTypes.string.isRequired
         })
     ).isRequired,
-    children: PropTypes.func.isRequired,
-    base: PropTypes.string
+    children: PropTypes.func.isRequired
 };
 
 export default Router;

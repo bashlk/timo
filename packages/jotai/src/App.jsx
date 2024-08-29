@@ -11,7 +11,7 @@ import TopBarWithUser from './contextualComponents/TopBarWithUser';
 import ProtectedRoute from './contextualComponents/ProtectedRoute';
 import Router from './components/Router';
 
-const BASE_URL = '/jotai';
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const routes = [
     { path: '/', name: 'Entries' },

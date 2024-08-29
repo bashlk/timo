@@ -27,7 +27,7 @@ const queryClient = new QueryClient();
 const App = () => (
     <QueryClientProvider client={queryClient}>
         <UserContextProvider>
-            <Router base="/tanstack-query" routes={routes}>
+            <Router routes={routes}>
                 {(routeName, history) => {
                     let pageComponent = null;
                     switch (routeName) {

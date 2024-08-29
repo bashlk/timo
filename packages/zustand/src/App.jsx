@@ -25,7 +25,7 @@ const queryClient = new QueryClient();
 
 const App = () => (
     <QueryClientProvider client={queryClient}>
-        <Router base="/zustand" routes={routes}>
+        <Router routes={routes}>
             {(routeName, history) => {
                 let pageComponent = null;
                 switch (routeName) {

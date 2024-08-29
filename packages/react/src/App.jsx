@@ -20,7 +20,7 @@ const routes = [
 
 const App = () => (
     <UserContextProvider>
-        <Router base="/react" routes={routes}>
+        <Router routes={routes}>
             {(routeName, history) => {
                 let pageComponent = null;
                 switch (routeName) {
