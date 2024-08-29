@@ -1,4 +1,5 @@
 import { atom } from 'jotai';
+import { loadable } from 'jotai/utils';
 import { atomWithQuery, atomWithMutation } from 'jotai-tanstack-query';
 import { listEntries, updateEntry, deleteEntry, createEntry } from '@timo/common/api';
 import getDateString from '@timo/common/utils/getDateString';
@@ -21,32 +22,32 @@ const entriesEndDateAtom = atom(
     getDateString(new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59))
 );
 
-const entriesAtom = atomWithQuery((get) => ({
+const entriesAtom = loadable(atomWithQuery((get) => ({
     queryKey: ['entries', get(entriesStartDateAtom), get(entriesEndDateAtom)],
     queryFn: async () => {
         const from = get(entriesStartDateAtom);
         const to = get(entriesEndDateAtom);
         return await listEntries({ from, to });
     }
-}));
+})));
 
 const entriesStatusAtom = atom(
     (get) => {
-        const { isLoading, isError, error, isSuccess } = get(entriesAtom);
+        const { data: { isLoading, isError, error, isSuccess } } = get(entriesAtom);
         return { isLoading, isError, isSuccess, error };
     }
 );
 
 const entriesCountAtom = atom(
     (get) => {
-        const { data } = get(entriesAtom);
+        const { data: { data } } = get(entriesAtom);
         return data?.length || 0;
     }
 );
 
 const entriesGroupedByDateAtom = atom(
     (get) => {
-        const { data } = get(entriesAtom);
+        const { data: { data } } = get(entriesAtom);
         if (data) {
             const formatter = new Intl.DateTimeFormat('default', { dateStyle: 'medium' });
             // Entries are sorted by id which is ascending, so we need to reverse them
@@ -78,7 +79,7 @@ const entriesDurationsGroupedByDateAtom = atom(
 
 const entriesDurationAtom = atom(
     (get) => {
-        const { data } = get(entriesAtom);
+        const { data: { data } } = get(entriesAtom);
         if (data) {
             return getTotalDuration(data);
         }
@@ -87,7 +88,7 @@ const entriesDurationAtom = atom(
 );
 
 const mutationSuccessHandler = (get) => () => {
-    const { refetch } = get(entriesAtom);
+    const { data: { refetch } } = get(entriesAtom);
     refetch();
 };
 
