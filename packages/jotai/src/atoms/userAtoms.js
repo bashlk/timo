@@ -4,7 +4,7 @@ import { atomWithQuery, atomWithMutation } from 'jotai-tanstack-query';
 import { getUser, logout, login, register, updateUser, updatePassword } from '@timo/common/api';
 import { UserStatus } from '@timo/common/context/UserContextProvider';
 
-const getUserAtom = loadable(atomWithQuery(() => ({
+const userAtom = loadable(atomWithQuery(() => ({
     queryKey: ['user'],
     queryFn: getUser,
     // Retry will keep repeating the query when the user is unauthenticated and the BE returns a 401
@@ -12,7 +12,7 @@ const getUserAtom = loadable(atomWithQuery(() => ({
 })));
 
 const mutationSuccessHandler = (get) => () => {
-    const { data } = get(getUserAtom);
+    const { data } = get(userAtom);
     data.refetch();
 };
 
@@ -43,7 +43,7 @@ const logoutAtom = atomWithMutation((get) => ({
 
 const userStatusAtom = atom(
     (get) => {
-        const { data } = get(getUserAtom);
+        const { data } = get(userAtom);
         if (data?.error?.message === 'Authentication required') {
             return UserStatus.UNAUTHENTICATED;
         }
@@ -59,21 +59,21 @@ const userStatusAtom = atom(
 
 const userIdAtom = atom(
     (get) => {
-        const { data } = get(getUserAtom);
+        const { data } = get(userAtom);
         return data?.data?.id;
     }
 );
 
 const usernameAtom = atom(
     (get) => {
-        const { data } = get(getUserAtom);
+        const { data } = get(userAtom);
         return data?.data?.username;
     }
 );
 
 const userAvatarAtom = atom(
     (get) => {
-        const { data } = get(getUserAtom);
+        const { data } = get(userAtom);
         return {
             character: data?.data?.avatar_character,
             background: data?.data?.avatar_background
