@@ -14,8 +14,7 @@
     "jotai-location": "^0.5.5",
     "jotai-tanstack-query": "^0.8.7",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-error-boundary": "^4.0.13"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.64",
