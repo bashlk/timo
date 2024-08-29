@@ -1,26 +1,15 @@
 import PropTypes from 'prop-types';
-import { atom, useAtomValue } from 'jotai';
-import { atomWithLocation } from 'jotai-location';
+import { useAtomValue } from 'jotai';
 
-const locationAtom = atomWithLocation();
-
-const Router = ({ base = '', routes, children }) => {
+const Router = ({ locationAtom, routes, children }) => {
     const location = useAtomValue(locationAtom);
-    const locationWithBase = atom(
-        (get) => (get(locationAtom)),
-        (get, set, update) => {
-            const updatedWithBase = { ...update, pathname: `${base}${update.pathname}` };
-            set(locationAtom, updatedWithBase);
-        }
-    );
-
-    const currentRoute = routes.find(route => `${base}${route.path}` === location.pathname);
+    const currentRoute = routes.find(route => route.path === location.pathname);
 
     if (!currentRoute) {
         return children(null);
     }
 
-    return children(currentRoute.name, locationWithBase);
+    return children(currentRoute.name);
 };
 
 Router.propTypes = {
@@ -31,7 +20,7 @@ Router.propTypes = {
         })
     ).isRequired,
     children: PropTypes.func.isRequired,
-    base: PropTypes.string
+    locationAtom: PropTypes.object.isRequired
 };
 
 export default Router;
