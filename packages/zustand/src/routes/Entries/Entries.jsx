@@ -1,4 +1,4 @@
-import { useState, createRef } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { listEntries, updateEntry, deleteEntry } from '@timo/common/api';
@@ -37,7 +37,6 @@ const firstDateOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 const lastDateOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
 
 const Entries = ({ history }) => {
-    const formRef = createRef(null);
     const [params, setParams] = useState({
         from: getDateString(firstDateOfMonth),
         to: getDateString(lastDateOfMonth)
@@ -70,7 +69,7 @@ const Entries = ({ history }) => {
 
     const handleFilter = (e) => {
         e.preventDefault();
-        const formData = new FormData(formRef.current);
+        const formData = new FormData(e.target);
         setParams({
             from: formData.get('from'),
             to: formData.get('to')
@@ -88,7 +87,7 @@ const Entries = ({ history }) => {
                 <div className={styles['new']}>
                     <Button onClick={handleNewClick}>New entry</Button>
                 </div>
-                <form className={styles['filters']} ref={formRef} action="" onSubmit={handleFilter}>
+                <form className={styles['filters']} action="" onSubmit={handleFilter}>
                     <Input label="Filter entries start time" type="datetime-local" name="from" defaultValue={getDateString(firstDateOfMonth)} />
                     <Input label="Filter entries end time" type="datetime-local" name="to" defaultValue={getDateString(lastDateOfMonth)} />
                     <Button variant={ButtonVariants.SECONDARY} type="submit">Filter</Button>
