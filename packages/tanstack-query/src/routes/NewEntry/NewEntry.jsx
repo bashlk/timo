@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useMutation } from '@tanstack/react-query';
 import { createEntry } from '@timo/common/api';
 import Timer from '@timo/common/components/Timer';
@@ -15,7 +14,7 @@ const TimerState = {
     STOPPED: 'stopped'
 };
 
-const LogTime = () => {
+const NewEntry = () => {
     const descriptionRef = useRef(null);
     const [duration, setDuration] = useState(0);
     const [timerState, setTimerState] = useState(TimerState.STOPPED);
@@ -107,8 +106,4 @@ const LogTime = () => {
     );
 };
 
-LogTime.propTypes = {
-    history: PropTypes.object.isRequired
-};
-
-export default LogTime;
+export default NewEntry;

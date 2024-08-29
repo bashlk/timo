@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAtomValue } from 'jotai';
-import PropTypes from 'prop-types';
 import Timer from '@timo/common/components/Timer';
 import Title from '@timo/common/components/Title';
 import Input from '@timo/common/components/Input';
@@ -15,7 +14,7 @@ const TimerState = {
     STOPPED: 'stopped'
 };
 
-const LogTime = () => {
+const NewEntry = () => {
     const descriptionRef = useRef(null);
     const [duration, setDuration] = useState(0);
     const [timerState, setTimerState] = useState(TimerState.STOPPED);
@@ -105,8 +104,4 @@ const LogTime = () => {
     );
 };
 
-LogTime.propTypes = {
-    history: PropTypes.object.isRequired
-};
-
-export default LogTime;
+export default NewEntry;

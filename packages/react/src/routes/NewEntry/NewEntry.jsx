@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { createEntry } from '@timo/common/api';
 import Timer from '@timo/common/components/Timer';
 import Title from '@timo/common/components/Title';
@@ -14,7 +13,7 @@ const TimerState = {
     STOPPED: 'stopped'
 };
 
-const LogTime = () => {
+const NewEntry = () => {
     const [duration, setDuration] = useState(0);
     const [timerState, setTimerState] = useState(TimerState.STOPPED);
     const [description, setDescription] = useState('');
@@ -110,8 +109,4 @@ const LogTime = () => {
     );
 };
 
-LogTime.propTypes = {
-    history: PropTypes.object.isRequired
-};
-
-export default LogTime;
+export default NewEntry;
