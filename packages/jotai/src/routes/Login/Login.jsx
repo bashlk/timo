@@ -5,7 +5,7 @@ import Button, { ButtonVariants } from '@timo/common/components/Button';
 import Title from '@timo/common/components/Title';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import { loginAtom, registerAtom, userStatusAtom, UserStatus } from '../../atoms/userAtoms';
-import { baseAwareLocationAtom } from '../atoms/locationAtoms';
+import { baseAwareLocationAtom } from '../../atoms/locationAtoms';
 import styles from './Login.module.css';
 
 const Login = () => {

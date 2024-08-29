@@ -17,7 +17,7 @@ import {
     deleteEntryAtom,
     entriesCountAtom
 } from '../../atoms/entryAtoms';
-import { baseAwareLocationAtom } from '../atoms/locationAtoms';
+import { baseAwareLocationAtom } from '../../atoms/locationAtoms';
 
 const Entries = () => {
     const setLocation = useSetAtom(baseAwareLocationAtom);
