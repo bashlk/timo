@@ -23,11 +23,11 @@ const Entries = () => {
     const setLocation = useSetAtom(baseAwareLocationAtom);
     const [startDate, setStartDate] = useAtom(entriesStartDateAtom);
     const [endDate, setEndDate] = useAtom(entriesEndDateAtom);
-    const entries = useAtomValue(entriesGroupedByDateAtom);
+    const groupedEntries = useAtomValue(entriesGroupedByDateAtom);
     const entriesDuration = useAtomValue(entriesDurationAtom);
     const entriesCount = useAtomValue(entriesCountAtom);
     const { isLoading, isError, error } = useAtomValue(entriesStatusAtom);
-    const entryDurationsGroupedByDate = useAtomValue(entriesDurationsGroupedByDateAtom);
+    const entriesDurationsGroupedByDate = useAtomValue(entriesDurationsGroupedByDateAtom);
 
     const statusMessage =
         isLoading === 'loading' ? 'Loading...' :
@@ -70,11 +70,11 @@ const Entries = () => {
                             <h2 className={styles['total-label']}>Total</h2>
                             <div>{entriesDuration}</div>
                         </div>
-                        {Object.entries(entries).map(([date, dayEntries]) => (
+                        {Object.entries(groupedEntries).map(([date, dayEntries]) => (
                             <div className={styles['day']} key={date}>
                                 <div className={styles['day-header']}>
                                     <h2 className={styles['day-name']}>{date}</h2>
-                                    <div>{entryDurationsGroupedByDate[date]}</div>
+                                    <div>{entriesDurationsGroupedByDate[date]}</div>
                                 </div>
                                 {dayEntries.map((entry) => {
                                     const updatingEntry = updateVariables?.id === entry.id;
