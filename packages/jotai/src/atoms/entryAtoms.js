@@ -77,7 +77,7 @@ const entriesDurationsGroupedByDateAtom = atom(
                 return grouped;
             }, {});
         }
-        return [];
+        return {};
     }
 );
 
