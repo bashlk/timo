@@ -10,6 +10,7 @@ const RadioGroup = ({ name, label, items, defaultValue, onChange }) => {
                     (item) => (
                         <span key={item.value} className={styles['radio-item']}>
                             <input
+                                id={`${name}-${item.value}`}
                                 className={styles['radio']}
                                 type="radio"
                                 name={name}
@@ -17,7 +18,7 @@ const RadioGroup = ({ name, label, items, defaultValue, onChange }) => {
                                 defaultChecked={defaultValue ? item.value === defaultValue : undefined}
                                 onChange={onChange}
                             />
-                            <label htmlFor={item.value}>{item.label}</label>
+                            <label htmlFor={`${name}-${item.value}`}>{item.label}</label>
                         </span>
                     )
                 )}
