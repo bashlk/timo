@@ -1,0 +1,20 @@
+@import '@timo/common/styles.css';
+
+:root {
+  --color-primary: #1F1F1F;
+  --color-primary-lite: #696969;
+  --color-secondary: #868E96;
+  --color-secondary-lite: #ADB5BD;
+  --color-text: #1F1F1F;
+  --color-background: #FAFAFA;
+}
+
+body {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-background);
+  margin: 12px;
+}
