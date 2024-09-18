@@ -1,0 +1,28 @@
+.center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 32px;
+}
+
+.status {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.description {
+    width: 250px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.entries {
+    margin-top: 32px;
+}

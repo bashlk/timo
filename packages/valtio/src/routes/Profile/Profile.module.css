@@ -1,0 +1,44 @@
+.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 32px;
+}
+
+.avatar {
+    margin-top: 24px;
+}
+
+.subheading {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 360px;
+    margin-top: 32px;
+}
+
+.form-controls {
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+  
+.status {
+    text-align: center;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+}
+
+.sign-out {
+    margin-top: 24px;
+}
