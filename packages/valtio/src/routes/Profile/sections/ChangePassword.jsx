@@ -1,14 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 import Input from '@timo/common/components/Input';
-import useUser from '@timo/common/hooks/useUser';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import Button from '@timo/common/components/Button';
 import { updatePassword } from '@timo/common/api';
 import styles from '../Profile.module.css';
+import userStore from '../../../../store/userStore';
 
 const ChangePassword = () => {
-    const user = useUser();
-
     const { mutate: updatePasswordM , error: updatePasswordError, isPending: isUpdatingPassword, isSuccess: passwordUpdated } = useMutation({
         mutationFn: updatePassword
     });
@@ -24,7 +22,7 @@ const ChangePassword = () => {
         const password = formData.get('password');
         const newPassword = formData.get('newPassword');
         updatePasswordM({
-            username: user?.data?.username,
+            username: userStore?.data?.username,
             password,
             newPassword
         });
