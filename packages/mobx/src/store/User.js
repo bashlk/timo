@@ -5,7 +5,12 @@ import { UserStatus } from '@timo/common/context/UserContextProvider';
 export class User {
     status = UserStatus.UNKNOWN;
     // has to be a normal property and not private for makeAutoObservable to make it observable
-    data = {};
+    data = {
+        id: null,
+        username: null,
+        avatar_character: null,
+        avatar_background: null
+    };
     error = null;
 
     constructor() {
@@ -39,8 +44,12 @@ export class User {
 
     clear = () => {
         this.status = UserStatus.UNKNOWN;
-        this.data = null;
         this.error = null;
+
+        this.data.id = null;
+        this.data.username = null;
+        this.data.avatar_character = null;
+        this.data.avatar_background = null;
     };
 }
 
