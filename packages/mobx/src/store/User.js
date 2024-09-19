@@ -16,14 +16,16 @@ export class User {
     // MobX in React strict mode requires all mutations to happen within actions
     setUser = (user) => {
         this.status = UserStatus.AUTHENTICATED;
+        this.error = null;
+
+        // Mutate the object so that MobX doesn't update everything subscribed to data
         this.data.id = user.id;
         this.data.username = user.username;
         this.data.avatar_character = user.avatar_character;
         this.data.avatar_background = user.avatar_background;
-        this.error = null;
     };
 
-    // Promise callbacks also need to be wrapped like this to prevent warning
+    // Promise callbacks also need to be wrapped like this to prevent strict mode warning
     setError = (error) => {
         this.status = UserStatus.UNAUTHENTICATED;
         this.error = error;
