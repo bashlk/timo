@@ -2,24 +2,23 @@ import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation } from '@tanstack/react-query';
 import { login, register } from '@timo/common/api';
-import useUser from '@timo/common/hooks/useUser';
 import Input from '@timo/common/components/Input';
 import Button, { ButtonVariants } from '@timo/common/components/Button';
 import Title from '@timo/common/components/Title';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import styles from './Login.module.css';
+import UserSingleton from '../../store/User';
+import { observer } from 'mobx-react-lite';
 
-const Login = ({ history }) => {
-    const user = useUser();
-
+const Login = observer(({ history }) => {
     useEffect(() => {
-        if (user.status === 'authenticated') {
+        if (UserSingleton.instance.status === 'authenticated') {
             history.replace('./');
         }
-    }, [history, user]);
+    }, [history]);
 
     const handleSuccess = (response) => {
-        user.setAuthenticatedUser(response);
+        UserSingleton.instance.setUser(response);
         history.replace('./');
     };
 
@@ -68,7 +67,7 @@ const Login = ({ history }) => {
             </form>
         </div>
     );
-};
+});
 
 Login.propTypes = {
     history: PropTypes.shape({

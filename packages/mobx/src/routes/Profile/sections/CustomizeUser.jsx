@@ -1,35 +1,36 @@
 import { useEffect, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
+import { observer } from 'mobx-react-lite';
 import Avatar from '@timo/common/components/Avatar';
 import RadioGroup from '@timo/common/components/RadioGroup';
 import Input from '@timo/common/components/Input';
-import useUser from '@timo/common/hooks/useUser';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import Button from '@timo/common/components/Button';
 import { updateUser } from '@timo/common/api';
 import styles from '../Profile.module.css';
+import UserSingleton from '../../../store/User';
 
-const CustomizeUser = () => {
-    const user = useUser();
+const CustomizeUser = observer(() => {
     const [avatar, setAvatar] = useState({
         character: undefined,
         background: undefined
     });
 
+    const userData = UserSingleton.instance.data;
+
     useEffect(() => {
-        if (user?.data) {
+        if (userData) {
             setAvatar({
-                character: user.data.avatar_character,
-                background: user.data.avatar_background
+                character: userData?.avatar_character,
+                background: userData?.avatar_background
             });
         }
-    }, [user]);
+    }, [userData]);
 
     const { mutate: updateUserM, error: updateUserError, isPending: isUpdatingUser, isSuccess: userUpdated } = useMutation({
         mutationFn: updateUser,
-        onSuccess: () => {
-            // Clear the user in context and force refetch
-            user.clearUser();
+        onSuccess: (data, vars) => {
+            UserSingleton.instance.setUser(vars);
         }
     });
 
@@ -45,7 +46,7 @@ const CustomizeUser = () => {
         const avatarCharacter = formData.get('avatar-character');
         const avatarBackground = formData.get('avatar-background');
         updateUserM({
-            id: user?.data?.id,
+            id: userData?.id,
             username,
             avatar_character: avatarCharacter,
             avatar_background: avatarBackground
@@ -84,7 +85,7 @@ const CustomizeUser = () => {
                             { value: 'light', label: 'Light' },
                             { value: 'dark', label: 'Dark' }
                         ]}
-                        defaultValue={user?.data?.avatar_background}
+                        defaultValue={userData?.avatar_background}
                         onChange={handleAvatarBackgroundChange}
                     />
                     <Input
@@ -93,7 +94,7 @@ const CustomizeUser = () => {
                         type="text"
                         maxLength={1}
                         pattern="[A-Za-z]"
-                        defaultValue={user?.data?.avatar_character}
+                        defaultValue={userData?.avatar_character}
                         onChange={handleAvatarCharacterChange}
                         labelVisible
                         required
@@ -102,7 +103,7 @@ const CustomizeUser = () => {
                         name="username"
                         label="Username"
                         type="text"
-                        defaultValue={user?.data?.username}
+                        defaultValue={userData?.username}
                         labelVisible
                         required
                     />
@@ -114,6 +115,6 @@ const CustomizeUser = () => {
             </form>
         </>
     );
-};
+});
 
 export default CustomizeUser;
