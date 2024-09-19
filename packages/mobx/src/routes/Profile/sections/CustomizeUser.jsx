@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { observer } from 'mobx-react-lite';
 import Avatar from '@timo/common/components/Avatar';
@@ -12,19 +12,9 @@ import UserSingleton from '../../../store/User';
 
 const CustomizeUser = observer(() => {
     const [avatar, setAvatar] = useState({
-        character: undefined,
-        background: undefined
+        character: UserSingleton.instance.data?.avatar_character,
+        background: UserSingleton.instance.data?.avatar_background
     });
-
-    useEffect(() => {
-        setAvatar({
-            character: UserSingleton.instance.data?.avatar_character,
-            background: UserSingleton.instance.data?.avatar_background
-        });
-    }, [
-        UserSingleton.instance.data?.avatar_character,
-        UserSingleton.instance.data?.avatar_background
-    ]);
 
     const { mutate: updateUserM, error: updateUserError, isPending: isUpdatingUser, isSuccess: userUpdated } = useMutation({
         mutationFn: updateUser,
