@@ -16,16 +16,15 @@ const CustomizeUser = observer(() => {
         background: undefined
     });
 
-    const userData = UserSingleton.instance.data;
-
     useEffect(() => {
-        if (userData) {
-            setAvatar({
-                character: userData?.avatar_character,
-                background: userData?.avatar_background
-            });
-        }
-    }, [userData]);
+        setAvatar({
+            character: UserSingleton.instance.data?.avatar_character,
+            background: UserSingleton.instance.data?.avatar_background
+        });
+    }, [
+        UserSingleton.instance.data?.avatar_character,
+        UserSingleton.instance.data?.avatar_background
+    ]);
 
     const { mutate: updateUserM, error: updateUserError, isPending: isUpdatingUser, isSuccess: userUpdated } = useMutation({
         mutationFn: updateUser,
@@ -46,7 +45,7 @@ const CustomizeUser = observer(() => {
         const avatarCharacter = formData.get('avatar-character');
         const avatarBackground = formData.get('avatar-background');
         updateUserM({
-            id: userData?.id,
+            id: UserSingleton.instance.data?.id,
             username,
             avatar_character: avatarCharacter,
             avatar_background: avatarBackground
@@ -85,7 +84,7 @@ const CustomizeUser = observer(() => {
                             { value: 'light', label: 'Light' },
                             { value: 'dark', label: 'Dark' }
                         ]}
-                        defaultValue={userData?.avatar_background}
+                        defaultValue={UserSingleton.instance.data?.avatar_background}
                         onChange={handleAvatarBackgroundChange}
                     />
                     <Input
@@ -94,7 +93,7 @@ const CustomizeUser = observer(() => {
                         type="text"
                         maxLength={1}
                         pattern="[A-Za-z]"
-                        defaultValue={userData?.avatar_character}
+                        defaultValue={UserSingleton.instance.data?.avatar_character}
                         onChange={handleAvatarCharacterChange}
                         labelVisible
                         required
@@ -103,7 +102,7 @@ const CustomizeUser = observer(() => {
                         name="username"
                         label="Username"
                         type="text"
-                        defaultValue={userData?.username}
+                        defaultValue={UserSingleton.instance.data?.username}
                         labelVisible
                         required
                     />
