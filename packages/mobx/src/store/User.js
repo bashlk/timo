@@ -43,7 +43,7 @@ export class User {
     };
 
     clear = () => {
-        this.status = UserStatus.UNKNOWN;
+        this.status = UserStatus.UNAUTHENTICATED;
         this.error = null;
 
         this.data.id = null;

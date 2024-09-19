@@ -16,7 +16,7 @@ const Avatar = ({ className, character = '?', background = 'light', large, onCli
         onClick={onClick}
     >
         <div className={styles['emoji']}>
-            {character.toUpperCase()}
+            {character?.toUpperCase()}
         </div>
     </div>
 );
