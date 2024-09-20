@@ -52,7 +52,7 @@ const ChangePassword = () => {
                 />
                 {passwordStatus && <StatusMessage className={styles['status']} message={passwordStatus} />}
                 <div className={styles['button']}>
-                    <Button value="login" type="submit">Change password</Button>
+                    <Button type="submit">Change password</Button>
                 </div>
             </div>
         </form>

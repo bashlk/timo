@@ -15,7 +15,6 @@ const Profile = () => {
             <ChangePassword />
             <Button
                 className={styles['sign-out']}
-                value="login"
                 variant={ButtonVariants.SECONDARY}
                 onClick={clearUser}
             >

@@ -108,7 +108,7 @@ const CustomizeUser = () => {
                     />
                     {updateUserStatus && <StatusMessage className={styles['status']} message={updateUserStatus} />}
                     <div className={styles['button']}>
-                        <Button value="login" type="submit">Save</Button>
+                        <Button type="submit">Save</Button>
                     </div>
                 </div>
             </form>

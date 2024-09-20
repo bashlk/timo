@@ -48,7 +48,7 @@ const ChangePassword = () => {
                 />
                 {updatePasswordStatus && <StatusMessage className={styles['status']} message={updatePasswordStatus} />}
                 <div className={styles['button']}>
-                    <Button value="login" type="submit">Change password</Button>
+                    <Button type="submit">Change password</Button>
                 </div>
             </div>
         </form>
