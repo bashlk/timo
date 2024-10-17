@@ -1,22 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { login, register } from '@timo/common/api';
-import useUser from '@timo/common/hooks/useUser';
 import Input from '@timo/common/components/Input';
 import Button, { ButtonVariants } from '@timo/common/components/Button';
 import Title from '@timo/common/components/Title';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import styles from './Login.module.css';
+import { USER_EVENTS, USER_STATES } from '../../machines/userMachine';
+import UserMachineContext from '../../context/UserMachineContext';
 
 const Login = ({ history }) => {
-    const user = useUser();
-    const [statusMessage, setStatusMessage] = useState(null);
+    const userState = UserMachineContext.useSelector((state) => state.value);
+    const error = UserMachineContext.useSelector((state) => state.context.error);
+    const userMachine = UserMachineContext.useActorRef();
+
+    const isLoading = userState === USER_STATES.REGISTERING || userState === USER_STATES.LOGGING_IN;
+    const statusMessage = isLoading ? 'Loading...' : error;
 
     useEffect(() => {
-        if (user.status === 'authenticated') {
+        if (userState === USER_STATES.AUTHENTICATED) {
             history.replace('./');
         }
-    }, [history, user]);
+    }, [history, userState]);
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
@@ -26,23 +30,19 @@ const Login = ({ history }) => {
         const username = formData.get('username');
         const password = formData.get('password');
 
-        setStatusMessage('Loading...');
-
         if (action == 'login') {
-            login({ username, password }).then((response) => {
-                user.setAuthenticatedUser(response);
-                history.replace('./');
-            }).catch((error) => {
-                setStatusMessage(error.message);
+            userMachine.send({
+                type: USER_EVENTS.LOGIN,
+                username,
+                password
             });
         }
 
         if (action == 'register') {
-            register({ username, password }).then((response) => {
-                user.setAuthenticatedUser(response);
-                history.replace('./');
-            }).catch((error) => {
-                setStatusMessage(error.message);
+            userMachine.send({
+                type: USER_EVENTS.REGISTER,
+                username,
+                password
             });
         }
     };

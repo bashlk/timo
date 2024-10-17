@@ -1,14 +1,14 @@
 import Router from '@timo/common/components/Router';
-import UserContextProvider from '@timo/common/context/UserContextProvider';
 import Container from '@timo/common/components/Container';
 import Title from '@timo/common/components/Title';
-import TopBarWithUser from '@timo/common/contextualComponents/TopBarWithUser';
-import ProtectedRoute from '@timo/common/contextualComponents/ProtectedRoute';
 
 import Login from './routes/Login/Login';
 import Entries from './routes/Entries/Entries';
 import NewEntry from './routes/NewEntry/NewEntry';
 import Profile from './routes/Profile/Profile';
+import ProtectedRoute from './contextualComponents/ProtectedRoute';
+import TopBarWithUser from './contextualComponents/TopBarWithUser';
+import UserMachineContext from './context/UserMachineContext';
 
 const routes = [
     { path: '/', name: 'Entries' },
@@ -19,7 +19,7 @@ const routes = [
 ];
 
 const App = () => (
-    <UserContextProvider>
+    <UserMachineContext.Provider>
         <Router routes={routes}>
             {(routeName, history) => {
                 let pageComponent = null;
@@ -61,7 +61,7 @@ const App = () => (
                 );
             }}
         </Router>
-    </UserContextProvider>
+    </UserMachineContext.Provider>
 );
 
 export default App;

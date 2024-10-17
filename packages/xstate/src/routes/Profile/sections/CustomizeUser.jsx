@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 import Avatar from '@timo/common/components/Avatar';
 import RadioGroup from '@timo/common/components/RadioGroup';
 import Input from '@timo/common/components/Input';
-import useUser from '@timo/common/hooks/useUser';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import Button from '@timo/common/components/Button';
 import { updateUser } from '@timo/common/api';
 import styles from '../Profile.module.css';
+import UserMachineContext from '../../../context/UserMachineContext';
 
 const CustomizeUser = () => {
-    const user = useUser();
+    const userData = UserMachineContext.useSelector((state) => state.context.data);
     const [customizeStatus, setCustomizeStatus] = useState(null);
     const [avatar, setAvatar] = useState({
         character: undefined,
@@ -17,13 +17,13 @@ const CustomizeUser = () => {
     });
 
     useEffect(() => {
-        if (user?.data) {
+        if (userData) {
             setAvatar({
-                character: user.data.avatar_character,
-                background: user.data.avatar_background
+                character: userData?.avatar_character,
+                background: userData?.avatar_background
             });
         }
-    }, [user]);
+    }, [userData]);
 
     const handleCustomizeFormSubmit = (e) => {
         e.preventDefault();
@@ -35,14 +35,13 @@ const CustomizeUser = () => {
         setCustomizeStatus('Loading...');
 
         updateUser({
-            id: user?.data?.id,
+            id: userData?.id,
             username,
             avatar_character: avatarCharacter,
             avatar_background: avatarBackground
         }).then(() => {
             setCustomizeStatus('Profile updated');
-            // Clear the user in context and force refetch
-            user.clearUser();
+            // TODO: Move to updating the user in the state machine
         }).catch((error) => {
             setCustomizeStatus(error.message);
         });
@@ -80,7 +79,7 @@ const CustomizeUser = () => {
                             { value: 'light', label: 'Light' },
                             { value: 'dark', label: 'Dark' }
                         ]}
-                        defaultValue={user?.data?.avatar_background}
+                        defaultValue={userData?.avatar_background}
                         onChange={handleAvatarBackgroundChange}
                     />
                     <Input
@@ -89,7 +88,7 @@ const CustomizeUser = () => {
                         type="text"
                         maxLength={1}
                         pattern="[A-Za-z]"
-                        defaultValue={user?.data?.avatar_character}
+                        defaultValue={userData?.avatar_character}
                         onChange={handleAvatarCharacterChange}
                         labelVisible
                         required
@@ -98,7 +97,7 @@ const CustomizeUser = () => {
                         name="username"
                         label="Username"
                         type="text"
-                        defaultValue={user?.data?.username}
+                        defaultValue={userData?.username}
                         labelVisible
                         required
                     />

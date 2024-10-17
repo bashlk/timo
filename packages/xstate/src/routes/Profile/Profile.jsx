@@ -1,17 +1,17 @@
 import Title from '@timo/common/components/Title';
 import Button, { ButtonVariants } from '@timo/common/components/Button';
-import useUser from '@timo/common/hooks/useUser';
-import { logout } from '@timo/common/api';
 import styles from './Profile.module.css';
 import ChangePassword from './sections/ChangePassword';
 import CustomizeUser from './sections/CustomizeUser';
+import UserMachineContext from '../../context/UserMachineContext';
+import { USER_EVENTS } from '../../machines/userMachine';
 
 const Profile = () => {
-    const user = useUser();
+    const userMachine = UserMachineContext.useActorRef();
 
     const handleLogoutClick = () => {
-        logout().then(() => {
-            user.clearUser();
+        userMachine.send({
+            type: USER_EVENTS.LOGOUT
         });
     };
 

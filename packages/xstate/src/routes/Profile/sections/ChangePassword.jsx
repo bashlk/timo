@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import Input from '@timo/common/components/Input';
-import useUser from '@timo/common/hooks/useUser';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import Button from '@timo/common/components/Button';
 import { updatePassword } from '@timo/common/api';
 import styles from '../Profile.module.css';
+import UserMachineContext from '../../../context/UserMachineContext';
 
 const ChangePassword = () => {
-    const user = useUser();
+    const username = UserMachineContext.useSelector((state) => state.context.data?.username);
     const [passwordStatus, setPasswordStatus] = useState(null);
 
     const handlePasswordFormSubmit = (e) => {
@@ -20,7 +20,7 @@ const ChangePassword = () => {
         setPasswordStatus('Loading...');
 
         updatePassword({
-            username: user?.data?.username,
+            username,
             password,
             newPassword
         }).then(() => {
