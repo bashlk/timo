@@ -17,7 +17,7 @@ const Login = ({ history }) => {
     const statusMessage = isLoading ? 'Loading...' : error;
 
     useEffect(() => {
-        if (userState === USER_STATES.AUTHENTICATED) {
+        if (userState?.[USER_STATES.AUTHENTICATED]) {
             history.replace('./');
         }
     }, [history, userState]);

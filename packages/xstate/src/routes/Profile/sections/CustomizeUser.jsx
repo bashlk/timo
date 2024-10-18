@@ -7,9 +7,11 @@ import Button from '@timo/common/components/Button';
 import { updateUser } from '@timo/common/api';
 import styles from '../Profile.module.css';
 import UserMachineContext from '../../../context/UserMachineContext';
+import { USER_EVENTS } from '../../../machines/userMachine';
 
 const CustomizeUser = () => {
     const userData = UserMachineContext.useSelector((state) => state.context.data);
+    const userMachine = UserMachineContext.useActorRef();
     const [customizeStatus, setCustomizeStatus] = useState(null);
     const [avatar, setAvatar] = useState({
         character: undefined,
@@ -41,7 +43,9 @@ const CustomizeUser = () => {
             avatar_background: avatarBackground
         }).then(() => {
             setCustomizeStatus('Profile updated');
-            // TODO: Move to updating the user in the state machine
+            userMachine.send({
+                type: USER_EVENTS.REFRESH
+            });
         }).catch((error) => {
             setCustomizeStatus(error.message);
         });

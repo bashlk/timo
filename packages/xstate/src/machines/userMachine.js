@@ -1,10 +1,11 @@
 import { assign, fromPromise, setup } from 'xstate';
-import { getUser, login, register, logout, updatePassword, updateUser } from '@timo/common/api';
+import { getUser, login, register, logout } from '@timo/common/api';
 
 export const USER_STATES = {
     UNKNOWN: 'unknown',
     AUTHENTICATED: 'authenticated',
     UNAUTHENTICATED: 'unauthenticated',
+    REFRESHING: 'refreshing',
     LOGGING_IN: 'logging_in',
     LOGGING_OUT: 'logging_out',
     REGISTERING: 'registering'
@@ -12,16 +13,14 @@ export const USER_STATES = {
 
 export const USER_AUTHENTICATED_STATES = {
     IDLE: 'idle',
-    CHANGING_PASSWORD: 'changing_password',
-    UPDATING: 'updating'
+    REFRESHING: 'refreshing'
 };
 
 export const USER_EVENTS = {
     LOGIN: 'login',
     LOGOUT: 'logout',
     REGISTER: 'register',
-    CHANGE_PASSWORD: 'change_password',
-    UPDATE: 'update'
+    REFRESH: 'refresh'
 };
 
 const userMachine = setup({
@@ -29,9 +28,7 @@ const userMachine = setup({
         getUser: fromPromise(getUser),
         login: fromPromise(async ({ input }) => login(input)),
         logout: fromPromise(logout),
-        register: fromPromise(async ({ input }) => register(input)),
-        changePassword: fromPromise(async ({ input }) => updatePassword(input)),
-        updateUser: fromPromise(async ({ input }) => updateUser(input))
+        register: fromPromise(async ({ input }) => register(input))
     }
 }).createMachine({
     id: 'user',
@@ -47,7 +44,7 @@ const userMachine = setup({
                 onDone: {
                     target: USER_STATES.AUTHENTICATED,
                     actions: assign({
-                        data: ({ event }) => event.data
+                        data: ({ event }) => event.output
                     })
                 },
                 onError: {
@@ -56,60 +53,39 @@ const userMachine = setup({
             }
         },
         [USER_STATES.AUTHENTICATED]: {
-            initial: 'idle',
+            initial: USER_AUTHENTICATED_STATES.IDLE,
             states: {
                 [USER_AUTHENTICATED_STATES.IDLE]: {
                     on: {
-                        [USER_EVENTS.CHANGE_PASSWORD]: {
-                            target: USER_AUTHENTICATED_STATES.CHANGING_PASSWORD
-                        },
-                        [USER_EVENTS.UPDATE]: {
-                            target: USER_AUTHENTICATED_STATES.UPDATING
-                        },
-                        [USER_EVENTS.LOGOUT]: {
-                            target: USER_STATES.LOGGING_OUT
+                        [USER_EVENTS.REFRESH]: {
+                            target: USER_AUTHENTICATED_STATES.REFRESHING
                         }
                     }
                 },
-                [USER_AUTHENTICATED_STATES.CHANGING_PASSWORD]: {
+                [USER_AUTHENTICATED_STATES.REFRESHING]: {
                     invoke: {
-                        src: 'changePassword',
+                        src: 'getUser',
                         onDone: {
                             target: USER_AUTHENTICATED_STATES.IDLE,
                             actions: assign({
-                                error: null
+                                data: ({ event }) => event.output
                             })
                         },
                         onError: {
                             target: USER_AUTHENTICATED_STATES.IDLE,
                             actions: assign({
                                 error: ({ event }) => ({
-                                    src: USER_AUTHENTICATED_STATES.CHANGING_PASSWORD,
+                                    src: USER_EVENTS.REFRESH,
                                     message: event.error.message
                                 })
                             })
                         }
                     }
-                },
-                [USER_AUTHENTICATED_STATES.UPDATING]: {
-                    invoke: {
-                        src: 'updateUser',
-                        onDone: {
-                            target: USER_AUTHENTICATED_STATES.IDLE,
-                            actions: assign({
-                                error: null
-                            })
-                        },
-                        onError: {
-                            target: USER_AUTHENTICATED_STATES.IDLE,
-                            actions: assign({
-                                error: ({ event }) => ({
-                                    src: USER_AUTHENTICATED_STATES.UPDATING,
-                                    message: event.error.message
-                                })
-                            })
-                        }
-                    }
+                }
+            },
+            on: {
+                [USER_EVENTS.LOGOUT]: {
+                    target: USER_STATES.LOGGING_OUT
                 }
             }
         },
@@ -130,7 +106,7 @@ const userMachine = setup({
                 onDone: {
                     target: USER_STATES.AUTHENTICATED,
                     actions: assign({
-                        data: ({ event }) => event.data,
+                        data: ({ event }) => event.output,
                         error: null
                     })
                 },
@@ -174,7 +150,7 @@ const userMachine = setup({
                 onDone: {
                     target: USER_STATES.AUTHENTICATED,
                     actions: assign({
-                        data: ({ event }) => event.data,
+                        data: ({ event }) => event.output,
                         error: null
                     })
                 },
@@ -182,7 +158,10 @@ const userMachine = setup({
                     target: USER_STATES.UNAUTHENTICATED,
                     actions: assign({
                         data: null,
-                        error: ({ event }) => event.error.message
+                        error: ({ event }) => ({
+                            src: USER_STATES.REGISTERING,
+                            message: event.error.message
+                        })
                     })
                 }
             }
