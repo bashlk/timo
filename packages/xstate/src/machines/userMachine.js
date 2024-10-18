@@ -1,4 +1,4 @@
-import { assign, fromPromise, setup } from 'xstate';
+import { assign, fromPromise, sendTo, setup } from 'xstate';
 import { getUser, login, register, logout } from '@timo/common/api';
 
 export const USER_STATES = {
@@ -20,7 +20,9 @@ export const USER_EVENTS = {
     LOGIN: 'login',
     LOGOUT: 'logout',
     REGISTER: 'register',
-    REFRESH: 'refresh'
+    REFRESH: 'refresh',
+    GET: 'get',
+    GET_RESPONSE: 'get_response'
 };
 
 const userMachine = setup({
@@ -86,6 +88,15 @@ const userMachine = setup({
             on: {
                 [USER_EVENTS.LOGOUT]: {
                     target: USER_STATES.LOGGING_OUT
+                },
+                [USER_EVENTS.GET]: {
+                    actions: sendTo(
+                        ({ event }) => event.sender,
+                        {
+                            type: USER_EVENTS.GET_RESPONSE,
+                            data: ({ context }) => context.data
+                        }
+                    )
                 }
             }
         },

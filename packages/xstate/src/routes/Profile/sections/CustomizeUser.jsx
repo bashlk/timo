@@ -1,31 +1,35 @@
-import { useEffect, useState } from 'react';
 import Avatar from '@timo/common/components/Avatar';
 import RadioGroup from '@timo/common/components/RadioGroup';
 import Input from '@timo/common/components/Input';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import Button from '@timo/common/components/Button';
-import { updateUser } from '@timo/common/api';
 import styles from '../Profile.module.css';
 import UserMachineContext from '../../../context/UserMachineContext';
-import { USER_EVENTS } from '../../../machines/userMachine';
+import { useActor } from '@xstate/react';
+import customizeUserMachine, { CUSTOMIZE_USER_EVENTS } from '../../../machines/customizeUserMachine';
 
 const CustomizeUser = () => {
-    const userData = UserMachineContext.useSelector((state) => state.context.data);
     const userMachine = UserMachineContext.useActorRef();
-    const [customizeStatus, setCustomizeStatus] = useState(null);
-    const [avatar, setAvatar] = useState({
-        character: undefined,
-        background: undefined
-    });
-
-    useEffect(() => {
-        if (userData) {
-            setAvatar({
-                character: userData?.avatar_character,
-                background: userData?.avatar_background
-            });
+    const updatedMachine = customizeUserMachine.provide({
+        actors: {
+            userMachine
         }
-    }, [userData]);
+    });
+    const [state, send] = useActor(updatedMachine);
+
+    const handleAvatarBackgroundChange = (e) => {
+        send({
+            type: CUSTOMIZE_USER_EVENTS.CHANGE_AVATAR_BACKGROUND,
+            background: e.target.value
+        });
+    };
+
+    const handleAvatarCharacterChange = (e) => {
+        send({
+            type: CUSTOMIZE_USER_EVENTS.CHANGE_AVATAR_CHARACTER,
+            character: e.target.value
+        });
+    };
 
     const handleCustomizeFormSubmit = (e) => {
         e.preventDefault();
@@ -34,34 +38,11 @@ const CustomizeUser = () => {
         const avatarCharacter = formData.get('avatar-character');
         const avatarBackground = formData.get('avatar-background');
 
-        setCustomizeStatus('Loading...');
-
-        updateUser({
-            id: userData?.id,
+        send({
+            type: CUSTOMIZE_USER_EVENTS.SAVE,
             username,
-            avatar_character: avatarCharacter,
-            avatar_background: avatarBackground
-        }).then(() => {
-            setCustomizeStatus('Profile updated');
-            userMachine.send({
-                type: USER_EVENTS.REFRESH
-            });
-        }).catch((error) => {
-            setCustomizeStatus(error.message);
-        });
-    };
-
-    const handleAvatarBackgroundChange = (e) => {
-        setAvatar({
-            ...avatar,
-            background: e.target.value
-        });
-    };
-
-    const handleAvatarCharacterChange = (e) => {
-        setAvatar({
-            ...avatar,
-            character: e.target.value
+            avatarCharacter,
+            avatarBackground
         });
     };
 
@@ -69,8 +50,8 @@ const CustomizeUser = () => {
         <>
             <Avatar
                 className={styles['avatar']}
-                character={avatar.character}
-                background={avatar.background}
+                character={state.context.avatar.character}
+                background={state.context.avatar.background}
                 large
             />
             <form className={styles['form']} action="" onSubmit={handleCustomizeFormSubmit}>
