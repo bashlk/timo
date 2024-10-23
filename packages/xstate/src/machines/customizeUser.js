@@ -1,6 +1,5 @@
-import { setup, assign, fromPromise, sendTo } from 'xstate';
+import { setup, assign, fromPromise } from 'xstate';
 import { updateUser } from '@timo/common/api';
-import userMachine, { USER_EVENTS } from './userMachine';
 
 export const CUSTOMIZE_USER_STATES = {
     IDLE: 'idle',
@@ -15,7 +14,6 @@ export const CUSTOMIZE_USER_EVENTS = {
 
 const customizeUserMachine = setup({
     actors: {
-        userMachine,
         updateUser: fromPromise(async ({ input }) => updateUser(input))
     }
 }).createMachine({
@@ -31,22 +29,7 @@ const customizeUserMachine = setup({
     },
     states: {
         [CUSTOMIZE_USER_STATES.IDLE]: {
-            entry: [
-                sendTo('userMachine', ({ self }) => ({
-                    sender: self,
-                    type: USER_EVENTS.GET
-                }))
-            ],
             on: {
-                [USER_EVENTS.GET_RESPONSE]: {
-                    actions: assign({
-                        userId: ({ event }) => event.data.id,
-                        avatar: ({ event }) => ({
-                            character: event.data.avatar_character,
-                            background: event.data.avatar_background
-                        })
-                    })
-                },
                 [CUSTOMIZE_USER_EVENTS.CHANGE_AVATAR_CHARACTER]: {
                     actions: assign({
                         avatar: ({ event, context }) => ({
@@ -88,9 +71,6 @@ const customizeUserMachine = setup({
                         actions: [
                             assign({
                                 statusMessage: 'Profile updated'
-                            }),
-                            sendTo('userMachine', {
-                                type: USER_EVENTS.REFRESH
                             })
                         ]
                     },
