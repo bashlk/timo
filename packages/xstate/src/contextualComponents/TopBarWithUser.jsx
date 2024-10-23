@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import TopBar from '@timo/common/components/TopBar';
-import UserMachineContext from '../context/UserMachineContext';
+import useMachineState from '../hooks/useMachineState';
 
 const TopBarWithUser = ({ history }) => {
-    const userData = UserMachineContext.useSelector((state) => state.context.data);
+    const userData = useMachineState('root', (state) => state.context.userData);
 
     return (
         <TopBar

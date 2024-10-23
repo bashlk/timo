@@ -8,7 +8,7 @@ import NewEntry from './routes/NewEntry/NewEntry';
 import Profile from './routes/Profile/Profile';
 import ProtectedRoute from './contextualComponents/ProtectedRoute';
 import TopBarWithUser from './contextualComponents/TopBarWithUser';
-import UserMachineContext from './context/UserMachineContext';
+import MachineContextProvider from './context/MachineContext';
 
 const routes = [
     { path: '/', name: 'Entries' },
@@ -19,7 +19,7 @@ const routes = [
 ];
 
 const App = () => (
-    <UserMachineContext.Provider>
+    <MachineContextProvider>
         <Router routes={routes}>
             {(routeName, history) => {
                 let pageComponent = null;
@@ -61,7 +61,7 @@ const App = () => (
                 );
             }}
         </Router>
-    </UserMachineContext.Provider>
+    </MachineContextProvider>
 );
 
 export default App;

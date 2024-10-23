@@ -1,20 +1,19 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import UserMachineContext from '../context/UserMachineContext';
-import { USER_STATES } from '../machines/userMachine';
+import useMachineState from '../hooks/useMachineState';
 
 const FALLBACK_ROUTE = './login';
 
 const ProtectedRoute = ({ history, children }) => {
-    const userState = UserMachineContext.useSelector((state) => state.value);
+    const authState = useMachineState('root', (state) => state.value);
 
     useEffect(() => {
-        if (userState === USER_STATES.UNAUTHENTICATED) {
+        if (authState === 'unauthenticated') {
             history.replace(FALLBACK_ROUTE);
         }
     });
 
-    if (userState === USER_STATES.UNKNOWN) {
+    if (authState === 'unknown') {
         return null;
     }
 

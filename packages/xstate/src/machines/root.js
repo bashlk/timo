@@ -1,29 +1,43 @@
-import { setup, spawnChild, sendTo } from 'xstate';
-import user, { USER_EVENTS } from './user';
-import customizeUser from './customizeUser';
+import { setup, spawnChild, sendTo, assign, fromPromise } from 'xstate';
+import { getUser } from '@timo/common/api';
+import customizeUserMachine from './customizeUser';
+import loginMachine from './login';
 
 const rootMachine = setup({
+    actors: {
+        getUser: fromPromise(getUser)
+    },
     actions: {
         getUser: sendTo(
-            ({ system }) => system.getActor('user'),
-            { type: USER_EVENTS.GET }
+            ({ system }) => system.get('user'),
+            { type: 'get' }
         )
     }
 }).createMachine({
-    systemId: 'root',
     entry: [
-        spawnChild(user, { systemId: 'user' }),
-        spawnChild(customizeUser, { systemId: 'customizeUser' })
+        spawnChild(loginMachine, { systemId: 'login' }),
+        spawnChild(customizeUserMachine, { systemId: 'customizeUser' })
     ],
     initial: 'unknown',
+    context: {
+        userData: null
+    },
     states: {
         'unknown': {
-            entry: 'getUser',
-            on: {
-                authenticate: {
-                    target: 'authenticated'
+            invoke: {
+                src: 'getUser',
+                onDone: {
+                    target: 'authenticated',
+                    actions: assign({
+                        userData: ({ event }) => ({
+                            id: event.output.id,
+                            username: event.output.username,
+                            avatar_character: event.output.avatar_character,
+                            avatar_background: event.output.avatar_background
+                        })
+                    })
                 },
-                unauthenticate: {
+                onError: {
                     target: 'unauthenticated'
                 }
             }
@@ -31,14 +45,27 @@ const rootMachine = setup({
         'authenticated': {
             on: {
                 unauthenticate: {
-                    target: 'unauthenticated'
+                    target: 'unauthenticated',
+                    actions: assign({
+                        userData: null
+                    })
                 }
             }
         },
         'unauthenticated': {
             on: {
                 authenticate: {
-                    target: 'authenticated'
+                    target: 'authenticated',
+                    actions:[
+                        assign({
+                            userData:({ event }) => ({
+                                id: event.params.id,
+                                username: event.params.username,
+                                avatar_character: event.params.avatar_character,
+                                avatar_background: event.params.avatar_background
+                            })
+                        })
+                    ]
                 }
             }
         }

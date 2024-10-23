@@ -4,23 +4,21 @@ import Input from '@timo/common/components/Input';
 import Button, { ButtonVariants } from '@timo/common/components/Button';
 import Title from '@timo/common/components/Title';
 import StatusMessage from '@timo/common/components/StatusMessage';
+import useMachine from '../../hooks/useMachine';
+import useMachineState from '../../hooks/useMachineState';
+
 import styles from './Login.module.css';
-import { USER_EVENTS, USER_STATES } from '../../machines/userMachine';
-import UserMachineContext from '../../context/UserMachineContext';
 
 const Login = ({ history }) => {
-    const userState = UserMachineContext.useSelector((state) => state.value);
-    const error = UserMachineContext.useSelector((state) => state.context.error);
-    const userMachine = UserMachineContext.useActorRef();
-
-    const isLoading = userState === USER_STATES.REGISTERING || userState === USER_STATES.LOGGING_IN;
-    const statusMessage = isLoading ? 'Loading...' : error;
+    const authState = useMachineState('root', (state) => state.value);
+    const statusMessage = useMachineState('login', (state) => state.context.statusMessage);
+    const loginMachine = useMachine('login');
 
     useEffect(() => {
-        if (userState?.[USER_STATES.AUTHENTICATED]) {
+        if (authState === 'authenticated') {
             history.replace('./');
         }
-    }, [history, userState]);
+    }, [history, authState]);
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
@@ -31,16 +29,16 @@ const Login = ({ history }) => {
         const password = formData.get('password');
 
         if (action == 'login') {
-            userMachine.send({
-                type: USER_EVENTS.LOGIN,
+            loginMachine.send({
+                type: 'login',
                 username,
                 password
             });
         }
 
         if (action == 'register') {
-            userMachine.send({
-                type: USER_EVENTS.REGISTER,
+            loginMachine.send({
+                type: 'register',
                 username,
                 password
             });
