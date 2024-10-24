@@ -114,7 +114,7 @@ const entriesMachine = setup({
                     actions: assign({
                         itemStatusMessage: ({ context, event }) => ({
                             ...context.itemStatusMessage,
-                            [event.id]: null
+                            [event.updatedEntry.id]: null
                         })
                     })
                 },
@@ -131,7 +131,7 @@ const entriesMachine = setup({
                 assign({
                     itemStatusMessage: ({ context, event }) => ({
                         ...context.itemStatusMessage,
-                        [event.id]: 'Deleting...'
+                        [event.entryId]: 'Deleting...'
                     })
                 })
             ],
