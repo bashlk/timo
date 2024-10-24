@@ -12,7 +12,7 @@ const rootMachine = setup({
     actors: {
         getUser: fromPromise(getUser),
         history: fromCallback(({ sendBack, receive }) => {
-            history.listen((location) => {
+            history.listen(({ location }) => {
                 sendBack({
                     type: 'locationChanged',
                     location
@@ -31,17 +31,12 @@ const rootMachine = setup({
 }).createMachine({
     entry: [
         spawnChild('history', { systemId: 'history' }),
-        spawnChild(loginMachine, { systemId: 'login' }),
-        spawnChild(customizeUserMachine, { systemId: 'customizeUser' }),
-        spawnChild(changePasswordMachine, { systemId: 'changePassword' }),
-        spawnChild(profileMachine, { systemId: 'profile' }),
-        spawnChild(entriesMachine, { systemId: 'entries' }),
-        spawnChild(newEntriesMachine, { systemId: 'newEntry' })
+        spawnChild(loginMachine, { systemId: 'login' })
     ],
     initial: 'unknown',
     context: {
         userData: null,
-        currentPath: history.location.pathname
+        currentPath: null
     },
     states: {
         'unknown': {
@@ -65,6 +60,16 @@ const rootMachine = setup({
         },
         'authenticated': {
             entry: [
+                spawnChild(customizeUserMachine, { systemId: 'customizeUser' }),
+                spawnChild(changePasswordMachine, { systemId: 'changePassword' }),
+                spawnChild(profileMachine, { systemId: 'profile' }),
+                spawnChild(entriesMachine, { systemId: 'entries' }),
+                spawnChild(newEntriesMachine, { systemId: 'newEntry' }),
+
+                assign({
+                    currentPath: history.location.pathname
+                }),
+
                 sendTo(
                     ({ system }) => system.get('customizeUser'),
                     ({ context }) => ({
@@ -134,12 +139,17 @@ const rootMachine = setup({
                 sendTo(
                     ({ system }) => system.get('history'),
                     {
-                        type: 'pushLocation',
+                        type: 'replaceLocation',
                         location: './login'
                     }
                 )
             ],
             on: {
+                locationChanged: {
+                    actions: assign({
+                        currentPath: ({ event }) => event.location.pathname
+                    })
+                },
                 authenticate: {
                     target: 'authenticated',
                     actions: [
