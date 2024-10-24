@@ -100,8 +100,7 @@ const entriesMachine = setup({
         'updating-entry': {
             entry: [
                 assign({
-                    itemStatusMessage: ({ context, event }) => ({
-                        ...context.itemStatusMessage,
+                    itemStatusMessage: ({ event }) => ({
                         [event.id]: 'Saving...'
                     })
                 })
@@ -112,8 +111,7 @@ const entriesMachine = setup({
                 onDone: {
                     target: 'loading',
                     actions: assign({
-                        itemStatusMessage: ({ context, event }) => ({
-                            ...context.itemStatusMessage,
+                        itemStatusMessage: ({ event }) => ({
                             [event.updatedEntry.id]: null
                         })
                     })
@@ -129,8 +127,7 @@ const entriesMachine = setup({
         'deleting-entry': {
             entry: [
                 assign({
-                    itemStatusMessage: ({ context, event }) => ({
-                        ...context.itemStatusMessage,
+                    itemStatusMessage: ({ event }) => ({
                         [event.entryId]: 'Deleting...'
                     })
                 })
@@ -141,8 +138,7 @@ const entriesMachine = setup({
                 onDone: {
                     target: 'loading',
                     actions: assign({
-                        itemStatusMessage: ({ context, event }) => ({
-                            ...context.itemStatusMessage,
+                        itemStatusMessage: ({ event }) => ({
                             [event.id]: null
                         })
                     })

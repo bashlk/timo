@@ -27,20 +27,17 @@ const customizeUserMachine = setup({
                     }))
                 },
                 'changeAvatarCharacter': {
-                    actions: assign(({ context, event }) => ({
-                        ...context,
+                    actions: assign(({ event }) => ({
                         avatar_character: event.value
                     }))
                 },
                 'changeAvatarBackground': {
-                    actions: assign(({ context, event }) => ({
-                        ...context,
+                    actions: assign(({ event }) => ({
                         avatar_background: event.value
                     }))
                 },
                 'changeUsername': {
-                    actions: assign(({ context, event }) => ({
-                        ...context,
+                    actions: assign(({ event }) => ({
                         username: event.value
                     }))
                 },
