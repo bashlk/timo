@@ -4,15 +4,15 @@ import Input from '@timo/common/components/Input';
 import Button, { ButtonVariants } from '@timo/common/components/Button';
 import Title from '@timo/common/components/Title';
 import StatusMessage from '@timo/common/components/StatusMessage';
-import useMachine from '../../hooks/useMachine';
-import useMachineState from '../../hooks/useMachineState';
+import useSystemMachine from '../../hooks/useSystemMachine';
+import useSystemMachineState from '../../hooks/useSystemMachineState';
 
 import styles from './Login.module.css';
 
 const Login = ({ history }) => {
-    const authState = useMachineState('root', (state) => state.value);
-    const statusMessage = useMachineState('login', (state) => state.context.statusMessage);
-    const loginMachine = useMachine('login');
+    const authState = useSystemMachineState('root', (state) => state.value);
+    const statusMessage = useSystemMachineState('login', (state) => state.context.statusMessage);
+    const loginMachine = useSystemMachine('login');
 
     useEffect(() => {
         if (authState === 'authenticated') {

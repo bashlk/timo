@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import useMachineState from '../hooks/useMachineState';
+import useSystemMachineState from '../hooks/useSystemMachineState';
 
 const FALLBACK_ROUTE = './login';
 
 const ProtectedRoute = ({ history, children }) => {
-    const authState = useMachineState('root', (state) => state.value);
+    const authState = useSystemMachineState('root', (state) => state.value);
 
     useEffect(() => {
         if (authState === 'unauthenticated') {

@@ -1,9 +1,9 @@
 import { useContext } from 'react';
 import { MachineContext } from '../context/MachineContext';
 
-const useMachine = (systemId) => {
+const useSystemMachine = (systemId) => {
     const machine = useContext(MachineContext);
     return machine.system.get(systemId);
 };
 
-export default useMachine;
+export default useSystemMachine;
