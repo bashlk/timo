@@ -3,6 +3,7 @@ import { getUser } from '@timo/common/api';
 import customizeUserMachine from './customizeUser';
 import loginMachine from './login';
 import changePasswordMachine from './changePassword';
+import profileMachine from './profile';
 
 const rootMachine = setup({
     actors: {
@@ -12,7 +13,8 @@ const rootMachine = setup({
     entry: [
         spawnChild(loginMachine, { systemId: 'login' }),
         spawnChild(customizeUserMachine, { systemId: 'customizeUser' }),
-        spawnChild(changePasswordMachine, { systemId: 'changePassword' })
+        spawnChild(changePasswordMachine, { systemId: 'changePassword' }),
+        spawnChild(profileMachine, { systemId: 'profile' })
     ],
     initial: 'unknown',
     context: {

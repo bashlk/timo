@@ -3,16 +3,13 @@ import Button, { ButtonVariants } from '@timo/common/components/Button';
 import styles from './Profile.module.css';
 import ChangePassword from './sections/ChangePassword';
 import CustomizeUser from './sections/CustomizeUser';
-import UserMachineContext from '../../context/UserMachineContext';
-import { USER_EVENTS } from '../../machines/userMachine';
+import useMachine from '../../hooks/useMachine';
 
 const Profile = () => {
-    const userMachine = UserMachineContext.useActorRef();
+    const profileMachine = useMachine('profile');
 
     const handleLogoutClick = () => {
-        userMachine.send({
-            type: USER_EVENTS.LOGOUT
-        });
+        profileMachine.send({ type: 'logout' });
     };
 
     return (
