@@ -2,6 +2,7 @@ import { setup, spawnChild, sendTo, assign, fromPromise } from 'xstate';
 import { getUser } from '@timo/common/api';
 import customizeUserMachine from './customizeUser';
 import loginMachine from './login';
+import changePasswordMachine from './changePassword';
 
 const rootMachine = setup({
     actors: {
@@ -10,7 +11,8 @@ const rootMachine = setup({
 }).createMachine({
     entry: [
         spawnChild(loginMachine, { systemId: 'login' }),
-        spawnChild(customizeUserMachine, { systemId: 'customizeUser' })
+        spawnChild(customizeUserMachine, { systemId: 'customizeUser' }),
+        spawnChild(changePasswordMachine, { systemId: 'changePassword' })
     ],
     initial: 'unknown',
     context: {
@@ -48,6 +50,13 @@ const rootMachine = setup({
                             avatar_character: context.userData.avatar_character,
                             avatar_background: context.userData.avatar_background
                         }
+                    })
+                ),
+                sendTo(
+                    ({ system }) => system.get('changePassword'),
+                    ({ context }) => ({
+                        type: 'initialize',
+                        username: context.userData.username
                     })
                 )
             ],

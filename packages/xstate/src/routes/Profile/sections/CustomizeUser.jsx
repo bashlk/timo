@@ -8,9 +8,13 @@ import useMachine from '../../../hooks/useMachine';
 import styles from '../Profile.module.css';
 
 const CustomizeUser = () => {
-    const customizeUserMachineState = useMachineState('customizeUser', state => state.context);
-    const { username, avatar_character, avatar_background, statusMessage } = customizeUserMachineState;
     const customizeUserMachine = useMachine('customizeUser');
+    const {
+        username,
+        avatar_character,
+        avatar_background,
+        statusMessage
+    } = useMachineState('customizeUser', state => state.context);
 
     const handleCustomizeFormSubmit = (e) => {
         e.preventDefault();

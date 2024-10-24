@@ -1,32 +1,21 @@
-import { useState } from 'react';
 import Input from '@timo/common/components/Input';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import Button from '@timo/common/components/Button';
-import { updatePassword } from '@timo/common/api';
 import styles from '../Profile.module.css';
-import UserMachineContext from '../../../context/UserMachineContext';
+import useMachineState from '../../../hooks/useMachineState';
+import useMachine from '../../../hooks/useMachine';
 
 const ChangePassword = () => {
-    const username = UserMachineContext.useSelector((state) => state.context.data?.username);
-    const [passwordStatus, setPasswordStatus] = useState(null);
+    const { statusMessage } = useMachineState('changePassword', state => state.context);
+    const changePasswordMachine = useMachine('changePassword');
 
     const handlePasswordFormSubmit = (e) => {
         e.preventDefault();
-
         const formData = new FormData(e.target);
-        const password = formData.get('password');
-        const newPassword = formData.get('newPassword');
-
-        setPasswordStatus('Loading...');
-
-        updatePassword({
-            username,
-            password,
-            newPassword
-        }).then(() => {
-            setPasswordStatus('Password updated');
-        }).catch((error) => {
-            setPasswordStatus(error.message);
+        changePasswordMachine.send({
+            type: 'save',
+            password: formData.get('password'),
+            newPassword: formData.get('newPassword')
         });
     };
 
@@ -50,7 +39,7 @@ const ChangePassword = () => {
                     labelVisible
                     required
                 />
-                {passwordStatus && <StatusMessage className={styles['status']} message={passwordStatus} />}
+                {statusMessage && <StatusMessage className={styles['status']} message={statusMessage} />}
                 <div className={styles['button']}>
                     <Button type="submit">Change password</Button>
                 </div>
