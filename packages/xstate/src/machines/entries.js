@@ -86,6 +86,9 @@ const entriesMachine = setup({
                         }
                     }))
                 },
+                'refresh': {
+                    target: 'loading'
+                },
                 'updateEntry': {
                     target: 'updating-entry'
                 },
