@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import Entry from '@timo/common/components/Entry';
 import Title from '@timo/common/components/Title';
 import Input from '@timo/common/components/Input';
@@ -10,7 +9,7 @@ import { ButtonVariants } from '@timo/common/components/Button/Button';
 import useSystemMachine from '../../hooks/useSystemMachine';
 import useSystemMachineState from '../../hooks/useSystemMachineState';
 
-const Entries = ({ history }) => {
+const Entries = () => {
     const {
         groupedEntries,
         totalDuration,
@@ -19,6 +18,7 @@ const Entries = ({ history }) => {
         itemStatusMessage
     } = useSystemMachineState('entries', state => state.context);
     const entriesMachine = useSystemMachine('entries');
+    const rootMachine = useSystemMachine('root');
 
     const handleEdit = (updatedEntry) => {
         entriesMachine.send({
@@ -45,7 +45,10 @@ const Entries = ({ history }) => {
     };
 
     const handleNewClick = () => {
-        history.push('./new');
+        rootMachine.send({
+            type: 'pushLocation',
+            location: './new'
+        });
     };
 
     return (
@@ -92,10 +95,6 @@ const Entries = ({ history }) => {
             </div>
         </>
     );
-};
-
-Entries.propTypes = {
-    history: PropTypes.object.isRequired
 };
 
 export default Entries;

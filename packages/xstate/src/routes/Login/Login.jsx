@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-import PropTypes from 'prop-types';
 import Input from '@timo/common/components/Input';
 import Button, { ButtonVariants } from '@timo/common/components/Button';
 import Title from '@timo/common/components/Title';
@@ -9,16 +7,9 @@ import useSystemMachineState from '../../hooks/useSystemMachineState';
 
 import styles from './Login.module.css';
 
-const Login = ({ history }) => {
-    const authState = useSystemMachineState('root', (state) => state.value);
+const Login = () => {
     const statusMessage = useSystemMachineState('login', (state) => state.context.statusMessage);
     const loginMachine = useSystemMachine('login');
-
-    useEffect(() => {
-        if (authState === 'authenticated') {
-            history.replace('./');
-        }
-    }, [history, authState]);
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
@@ -59,12 +50,6 @@ const Login = ({ history }) => {
             </form>
         </div>
     );
-};
-
-Login.propTypes = {
-    history: PropTypes.shape({
-        replace: PropTypes.func.isRequired
-    }).isRequired
 };
 
 export default Login;

@@ -1,9 +1,10 @@
-import PropTypes from 'prop-types';
 import TopBar from '@timo/common/components/TopBar';
+import useSystemMachine from '../hooks/useSystemMachine';
 import useSystemMachineState from '../hooks/useSystemMachineState';
 
-const TopBarWithUser = ({ history }) => {
+const TopBarWithUser = () => {
     const userData = useSystemMachineState('root', (state) => state.context.userData);
+    const rootMachine = useSystemMachine('root');
 
     return (
         <TopBar
@@ -11,14 +12,10 @@ const TopBarWithUser = ({ history }) => {
                 character: userData?.avatar_character,
                 background: userData?.avatar_background
             }}
-            onIconClick={() => history.push('./')}
-            onAvatarClick={() => history.push('./profile')}
+            onIconClick={() => rootMachine.send({ type: 'pushLocation', location: './' })}
+            onAvatarClick={() => rootMachine.send({ type: 'pushLocation', location: './profile' })}
         />
     );
-};
-
-TopBarWithUser.propTypes = {
-    history: PropTypes.object.isRequired
 };
 
 export default TopBarWithUser;

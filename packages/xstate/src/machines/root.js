@@ -1,4 +1,5 @@
-import { setup, spawnChild, sendTo, assign, fromPromise } from 'xstate';
+import { setup, spawnChild, sendTo, assign, fromPromise, fromCallback } from 'xstate';
+import history from 'history/browser';
 import { getUser } from '@timo/common/api';
 import customizeUserMachine from './customizeUser';
 import loginMachine from './login';
@@ -9,10 +10,27 @@ import newEntriesMachine from './newEntry';
 
 const rootMachine = setup({
     actors: {
-        getUser: fromPromise(getUser)
+        getUser: fromPromise(getUser),
+        history: fromCallback(({ sendBack, receive }) => {
+            history.listen((location) => {
+                sendBack({
+                    type: 'locationChanged',
+                    location
+                });
+            });
+            receive((event) => {
+                if (event.type === 'pushLocation') {
+                    history.push(event.location);
+                }
+                if (event.type === 'replaceLocation') {
+                    history.replace(event.location);
+                }
+            });
+        })
     }
 }).createMachine({
     entry: [
+        spawnChild('history', { systemId: 'history' }),
         spawnChild(loginMachine, { systemId: 'login' }),
         spawnChild(customizeUserMachine, { systemId: 'customizeUser' }),
         spawnChild(changePasswordMachine, { systemId: 'changePassword' }),
@@ -22,7 +40,8 @@ const rootMachine = setup({
     ],
     initial: 'unknown',
     context: {
-        userData: null
+        userData: null,
+        currentPath: history.location.pathname
     },
     states: {
         'unknown': {
@@ -77,26 +96,69 @@ const rootMachine = setup({
                         })
                     })
                 },
-                unauthenticate: {
-                    target: 'unauthenticated',
+                locationChanged: {
                     actions: assign({
-                        userData: null
+                        currentPath: ({ event }) => event.location.pathname
                     })
+                },
+                pushLocation: {
+                    actions: [
+                        sendTo(
+                            ({ system }) => system.get('history'),
+                            ({ event }) => ({
+                                type: 'pushLocation',
+                                location: event.location
+                            })
+                        )
+                    ]
+                },
+                replaceLocation: {
+                    actions: sendTo(
+                        ({ system }) => system.get('history'),
+                        ({ event }) => ({
+                            type: 'replaceLocation',
+                            location: event.location
+                        })
+                    )
+                },
+                unauthenticate: {
+                    target: 'unauthenticated'
                 }
             }
         },
         'unauthenticated': {
+            entry: [
+                assign({
+                    userData: null
+                }),
+                sendTo(
+                    ({ system }) => system.get('history'),
+                    {
+                        type: 'pushLocation',
+                        location: './login'
+                    }
+                )
+            ],
             on: {
                 authenticate: {
                     target: 'authenticated',
-                    actions: assign({
-                        userData:({ event }) => ({
-                            id: event.params.id,
-                            username: event.params.username,
-                            avatar_character: event.params.avatar_character,
-                            avatar_background: event.params.avatar_background
-                        })
-                    })
+                    actions: [
+                        assign({
+                            userData:({ event }) => ({
+                                id: event.params.id,
+                                username: event.params.username,
+                                avatar_character: event.params.avatar_character,
+                                avatar_background: event.params.avatar_background
+                            })
+                        }),
+                        sendTo(
+                            ({ system }) => system.get('history'),
+                            {
+                                type: 'replaceLocation',
+                                location: './'
+                            }
+                        )
+                    ]
                 }
             }
         }

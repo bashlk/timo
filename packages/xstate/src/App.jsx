@@ -6,7 +6,6 @@ import Login from './routes/Login/Login';
 import Entries from './routes/Entries/Entries';
 import NewEntry from './routes/NewEntry/NewEntry';
 import Profile from './routes/Profile/Profile';
-import ProtectedRoute from './contextualComponents/ProtectedRoute';
 import TopBarWithUser from './contextualComponents/TopBarWithUser';
 import MachineContextProvider from './context/MachineContext';
 
@@ -21,31 +20,25 @@ const routes = [
 const App = () => (
     <MachineContextProvider>
         <Router routes={routes}>
-            {(routeName, history) => {
+            {(routeName) => {
                 let pageComponent = null;
                 switch (routeName) {
                 case 'Login':
-                    pageComponent = <Login history={history} />;
+                    pageComponent = <Login />;
                     break;
                 case 'NewEntry':
                     pageComponent = (
-                        <ProtectedRoute history={history}>
-                            <NewEntry history={history} />
-                        </ProtectedRoute>
+                        <NewEntry />
                     );
                     break;
                 case 'Entries':
                     pageComponent = (
-                        <ProtectedRoute history={history}>
-                            <Entries history={history} />
-                        </ProtectedRoute>
+                        <Entries />
                     );
                     break;
                 case 'Profile':
                     pageComponent = (
-                        <ProtectedRoute history={history}>
-                            <Profile />
-                        </ProtectedRoute>
+                        <Profile />
                     );
                     break;
                 default:
@@ -55,7 +48,7 @@ const App = () => (
                 }
                 return (
                     <Container>
-                        <TopBarWithUser history={history} />
+                        <TopBarWithUser />
                         {pageComponent}
                     </Container>
                 );
