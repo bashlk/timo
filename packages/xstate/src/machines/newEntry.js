@@ -92,23 +92,33 @@ const newEntriesMachine = setup({
                     };
                 },
                 onDone: {
-                    target: 'idle',
-                    actions: [
-                        assign({
-                            statusMessage: 'Time logged successfully'
-                        }),
-                        sendTo(
-                            ({ system }) => system.get('entries'),
-                            {
-                                type: 'refresh'
-                            }
-                        )
-                    ]
+                    target: 'finished'
                 },
                 onError: {
                     target: 'paused',
                     actions: assign({
                         statusMessage: ({ event }) => event.error.message
+                    })
+                }
+            }
+        },
+        'finished': {
+            entry: [
+                assign({
+                    statusMessage: 'Time logged successfully'
+                }),
+                sendTo(
+                    ({ system }) => system.get('entries'),
+                    {
+                        type: 'refresh'
+                    }
+                )
+            ],
+            after: {
+                2000: {
+                    target: 'idle',
+                    actions: assign({
+                        statusMessage: null
                     })
                 }
             }
