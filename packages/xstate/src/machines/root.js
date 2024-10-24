@@ -4,6 +4,7 @@ import customizeUserMachine from './customizeUser';
 import loginMachine from './login';
 import changePasswordMachine from './changePassword';
 import profileMachine from './profile';
+import entriesMachine from './entries';
 
 const rootMachine = setup({
     actors: {
@@ -14,7 +15,8 @@ const rootMachine = setup({
         spawnChild(loginMachine, { systemId: 'login' }),
         spawnChild(customizeUserMachine, { systemId: 'customizeUser' }),
         spawnChild(changePasswordMachine, { systemId: 'changePassword' }),
-        spawnChild(profileMachine, { systemId: 'profile' })
+        spawnChild(profileMachine, { systemId: 'profile' }),
+        spawnChild(entriesMachine, { systemId: 'entries' })
     ],
     initial: 'unknown',
     context: {
