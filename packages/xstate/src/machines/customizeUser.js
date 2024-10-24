@@ -1,16 +1,5 @@
-import { setup, assign, fromPromise } from 'xstate';
+import { setup, assign, fromPromise, sendTo } from 'xstate';
 import { updateUser } from '@timo/common/api';
-
-export const CUSTOMIZE_USER_STATES = {
-    IDLE: 'idle',
-    SAVING: 'saving'
-};
-
-export const CUSTOMIZE_USER_EVENTS = {
-    CHANGE_AVATAR_CHARACTER: 'changeAvatarCharacter',
-    CHANGE_AVATAR_BACKGROUND: 'changeAvatarBackground',
-    SAVE: 'save'
-};
 
 const customizeUserMachine = setup({
     actors: {
@@ -18,64 +7,84 @@ const customizeUserMachine = setup({
     }
 }).createMachine({
     id: 'customizeUser',
-    initial: CUSTOMIZE_USER_STATES.IDLE,
+    initial: 'idle',
     context: {
         userId: null,
-        avatar: {
-            character: null,
-            background: null
-        },
+        username: null,
+        avatar_background: null,
+        avatar_character: null,
         statusMessage: null
     },
     states: {
-        [CUSTOMIZE_USER_STATES.IDLE]: {
+        'idle': {
             on: {
-                [CUSTOMIZE_USER_EVENTS.CHANGE_AVATAR_CHARACTER]: {
-                    actions: assign({
-                        avatar: ({ event, context }) => ({
-                            ...context.avatar,
-                            character: event.character
-                        })
-                    })
+                'initialize': {
+                    actions: assign(({ event }) => ({
+                        userId: event.params.userId,
+                        username: event.params.username,
+                        avatar_background: event.params.avatar_background,
+                        avatar_character: event.params.avatar_character
+                    }))
                 },
-                [CUSTOMIZE_USER_EVENTS.CHANGE_AVATAR_BACKGROUND]: {
-                    actions: assign({
-                        avatar: ({ event, context }) => ({
-                            ...context.avatar,
-                            background: event.background
-                        })
-                    })
+                'changeAvatarCharacter': {
+                    actions: assign(({ context, event }) => ({
+                        ...context,
+                        avatar_character: event.value
+                    }))
                 },
-                [CUSTOMIZE_USER_EVENTS.SAVE]: {
-                    target: CUSTOMIZE_USER_STATES.SAVING
+                'changeAvatarBackground': {
+                    actions: assign(({ context, event }) => ({
+                        ...context,
+                        avatar_background: event.value
+                    }))
+                },
+                'changeUsername': {
+                    actions: assign(({ context, event }) => ({
+                        ...context,
+                        username: event.value
+                    }))
+                },
+                'save': {
+                    target: 'saving'
                 }
             }
         },
-        [CUSTOMIZE_USER_STATES.SAVING]: {
+        'saving': {
             entry: [
                 assign({
-                    statusMessage: 'Loading...'
+                    statusMessage: 'Saving...'
                 })
             ],
             invoke: [
                 {
                     src: 'updateUser',
-                    input: ({ event, context }) => ({
+                    input: ({ context }) => ({
                         id: context.userId,
-                        username: event.username,
-                        avatar_character: event.avatarCharacter,
-                        avatar_background: event.avatarBackground
+                        username: context.username,
+                        avatar_character: context.avatar_character,
+                        avatar_background: context.avatar_background
                     }),
                     onDone: {
-                        target: CUSTOMIZE_USER_STATES.IDLE,
+                        target: 'idle',
                         actions: [
                             assign({
                                 statusMessage: 'Profile updated'
-                            })
+                            }),
+                            sendTo(
+                                ({ system }) => system.get('root'),
+                                ({ context }) => ({
+                                    type: 'updateUserData',
+                                    params: {
+                                        username: context.username,
+                                        avatar_character: context.avatar_character,
+                                        avatar_background: context.avatar_background
+                                    }
+                                })
+                            )
                         ]
                     },
                     onError: {
-                        target: CUSTOMIZE_USER_STATES.IDLE,
+                        target: 'idle',
                         actions: assign({
                             statusMessage: ({ event }) => event.error.message
                         })

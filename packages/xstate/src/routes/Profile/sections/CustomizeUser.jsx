@@ -3,46 +3,38 @@ import RadioGroup from '@timo/common/components/RadioGroup';
 import Input from '@timo/common/components/Input';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import Button from '@timo/common/components/Button';
+import useMachineState from '../../../hooks/useMachineState';
+import useMachine from '../../../hooks/useMachine';
 import styles from '../Profile.module.css';
-import UserMachineContext from '../../../context/UserMachineContext';
-import { useActor } from '@xstate/react';
-import customizeUserMachine, { CUSTOMIZE_USER_EVENTS } from '../../../machines/customizeUserMachine';
 
 const CustomizeUser = () => {
-    const userMachine = UserMachineContext.useActorRef();
-    const updatedMachine = customizeUserMachine.provide({
-        actors: {
-            userMachine
-        }
-    });
-    const [state, send] = useActor(updatedMachine);
+    const customizeUserMachineState = useMachineState('customizeUser', state => state.context);
+    const { username, avatar_character, avatar_background, statusMessage } = customizeUserMachineState;
+    const customizeUserMachine = useMachine('customizeUser');
+
+    const handleCustomizeFormSubmit = (e) => {
+        e.preventDefault();
+        customizeUserMachine.send({ type: 'save' });
+    };
 
     const handleAvatarBackgroundChange = (e) => {
-        send({
-            type: CUSTOMIZE_USER_EVENTS.CHANGE_AVATAR_BACKGROUND,
-            background: e.target.value
+        customizeUserMachine.send({
+            type: 'changeAvatarBackground',
+            value: e.target.value
         });
     };
 
     const handleAvatarCharacterChange = (e) => {
-        send({
-            type: CUSTOMIZE_USER_EVENTS.CHANGE_AVATAR_CHARACTER,
-            character: e.target.value
+        customizeUserMachine.send({
+            type: 'changeAvatarCharacter',
+            value: e.target.value
         });
     };
 
-    const handleCustomizeFormSubmit = (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const username = formData.get('username');
-        const avatarCharacter = formData.get('avatar-character');
-        const avatarBackground = formData.get('avatar-background');
-
-        send({
-            type: CUSTOMIZE_USER_EVENTS.SAVE,
-            username,
-            avatarCharacter,
-            avatarBackground
+    const handleUsernameChange = (e) => {
+        customizeUserMachine.send({
+            type: 'changeUsername',
+            value: e.target.value
         });
     };
 
@@ -50,8 +42,8 @@ const CustomizeUser = () => {
         <>
             <Avatar
                 className={styles['avatar']}
-                character={state.context.avatar.character}
-                background={state.context.avatar.background}
+                character={avatar_character}
+                background={avatar_background}
                 large
             />
             <form className={styles['form']} action="" onSubmit={handleCustomizeFormSubmit}>
@@ -64,7 +56,7 @@ const CustomizeUser = () => {
                             { value: 'light', label: 'Light' },
                             { value: 'dark', label: 'Dark' }
                         ]}
-                        defaultValue={userData?.avatar_background}
+                        defaultValue={avatar_background}
                         onChange={handleAvatarBackgroundChange}
                     />
                     <Input
@@ -73,7 +65,7 @@ const CustomizeUser = () => {
                         type="text"
                         maxLength={1}
                         pattern="[A-Za-z]"
-                        defaultValue={userData?.avatar_character}
+                        defaultValue={avatar_character}
                         onChange={handleAvatarCharacterChange}
                         labelVisible
                         required
@@ -82,11 +74,12 @@ const CustomizeUser = () => {
                         name="username"
                         label="Username"
                         type="text"
-                        defaultValue={userData?.username}
+                        defaultValue={username}
+                        onChange={handleUsernameChange}
                         labelVisible
                         required
                     />
-                    {customizeStatus && <StatusMessage className={styles['status']} message={customizeStatus} />}
+                    {statusMessage && <StatusMessage className={styles['status']} message={statusMessage} />}
                     <div className={styles['button']}>
                         <Button type="submit">Save</Button>
                     </div>

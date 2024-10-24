@@ -6,12 +6,6 @@ import loginMachine from './login';
 const rootMachine = setup({
     actors: {
         getUser: fromPromise(getUser)
-    },
-    actions: {
-        getUser: sendTo(
-            ({ system }) => system.get('user'),
-            { type: 'get' }
-        )
     }
 }).createMachine({
     entry: [
@@ -43,7 +37,31 @@ const rootMachine = setup({
             }
         },
         'authenticated': {
+            entry: [
+                sendTo(
+                    ({ system }) => system.get('customizeUser'),
+                    ({ context }) => ({
+                        type: 'initialize',
+                        params: {
+                            userId: context.userData.id,
+                            username: context.userData.username,
+                            avatar_character: context.userData.avatar_character,
+                            avatar_background: context.userData.avatar_background
+                        }
+                    })
+                )
+            ],
             on: {
+                updateUserData: {
+                    actions: assign({
+                        userData: ({ event, context }) => ({
+                            id: context.userData.id,
+                            username: event.params.username,
+                            avatar_character: event.params.avatar_character,
+                            avatar_background: event.params.avatar_background
+                        })
+                    })
+                },
                 unauthenticate: {
                     target: 'unauthenticated',
                     actions: assign({
