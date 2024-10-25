@@ -189,16 +189,14 @@ const rootMachine = setup({
             on: {
                 authenticate: {
                     target: 'authenticated',
-                    actions: [
-                        assign({
-                            userData:({ event }) => ({
-                                id: event.params.id,
-                                username: event.params.username,
-                                avatar_character: event.params.avatar_character,
-                                avatar_background: event.params.avatar_background
-                            })
+                    actions: assign({
+                        userData:({ event }) => ({
+                            id: event.params.id,
+                            username: event.params.username,
+                            avatar_character: event.params.avatar_character,
+                            avatar_background: event.params.avatar_background
                         })
-                    ]
+                    })
                 }
             }
         }
