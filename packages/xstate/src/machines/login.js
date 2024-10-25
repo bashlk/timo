@@ -13,6 +13,7 @@ const loginMachine = setup({
         )
     }
 }).createMachine({
+    id: 'login',
     context: {
         statusMessage: null
     },

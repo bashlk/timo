@@ -18,6 +18,7 @@ const newEntryMachine = setup({
         })
     }
 }).createMachine({
+    id: 'newEntry',
     initial: 'idle',
     context: {
         timerValue: 0,

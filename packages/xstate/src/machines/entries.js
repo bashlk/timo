@@ -40,6 +40,7 @@ const entriesMachine = setup({
         deleteEntry: fromPromise(async ({ input }) => deleteEntry(input))
     }
 }).createMachine({
+    id: 'entries',
     initial: 'loading',
     context: {
         groupedEntries: [],

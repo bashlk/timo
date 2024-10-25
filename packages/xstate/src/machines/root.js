@@ -58,6 +58,7 @@ const rootMachine = setup({
         }
     }
 }).createMachine({
+    id: 'root',
     entry: [
         spawnChild('history', { id: 'history' })
     ],
