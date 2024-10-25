@@ -3,18 +3,18 @@ import RadioGroup from '@timo/common/components/RadioGroup';
 import Input from '@timo/common/components/Input';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import Button from '@timo/common/components/Button';
-import useSystemMachineState from '../../../hooks/useSystemMachineState';
-import useSystemMachine from '../../../hooks/useSystemMachine';
+import useChildMachine from '../../../hooks/useChildMachine';
+import useChildMachineState from '../../../hooks/useChildMachineState';
 import styles from '../Profile.module.css';
 
 const CustomizeUser = () => {
-    const customizeUserMachine = useSystemMachine('customizeUser');
+    const customizeUserMachine = useChildMachine('customizeUser');
     const {
         username,
         avatar_character,
         avatar_background,
         statusMessage
-    } = useSystemMachineState('customizeUser', state => state.context);
+    } = useChildMachineState('customizeUser', state => state.context);
 
     const handleCustomizeFormSubmit = (e) => {
         e.preventDefault();

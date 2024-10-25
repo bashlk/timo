@@ -1,28 +1,18 @@
 import PropTypes from 'prop-types';
-import useSystemMachineState from '../hooks/useSystemMachineState';
+import useRootMachine from '../hooks/useRootMachine';
+import { useSelector } from '@xstate/react';
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-
-const Router = ({ routes, children }) => {
-    const currentPath = useSystemMachineState('root', (state) => state.context.currentPath);
-    if (!currentPath) {
-        return null;
+const Router = ({ children }) => {
+    const rootMachine = useRootMachine();
+    const state = useSelector(rootMachine, state => state.value);
+    const route = state?.authenticated || state?.unauthenticated;
+    if (route && route !== 'unknown') {
+        return children(route);
     }
-
-    const currentRoute = routes.find(route => `${BASE_URL}${route.path}` === currentPath);
-    if (!currentRoute) {
-        return children(null);
-    }
-    return children(currentRoute.name);
+    return null;
 };
 
 Router.propTypes = {
-    routes: PropTypes.arrayOf(
-        PropTypes.shape({
-            path: PropTypes.string.isRequired,
-            name: PropTypes.string.isRequired
-        })
-    ).isRequired,
     children: PropTypes.func.isRequired
 };
 

@@ -2,14 +2,14 @@ import Input from '@timo/common/components/Input';
 import Button, { ButtonVariants } from '@timo/common/components/Button';
 import Title from '@timo/common/components/Title';
 import StatusMessage from '@timo/common/components/StatusMessage';
-import useSystemMachine from '../../hooks/useSystemMachine';
-import useSystemMachineState from '../../hooks/useSystemMachineState';
+import useChildMachine from '../../hooks/useChildMachine';
+import useChildMachineState from '../../hooks/useChildMachineState';
 
 import styles from './Login.module.css';
 
 const Login = () => {
-    const statusMessage = useSystemMachineState('login', (state) => state.context.statusMessage);
-    const loginMachine = useSystemMachine('login');
+    const statusMessage = useChildMachineState('login', (state) => state.context.statusMessage);
+    const loginMachine = useChildMachine('login');
 
     const handleFormSubmit = (e) => {
         e.preventDefault();

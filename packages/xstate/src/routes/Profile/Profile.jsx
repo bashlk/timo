@@ -3,10 +3,10 @@ import Button, { ButtonVariants } from '@timo/common/components/Button';
 import styles from './Profile.module.css';
 import ChangePassword from './sections/ChangePassword';
 import CustomizeUser from './sections/CustomizeUser';
-import useSystemMachine from '../../hooks/useSystemMachine';
+import useChildMachine from '../../hooks/useChildMachine';
 
 const Profile = () => {
-    const profileMachine = useSystemMachine('profile');
+    const profileMachine = useChildMachine('profile');
 
     const handleLogoutClick = () => {
         profileMachine.send({ type: 'logout' });

@@ -6,7 +6,16 @@ import loginMachine from './login';
 import changePasswordMachine from './changePassword';
 import profileMachine from './profile';
 import entriesMachine from './entries';
-import newEntriesMachine from './newEntry';
+import newEntryMachine from './newEntry';
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
+const routes = {
+    login: `${BASE_URL}/login`,
+    entries: `${BASE_URL}/`,
+    newEntry: `${BASE_URL}/new`,
+    profile: `${BASE_URL}/profile`
+};
 
 const rootMachine = setup({
     actors: {
@@ -19,24 +28,42 @@ const rootMachine = setup({
                 });
             });
             receive((event) => {
+                if (event.type === 'getLocation') {
+                    sendBack({
+                        type: 'locationChanged',
+                        location: history.location
+                    });
+                }
                 if (event.type === 'pushLocation') {
                     history.push(event.location);
                 }
                 if (event.type === 'replaceLocation') {
-                    history.replace(event.location);
+                    history.push(event.location);
                 }
             });
-        })
+        }),
+        customizeUser: customizeUserMachine,
+        login: loginMachine,
+        changePassword: changePasswordMachine,
+        profile: profileMachine,
+        entries: entriesMachine,
+        newEntry: newEntryMachine
+    },
+    guards: {
+        isNewEntryRoute: ({ event }) => {
+            return event.location.pathname === routes.newEntry;
+        },
+        isProfileRoute: ({ event }) => {
+            return event.location.pathname === routes.profile;
+        }
     }
 }).createMachine({
     entry: [
-        spawnChild('history', { systemId: 'history' }),
-        spawnChild(loginMachine, { systemId: 'login' })
+        spawnChild('history', { id: 'history' })
     ],
     initial: 'unknown',
     context: {
-        userData: null,
-        currentPath: null
+        userData: null
     },
     states: {
         'unknown': {
@@ -59,97 +86,107 @@ const rootMachine = setup({
             }
         },
         'authenticated': {
-            entry: [
-                spawnChild(customizeUserMachine, { systemId: 'customizeUser' }),
-                spawnChild(changePasswordMachine, { systemId: 'changePassword' }),
-                spawnChild(profileMachine, { systemId: 'profile' }),
-                spawnChild(entriesMachine, { systemId: 'entries' }),
-                spawnChild(newEntriesMachine, { systemId: 'newEntry' }),
-
-                assign({
-                    currentPath: history.location.pathname
-                }),
-
-                sendTo(
-                    ({ system }) => system.get('customizeUser'),
-                    ({ context }) => ({
-                        type: 'initialize',
-                        params: {
-                            userId: context.userData.id,
-                            username: context.userData.username,
-                            avatar_character: context.userData.avatar_character,
-                            avatar_background: context.userData.avatar_background
+            invoke: {
+                // Invoke entries here so that it doesn't reload as we navigate across routes
+                src: 'entries',
+                id: 'entries',
+                systemId: 'entries'
+            },
+            initial: 'unknown',
+            states: {
+                'unknown': {
+                    entry: [
+                        sendTo('history', { type: 'getLocation' })
+                    ]
+                },
+                'entries': {},
+                'newEntry': {
+                    invoke: {
+                        src: 'newEntry',
+                        id: 'newEntry'
+                    }
+                },
+                'profile': {
+                    invoke: [
+                        {
+                            src: 'profile',
+                            id: 'profile'
+                        },
+                        {
+                            src: 'customizeUser',
+                            id: 'customizeUser'
+                        },
+                        {
+                            src: 'changePassword',
+                            id: 'changePassword'
                         }
-                    })
-                ),
-                sendTo(
-                    ({ system }) => system.get('changePassword'),
-                    ({ context }) => ({
-                        type: 'initialize',
-                        username: context.userData.username
-                    })
-                )
-            ],
-            on: {
-                updateUserData: {
-                    actions: assign({
-                        userData: ({ event, context }) => ({
-                            id: context.userData.id,
-                            username: event.params.username,
-                            avatar_character: event.params.avatar_character,
-                            avatar_background: event.params.avatar_background
-                        })
-                    })
-                },
-                locationChanged: {
-                    actions: assign({
-                        currentPath: ({ event }) => event.location.pathname
-                    })
-                },
-                pushLocation: {
-                    actions: [
+                    ],
+                    entry: [
                         sendTo(
-                            ({ system }) => system.get('history'),
-                            ({ event }) => ({
-                                type: 'pushLocation',
-                                location: event.location
+                            'customizeUser',
+                            ({ context }) => ({
+                                type: 'initialize',
+                                params: {
+                                    userId: context.userData.id,
+                                    username: context.userData.username,
+                                    avatar_character: context.userData.avatar_character,
+                                    avatar_background: context.userData.avatar_background
+                                }
+                            })
+                        ),
+                        sendTo(
+                            'changePassword',
+                            ({ context }) => ({
+                                type: 'initialize',
+                                username: context.userData.username
                             })
                         )
                     ]
+                }
+            },
+            on: {
+                'locationChanged': [
+                    {
+                        target: '.newEntry',
+                        guard: 'isNewEntryRoute'
+                    },
+                    {
+                        target: '.profile',
+                        guard: 'isProfileRoute'
+                    },
+                    // Fallback to entries route if non specified or not found
+                    {
+                        target: '.entries'
+                    }
+                ],
+                'pushRoute': {
+                    actions: sendTo('history', ({ event }) => ({
+                        type: 'pushLocation',
+                        location: routes[event.route]
+                    }))
                 },
-                replaceLocation: {
-                    actions: sendTo(
-                        ({ system }) => system.get('history'),
-                        ({ event }) => ({
-                            type: 'replaceLocation',
-                            location: event.location
-                        })
-                    )
-                },
-                unauthenticate: {
+                'unauthenticate': {
                     target: 'unauthenticated'
                 }
             }
         },
         'unauthenticated': {
-            entry: [
-                assign({
-                    userData: null
-                }),
-                sendTo(
-                    ({ system }) => system.get('history'),
-                    {
-                        type: 'replaceLocation',
-                        location: './login'
+            initial: 'login',
+            states: {
+                'login': {
+                    entry: [
+                        sendTo('history', {
+                            type: 'replaceLocation',
+                            location: routes.login
+                        })
+                    ],
+                    invoke: {
+                        src: loginMachine,
+                        id: 'login'
                     }
-                )
-            ],
+                }
+            },
             on: {
-                locationChanged: {
-                    actions: assign({
-                        currentPath: ({ event }) => event.location.pathname
-                    })
-                },
                 authenticate: {
                     target: 'authenticated',
                     actions: [
@@ -160,14 +197,7 @@ const rootMachine = setup({
                                 avatar_character: event.params.avatar_character,
                                 avatar_background: event.params.avatar_background
                             })
-                        }),
-                        sendTo(
-                            ({ system }) => system.get('history'),
-                            {
-                                type: 'replaceLocation',
-                                location: './'
-                            }
-                        )
+                        })
                     ]
                 }
             }

@@ -1,7 +1,7 @@
 import { setup, fromPromise, fromCallback, assign, sendTo } from 'xstate';
 import { createEntry } from '@timo/common/api';
 
-const newEntriesMachine = setup({
+const newEntryMachine = setup({
     actors: {
         createEntry: fromPromise(async ({ input }) => createEntry(input)),
         timer: fromCallback(({ sendBack, receive}) => {
@@ -126,4 +126,4 @@ const newEntriesMachine = setup({
     }
 });
 
-export default newEntriesMachine;
+export default newEntryMachine;

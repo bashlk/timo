@@ -1,5 +1,4 @@
 import Container from '@timo/common/components/Container';
-import Title from '@timo/common/components/Title';
 
 import Login from './routes/Login/Login';
 import Entries from './routes/Entries/Entries';
@@ -9,41 +8,30 @@ import TopBarWithUser from './contextualComponents/TopBarWithUser';
 import MachineContextProvider from './context/MachineContext';
 import Router from './components/Router';
 
-const routes = [
-    { path: '/', name: 'Entries' },
-    { path: '/login', name: 'Login' },
-    { path: '/new', name: 'NewEntry' },
-    { path: '/profile', name: 'Profile' }
-];
-
 const App = () => (
     <MachineContextProvider>
-        <Router routes={routes}>
+        <Router>
             {(routeName) => {
                 let pageComponent = null;
                 switch (routeName) {
-                case 'Login':
+                case 'login':
                     pageComponent = <Login />;
                     break;
-                case 'NewEntry':
+                case 'newEntry':
                     pageComponent = (
                         <NewEntry />
                     );
                     break;
-                case 'Entries':
+                case 'entries':
                     pageComponent = (
                         <Entries />
                     );
                     break;
-                case 'Profile':
+                case 'profile':
                     pageComponent = (
                         <Profile />
                     );
                     break;
-                default:
-                    pageComponent = (
-                        <Title>Page not found</Title>
-                    );
                 }
                 return (
                     <Container>

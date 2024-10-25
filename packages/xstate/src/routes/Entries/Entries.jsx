@@ -6,8 +6,9 @@ import StatusMessage from '@timo/common/components/StatusMessage';
 import formatDuration from '@timo/common/utils/formatDuration';
 import styles from './Entries.module.css';
 import { ButtonVariants } from '@timo/common/components/Button/Button';
-import useSystemMachine from '../../hooks/useSystemMachine';
-import useSystemMachineState from '../../hooks/useSystemMachineState';
+import useChildMachineState from '../../hooks/useChildMachineState';
+import useChildMachine from '../../hooks/useChildMachine';
+import useRootMachine from '../../hooks/useRootMachine';
 
 const Entries = () => {
     const {
@@ -16,9 +17,9 @@ const Entries = () => {
         statusMessage,
         filter,
         itemStatusMessage
-    } = useSystemMachineState('entries', state => state.context);
-    const entriesMachine = useSystemMachine('entries');
-    const rootMachine = useSystemMachine('root');
+    } = useChildMachineState('entries', state => state.context);
+    const entriesMachine = useChildMachine('entries');
+    const rootMachine = useRootMachine();
 
     const handleEdit = (updatedEntry) => {
         entriesMachine.send({
@@ -46,8 +47,8 @@ const Entries = () => {
 
     const handleNewClick = () => {
         rootMachine.send({
-            type: 'pushLocation',
-            location: './new'
+            type: 'pushRoute',
+            route: 'newEntry'
         });
     };
 

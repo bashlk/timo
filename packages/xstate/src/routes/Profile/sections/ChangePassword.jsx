@@ -2,12 +2,12 @@ import Input from '@timo/common/components/Input';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import Button from '@timo/common/components/Button';
 import styles from '../Profile.module.css';
-import useSystemMachineState from '../../../hooks/useSystemMachineState';
-import useSystemMachine from '../../../hooks/useSystemMachine';
+import useChildMachine from '../../../hooks/useChildMachine';
+import useChildMachineState from '../../../hooks/useChildMachineState';
 
 const ChangePassword = () => {
-    const { statusMessage } = useSystemMachineState('changePassword', state => state.context);
-    const changePasswordMachine = useSystemMachine('changePassword');
+    const { statusMessage } = useChildMachineState('changePassword', state => state.context);
+    const changePasswordMachine = useChildMachine('changePassword');
 
     const handlePasswordFormSubmit = (e) => {
         e.preventDefault();

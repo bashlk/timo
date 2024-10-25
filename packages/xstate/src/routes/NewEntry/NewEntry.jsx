@@ -2,15 +2,15 @@ import Title from '@timo/common/components/Title';
 import Input from '@timo/common/components/Input';
 import Button, { ButtonVariants } from '@timo/common/components/Button';
 import StatusMessage from '@timo/common/components/StatusMessage';
-import useSystemMachineState from '../../hooks/useSystemMachineState';
-import useSystemMachine from '../../hooks/useSystemMachine';
+import useChildMachine from '../../hooks/useChildMachine';
+import useChildMachineState from '../../hooks/useChildMachineState';
 import Timer from '../../components/Timer';
 import styles from './NewEntry.module.css';
 
 const NewEntry = () => {
-    const timerState = useSystemMachineState('newEntry', state => state.value);
-    const statusMessage = useSystemMachineState('newEntry', state => state.context.statusMessage);
-    const newEntryMachine = useSystemMachine('newEntry');
+    const timerState = useChildMachineState('newEntry', state => state.value);
+    const statusMessage = useChildMachineState('newEntry', state => state.context.statusMessage);
+    const newEntryMachine = useChildMachine('newEntry');
 
     const handleSubmit = (e) => {
         e.preventDefault();
