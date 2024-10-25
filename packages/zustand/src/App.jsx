@@ -16,7 +16,6 @@ import ProtectedRoute from './contextualComponents/ProtectedRoute';
 const routes = [
     { path: '/', name: 'Entries' },
     { path: '/login', name: 'Login' },
-    { path: '/register', name: 'Register' },
     { path: '/new', name: 'NewEntry' },
     { path: '/profile', name: 'Profile' }
 ];
