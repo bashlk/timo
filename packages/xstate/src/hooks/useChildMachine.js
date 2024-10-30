@@ -3,8 +3,7 @@ import useRootMachine from './useRootMachine';
 
 const useChildMachine = (childId) => {
     const rootMachine = useRootMachine();
-    const childMachines = useSelector(rootMachine, (state) => state.children);
-    return childMachines[childId];
+    return useSelector(rootMachine, (state) => state.children[childId]);
 };
 
 export default useChildMachine;
