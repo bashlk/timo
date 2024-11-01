@@ -1,10 +1,10 @@
 import TopBar from '@timo/common/components/TopBar';
 import useRootMachine from '../hooks/useRootMachine';
-import { useSelector } from '@xstate/react';
+import useRootMachineState from '../hooks/useRootMachineState';
 
 const TopBarWithUser = () => {
     const rootMachine = useRootMachine();
-    const userData = useSelector(rootMachine, (state) => state.context.userData);
+    const userData = useRootMachineState(state => state.context.userData);
 
     return (
         <TopBar

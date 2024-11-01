@@ -1,10 +1,8 @@
 import PropTypes from 'prop-types';
-import useRootMachine from '../hooks/useRootMachine';
-import { useSelector } from '@xstate/react';
+import useRootMachineState from '../hooks/useRootMachineState';
 
 const Router = ({ children }) => {
-    const rootMachine = useRootMachine();
-    const state = useSelector(rootMachine, state => state.value);
+    const state = useRootMachineState(state => state.value);
     const route = state?.authenticated || state?.unauthenticated;
     if (route && route !== 'unknown') {
         return children(route);
