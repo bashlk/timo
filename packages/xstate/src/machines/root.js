@@ -115,33 +115,21 @@ const rootMachine = setup({
                         },
                         {
                             src: 'customizeUser',
-                            id: 'customizeUser'
+                            id: 'customizeUser',
+                            input: ({ context }) => ({
+                                userId: context.userData.id,
+                                username: context.userData.username,
+                                avatar_character: context.userData.avatar_character,
+                                avatar_background: context.userData.avatar_background
+                            })
                         },
                         {
                             src: 'changePassword',
-                            id: 'changePassword'
-                        }
-                    ],
-                    entry: [
-                        sendTo(
-                            'customizeUser',
-                            ({ context }) => ({
-                                type: 'initialize',
-                                params: {
-                                    userId: context.userData.id,
-                                    username: context.userData.username,
-                                    avatar_character: context.userData.avatar_character,
-                                    avatar_background: context.userData.avatar_background
-                                }
-                            })
-                        ),
-                        sendTo(
-                            'changePassword',
-                            ({ context }) => ({
-                                type: 'initialize',
+                            id: 'changePassword',
+                            input: ({ context }) => ({
                                 username: context.userData.username
                             })
-                        )
+                        }
                     ]
                 }
             },

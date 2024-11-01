@@ -8,18 +8,13 @@ const changePasswordMachine = setup({
 }).createMachine({
     id: 'changePassword',
     initial: 'idle',
-    context: {
-        username: null,
+    context: ({ input }) => ({
+        username: input.username,
         statusMessage: null
-    },
+    }),
     states: {
         'idle': {
             on: {
-                'initialize': {
-                    actions: assign(({ event }) => ({
-                        username: event.username
-                    }))
-                },
                 'save': {
                     target: 'saving'
                 }

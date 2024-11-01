@@ -8,24 +8,16 @@ const customizeUserMachine = setup({
 }).createMachine({
     id: 'customizeUser',
     initial: 'idle',
-    context: {
-        userId: null,
-        username: null,
-        avatar_background: null,
-        avatar_character: null,
+    context: ({ input }) => ({
+        userId: input.userId,
+        username: input.username,
+        avatar_background: input.avatar_background,
+        avatar_character: input.avatar_character,
         statusMessage: null
-    },
+    }),
     states: {
         'idle': {
             on: {
-                'initialize': {
-                    actions: assign(({ event }) => ({
-                        userId: event.params.userId,
-                        username: event.params.username,
-                        avatar_background: event.params.avatar_background,
-                        avatar_character: event.params.avatar_character
-                    }))
-                },
                 'changeAvatarCharacter': {
                     actions: assign(({ event }) => ({
                         avatar_character: event.value
