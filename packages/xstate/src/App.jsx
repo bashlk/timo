@@ -1,67 +1,47 @@
-import Router from '@timo/common/components/Router';
-import UserContextProvider from '@timo/common/context/UserContextProvider';
 import Container from '@timo/common/components/Container';
-import Title from '@timo/common/components/Title';
-import TopBarWithUser from '@timo/common/contextualComponents/TopBarWithUser';
-import ProtectedRoute from '@timo/common/contextualComponents/ProtectedRoute';
 
 import Login from './routes/Login/Login';
 import Entries from './routes/Entries/Entries';
 import NewEntry from './routes/NewEntry/NewEntry';
 import Profile from './routes/Profile/Profile';
-
-const routes = [
-    { path: '/', name: 'Entries' },
-    { path: '/login', name: 'Login' },
-    { path: '/register', name: 'Register' },
-    { path: '/new', name: 'NewEntry' },
-    { path: '/profile', name: 'Profile' }
-];
+import TopBarWithUser from './contextualComponents/TopBarWithUser';
+import MachineContextProvider from './context/MachineContext';
+import Router from './components/Router';
 
 const App = () => (
-    <UserContextProvider>
-        <Router routes={routes}>
-            {(routeName, history) => {
+    <MachineContextProvider>
+        <Router>
+            {(routeName) => {
                 let pageComponent = null;
                 switch (routeName) {
-                case 'Login':
-                    pageComponent = <Login history={history} />;
+                case 'login':
+                    pageComponent = <Login />;
                     break;
-                case 'NewEntry':
+                case 'newEntry':
                     pageComponent = (
-                        <ProtectedRoute history={history}>
-                            <NewEntry history={history} />
-                        </ProtectedRoute>
+                        <NewEntry />
                     );
                     break;
-                case 'Entries':
+                case 'entries':
                     pageComponent = (
-                        <ProtectedRoute history={history}>
-                            <Entries history={history} />
-                        </ProtectedRoute>
+                        <Entries />
                     );
                     break;
-                case 'Profile':
+                case 'profile':
                     pageComponent = (
-                        <ProtectedRoute history={history}>
-                            <Profile />
-                        </ProtectedRoute>
+                        <Profile />
                     );
                     break;
-                default:
-                    pageComponent = (
-                        <Title>Page not found</Title>
-                    );
                 }
                 return (
                     <Container>
-                        <TopBarWithUser history={history} />
+                        <TopBarWithUser />
                         {pageComponent}
                     </Container>
                 );
             }}
         </Router>
-    </UserContextProvider>
+    </MachineContextProvider>
 );
 
 export default App;

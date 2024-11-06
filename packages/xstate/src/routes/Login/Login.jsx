@@ -1,22 +1,15 @@
-import { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { login, register } from '@timo/common/api';
-import useUser from '@timo/common/hooks/useUser';
 import Input from '@timo/common/components/Input';
 import Button, { ButtonVariants } from '@timo/common/components/Button';
 import Title from '@timo/common/components/Title';
 import StatusMessage from '@timo/common/components/StatusMessage';
+import useChildMachine from '../../hooks/useChildMachine';
+import useChildMachineState from '../../hooks/useChildMachineState';
+
 import styles from './Login.module.css';
 
-const Login = ({ history }) => {
-    const user = useUser();
-    const [statusMessage, setStatusMessage] = useState(null);
-
-    useEffect(() => {
-        if (user.status === 'authenticated') {
-            history.replace('./');
-        }
-    }, [history, user]);
+const Login = () => {
+    const statusMessage = useChildMachineState('login', (state) => state.context.statusMessage);
+    const loginMachine = useChildMachine('login');
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
@@ -26,23 +19,19 @@ const Login = ({ history }) => {
         const username = formData.get('username');
         const password = formData.get('password');
 
-        setStatusMessage('Loading...');
-
         if (action == 'login') {
-            login({ username, password }).then((response) => {
-                user.setAuthenticatedUser(response);
-                history.replace('./');
-            }).catch((error) => {
-                setStatusMessage(error.message);
+            loginMachine.send({
+                type: 'login',
+                username,
+                password
             });
         }
 
         if (action == 'register') {
-            register({ username, password }).then((response) => {
-                user.setAuthenticatedUser(response);
-                history.replace('./');
-            }).catch((error) => {
-                setStatusMessage(error.message);
+            loginMachine.send({
+                type: 'register',
+                username,
+                password
             });
         }
     };
@@ -61,12 +50,6 @@ const Login = ({ history }) => {
             </form>
         </div>
     );
-};
-
-Login.propTypes = {
-    history: PropTypes.shape({
-        replace: PropTypes.func.isRequired
-    }).isRequired
 };
 
 export default Login;
