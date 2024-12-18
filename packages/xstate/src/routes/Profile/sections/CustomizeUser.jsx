@@ -1,64 +1,44 @@
-import { useEffect, useState } from 'react';
 import Avatar from '@timo/common/components/Avatar';
 import RadioGroup from '@timo/common/components/RadioGroup';
 import Input from '@timo/common/components/Input';
-import useUser from '@timo/common/hooks/useUser';
 import StatusMessage from '@timo/common/components/StatusMessage';
 import Button from '@timo/common/components/Button';
-import { updateUser } from '@timo/common/api';
+import useChildMachine from '../../../hooks/useChildMachine';
+import useChildMachineState from '../../../hooks/useChildMachineState';
 import styles from '../Profile.module.css';
 
 const CustomizeUser = () => {
-    const user = useUser();
-    const [customizeStatus, setCustomizeStatus] = useState(null);
-    const [avatar, setAvatar] = useState({
-        character: undefined,
-        background: undefined
-    });
-
-    useEffect(() => {
-        if (user?.data) {
-            setAvatar({
-                character: user.data.avatar_character,
-                background: user.data.avatar_background
-            });
-        }
-    }, [user]);
+    const customizeUserMachine = useChildMachine('customizeUser');
+    const {
+        username,
+        avatar_character,
+        avatar_background,
+        statusMessage
+    } = useChildMachineState('customizeUser', state => state.context);
 
     const handleCustomizeFormSubmit = (e) => {
         e.preventDefault();
-        const formData = new FormData(e.target);
-        const username = formData.get('username');
-        const avatarCharacter = formData.get('avatar-character');
-        const avatarBackground = formData.get('avatar-background');
-
-        setCustomizeStatus('Loading...');
-
-        updateUser({
-            id: user?.data?.id,
-            username,
-            avatar_character: avatarCharacter,
-            avatar_background: avatarBackground
-        }).then(() => {
-            setCustomizeStatus('Profile updated');
-            // Clear the user in context and force refetch
-            user.clearUser();
-        }).catch((error) => {
-            setCustomizeStatus(error.message);
-        });
+        customizeUserMachine.send({ type: 'save' });
     };
 
     const handleAvatarBackgroundChange = (e) => {
-        setAvatar({
-            ...avatar,
-            background: e.target.value
+        customizeUserMachine.send({
+            type: 'changeAvatarBackground',
+            value: e.target.value
         });
     };
 
     const handleAvatarCharacterChange = (e) => {
-        setAvatar({
-            ...avatar,
-            character: e.target.value
+        customizeUserMachine.send({
+            type: 'changeAvatarCharacter',
+            value: e.target.value
+        });
+    };
+
+    const handleUsernameChange = (e) => {
+        customizeUserMachine.send({
+            type: 'changeUsername',
+            value: e.target.value
         });
     };
 
@@ -66,8 +46,8 @@ const CustomizeUser = () => {
         <>
             <Avatar
                 className={styles['avatar']}
-                character={avatar.character}
-                background={avatar.background}
+                character={avatar_character}
+                background={avatar_background}
                 large
             />
             <form className={styles['form']} action="" onSubmit={handleCustomizeFormSubmit}>
@@ -80,7 +60,7 @@ const CustomizeUser = () => {
                             { value: 'light', label: 'Light' },
                             { value: 'dark', label: 'Dark' }
                         ]}
-                        defaultValue={user?.data?.avatar_background}
+                        defaultValue={avatar_background}
                         onChange={handleAvatarBackgroundChange}
                     />
                     <Input
@@ -89,7 +69,7 @@ const CustomizeUser = () => {
                         type="text"
                         maxLength={1}
                         pattern="[A-Za-z]"
-                        defaultValue={user?.data?.avatar_character}
+                        defaultValue={avatar_character}
                         onChange={handleAvatarCharacterChange}
                         labelVisible
                         required
@@ -98,11 +78,12 @@ const CustomizeUser = () => {
                         name="username"
                         label="Username"
                         type="text"
-                        defaultValue={user?.data?.username}
+                        defaultValue={username}
+                        onChange={handleUsernameChange}
                         labelVisible
                         required
                     />
-                    {customizeStatus && <StatusMessage className={styles['status']} message={customizeStatus} />}
+                    {statusMessage && <StatusMessage className={styles['status']} message={statusMessage} />}
                     <div className={styles['button']}>
                         <Button type="submit">Save</Button>
                     </div>

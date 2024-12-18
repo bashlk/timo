@@ -16,3 +16,6 @@ fs.readdirSync(source, { withFileTypes: true }).forEach(dirent => {
         }
     }
 });
+
+const public = path.join(__dirname, 'public');
+fs.cpSync(public, destination, { recursive: true });
